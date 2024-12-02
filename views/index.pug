@@ -1,0 +1,174 @@
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Tâches du jour
+    link(rel="manifest" href="/manifest.json")
+    link(href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet")
+    style.
+      body {
+        font-family: 'Audiowide', sans-serif; /* Police futuriste */
+        margin: 0;
+        padding: 20px;
+        background-color: #121212; /* Fond sombre inspiré des années 80 */
+        color: #b3b3b3; /* Texte gris clair */
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 1600px;
+        gap: 40px;
+      }
+      .form-container, .tasks-container, .purchase-container {
+        width: 100%;
+      }
+      .form {
+        border: 2px solid #9c27b0; /* Bordure violette */
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #2a2a2a; /* Fond encore plus sombre pour le formulaire */
+        margin-bottom: 20px;
+      }
+      .ajoutCommentaire {
+        display: flex;
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        width: 100%;
+        gap: 10px; /* Espacement entre l'input et le bouton */
+      }
+      .ajoutCommentaire input {
+        width: 60%; /* Champ de texte prend 60% de la largeur */
+        padding: 10px;
+        border: 2px solid #00bcd4;
+        border-radius: 5px;
+        background-color: #2a2a2a;
+        color: #b3b3b3;
+      }
+      .ajoutCommentaire button {
+        width: 10%; /* Le bouton prend 10% de la largeur */
+        background-color: #00bcd4; /* Bleu cyan lumineux */
+        color: #121212; /* Texte sombre pour contraste */
+        border-radius: 5px;
+        cursor: pointer;
+        padding: 10px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+      .button-submit-taches:hover, .button-submit:hover, .button-delete:hover {
+        background-color: #00796b; /* Teinte plus foncée au survol */
+      }
+      .button-delete {
+        background-color: #f44336; /* Rouge foncé pour la suppression */
+      }
+      .titre-container {
+        display: flex;
+        justify-content: space-between; /* Crée trois colonnes égales */
+        width: 100%; /* Prend toute la largeur */
+      }
+      .titre {
+        flex: 1; /* La colonne centrale occupe l'espace disponible */
+        font-family: 'Audiowide', sans-serif;
+        font-size: 3rem;
+        color: #00c7ff; /* Bleu néon doux */
+        text-align: center; /* Centrer le titre */
+        width:60%
+      }
+      .autres-pages {
+        font-family: 'Audiowide', sans-serif;
+        font-size: 1.5rem;
+        color: #00c7ff; /* Bleu néon doux */
+        align-self: center; /* Centrer le texte de la colonne droite */
+        width:20%;
+        text-align:center;
+        margin-top:0;
+      }
+      .task {
+        border: 2px solid #9c27b0; /* Bordure violette */
+        background-color: #2a2a2a; /* Arrière-plan sombre pour les tâches */
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      .task h3 {
+        margin-top: 0;
+        color: #9c27b0; /* Texte violet */
+      }
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .faible {
+        background-color: #4caf50; /* Vert doux */
+      }
+      .haute {
+        background-color: #d32f2f; /* Rouge foncé */
+      }
+      .moyenne {
+        background-color: #2196f3; /* Bleu moyen */
+      }
+      .priority {
+        margin-bottom: 5%;
+      }
+      .priority-qui-container {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .button-submit-taches {
+        width: 100%;
+      }
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+        .form-container, .tasks-container, .purchase-container {
+          width: 100%;
+        }
+        .button-submit-taches, .button-delete {
+          width: 100%;
+        }
+      }
+
+  body
+    .container
+      .form-container
+        .titre-container
+          p.autres-pages Amigos
+          p.titre Os compañeros
+          p.autres-pages Chat commun
+        .formDate
+          .date-time
+            #dateJour
+            #heure
+        form(action="/" method="post")
+          .ajoutCommentaire
+            label(for="task")
+            input(type="text" id="task" name="task" required)
+            button(type="submit" class="button-submit-taches") +
+      .tasks-container
+        each task in tasks
+          .task(data-task-id=task._id)(class=task.priority)
+            .task-header
+              h3 #{task.name}
+              p #{new Intl.DateTimeFormat('fr-FR').format(new Date(task.date))}
+            p #{task.description}
+            button(type="button" onclick="deleteTask(this)" class="button-delete") Supprimer
+
+    script(src="/js/script.js")
+    script.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
