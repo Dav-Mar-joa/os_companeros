@@ -70,6 +70,10 @@ html(lang="en")
         display: flex;
         justify-content: space-between; /* Crée trois colonnes égales */
         width: 100%; /* Prend toute la largeur */
+        padding-top:0px;
+        padding-bottom:0px;
+        margin-top:0px;
+        margin-bottom:0px;
       }
       .titre {
         flex: 1; /* La colonne centrale occupe l'espace disponible */
@@ -77,7 +81,9 @@ html(lang="en")
         font-size: 3rem;
         color: #00c7ff; /* Bleu néon doux */
         text-align: center; /* Centrer le titre */
-        width:60%
+        width:60%;
+        padding-top:0px;
+        padding-bottom:0px;
       }
       .autres-pages {
         font-family: 'Audiowide', sans-serif;
@@ -87,6 +93,14 @@ html(lang="en")
         width:20%;
         text-align:center;
         margin-top:0;
+        padding : 10px;
+        padding-left:12px;
+        padding-right:12px;
+        border:2px solid #00bcd4;
+        border-radius : 12px;
+      }
+      .autres-pages:hover {
+        transform:scale(1.1);
       }
       .task {
         border: 2px solid #9c27b0; /* Bordure violette */
@@ -124,7 +138,7 @@ html(lang="en")
       .button-submit-taches {
         width: 100%;
       }
-      @media (max-width: 768px) {
+      @media (max-width: 450px) {
         .container {
           flex-direction: column;
         }
@@ -134,19 +148,30 @@ html(lang="en")
         .button-submit-taches, .button-delete {
           width: 100%;
         }
-      }
+        .autres-pages {
+        padding-left:20px;
+        padding-right:20px;
 
+      }
+      }
+      .autres-pages {
+        padding-left:12px;
+        padding-right:12px;
+
+      }
   body
     .container
       .form-container
         .titre-container
           p.autres-pages Amigos
-          p.titre Os compañeros
           p.autres-pages Chat commun
+          p.autres-pages Chat privé
         .formDate
           .date-time
-            #dateJour
-            #heure
+            //- #dateJour
+            #heure  
+        .titre-container
+          p.titre Os compañeros
         form(action="/" method="post")
           .ajoutCommentaire
             label(for="task")
@@ -157,7 +182,7 @@ html(lang="en")
           .task(data-task-id=task._id)(class=task.priority)
             .task-header
               h3 #{task.name}
-              p #{new Intl.DateTimeFormat('fr-FR').format(new Date(task.date))}
+              p #{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(task.date))}
             p #{task.description}
             button(type="button" onclick="deleteTask(this)" class="button-delete") Supprimer
 
