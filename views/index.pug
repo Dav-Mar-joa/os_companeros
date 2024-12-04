@@ -118,7 +118,7 @@ html(lang="en")
 
       .task-left {
         display: flex;
-        width: 15%;
+        width: %;
         flex-direction: column; /* Aligne les éléments en colonne */
         justify-content: space-between; /* Aligne verticalement avec un espacement */
         word-wrap: break-word; /* Ancien nom, pour compatibilité */
@@ -132,7 +132,7 @@ html(lang="en")
 
       .task-right {
         display: flex;
-        width: 90%;
+        width: 100%;
         flex-direction: column;
         justify-content: space-between;
         word-wrap: break-word; /* Ancien nom, pour compatibilité */
@@ -142,8 +142,7 @@ html(lang="en")
 
       .task-header {
         display: flex;
-        justify-content: flex-end; /* Aligne les éléments horizontalement */
-        text-align:right;
+      
       }
 
       button.button-delete {
@@ -166,7 +165,7 @@ html(lang="en")
         text-align:left;
         padding:1%;
         padding-left:5%;
-        padding-right:20%;
+        padding-right:5%;
         margin-bottom:0;
         background-color: grey;
         border-radius:15px;
@@ -193,10 +192,25 @@ html(lang="en")
         width: 100%;
         font-size:1.2rem;
       }
-      .username-commentaire {
-        padding-bottom:0;
-        margin-bottom:0;
+
+      .avatar {
+        width: 40px; /* Taille de l'avatar */
+        height: 40px;
+        border-radius: 50%; /* Forme ronde */
+        background-color: #ccc; /* Couleur par défaut */
       }
+
+      .avatar-container {
+        display: flex;
+        align-items: center; /* Vertically centers the avatar and text */
+        justify-content: flex-start; /* Aligns items to the left */
+        gap: 10px;
+      }
+      .dateCommentaire {
+        text-align: right;
+        flex: 1;  /* This will make the .dateCommentaire take up the available space */
+      }
+
       .button-container{
         display:flex;
         gap:10px;
@@ -287,13 +301,12 @@ html(lang="en")
       .tasks-container
         each task in tasks
           .task(data-task-id=task._id class=task.priority)
-            .task-left
-              p Avatar
-              p.username-commentaire Username
             .task-right
               .task-header
-                
-                p #{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(task.date))}
+                .avatar-container
+                  div.avatar Avatar
+                  p.username-commentaire Usernam
+                p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(task.date))}
               h3 #{task.name}  
               p #{task.description}
               .button-container
