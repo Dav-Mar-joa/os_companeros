@@ -20,8 +20,8 @@ html(lang="en")
         display: flex;
         flex-direction: column;
         width: 100%;
-        max-width: 1600px;
-        gap: 40px;
+        max-width: 1100px;
+        gap: 20px;
       }
       .form-container, .tasks-container, .purchase-container {
         width: 100%;
@@ -62,6 +62,8 @@ html(lang="en")
       }
       .button-submit-taches:hover, .button-submit:hover, .button-delete:hover {
         background-color: #00796b; /* Teinte plus foncée au survol */
+        transform:scale(1.05);
+        border-radius:15px;
       }
       .button-delete {
         background-color: #f44336; /* Rouge foncé pour la suppression */
@@ -82,6 +84,8 @@ html(lang="en")
         color: #00c7ff; /* Bleu néon doux */
         text-align: center; /* Centrer le titre */
         width:60%;
+        margin-bottom:3%;
+        margin-top:0%;
         padding-top:0px;
         padding-bottom:0px;
       }
@@ -103,20 +107,70 @@ html(lang="en")
         transform:scale(1.1);
       }
       .task {
+        display: flex;
+        gap: 20px; /* Espacement entre les deux colonnes */
         border: 2px solid #9c27b0; /* Bordure violette */
-        background-color: #2a2a2a; /* Arrière-plan sombre pour les tâches */
+        background-color: #2a2a2a; /* Fond sombre */
         padding: 20px;
         border-radius: 10px;
         margin-bottom: 20px;
       }
+
+      .task-left {
+        display: flex;
+        width: 15%;
+        flex-direction: column; /* Aligne les éléments en colonne */
+        justify-content: space-between; /* Aligne verticalement avec un espacement */
+        word-wrap: break-word; /* Ancien nom, pour compatibilité */
+        overflow-wrap: break-word; /* Nom moderne et standard */
+        word-break: break-word; /* Comportement pour les très longs mots */
+        border: 2px solid white !important;
+        border-radius: 8px;
+        text-align:center;
+        padding:5px;
+      }
+
+      .task-right {
+        display: flex;
+        width: 90%;
+        flex-direction: column;
+        justify-content: space-between;
+        word-wrap: break-word; /* Ancien nom, pour compatibilité */
+        overflow-wrap: break-word; /* Nom moderne et standard */
+        word-break: break-word; /* Comportement pour les très longs mots */
+      }
+
+      .task-header {
+        display: flex;
+        justify-content: flex-end; /* Aligne les éléments horizontalement */
+        text-align:right;
+      }
+
+      button.button-delete {
+        align-self: flex-end; /* Aligne le bouton à droite */
+        color:white;
+        text-shadow: 
+        1px 1px 0px black,  /* Ombre en bas à droite */
+        -1px 1px 0px black, /* Ombre en bas à gauche */
+        1px -1px 0px black, /* Ombre en haut à droite */
+        -1px -1px 0px black; /* Ombre en haut à gauche */
+        font-family: 'Audiowide', sans-serif; 
+        padding: 0.8%;
+        padding-left:2%;
+        padding-right:2%;
+        border-radius:8px;
+      }
       .task h3 {
         margin-top: 0;
         color: #9c27b0; /* Texte violet */
-      }
-      .task-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        text-align:left;
+        padding:1%;
+        padding-left:5%;
+        padding-right:20%;
+        margin-bottom:0;
+        background-color: grey;
+        border-radius:15px;
+        border:3px solid #00c7ff;
       }
       .faible {
         background-color: #4caf50; /* Vert doux */
@@ -137,8 +191,61 @@ html(lang="en")
       }
       .button-submit-taches {
         width: 100%;
+        font-size:1.2rem;
+      }
+      .username-commentaire {
+        padding-bottom:0;
+        margin-bottom:0;
+      }
+      .button-container{
+        display:flex;
+        gap:10px;
+        justify-content:space-between;
+      }
+      .button-like {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        background-color:#00c7ff;
+        border-radius:8px;
+        margin-left:3%;
+      }
+      .button-like:hover {
+        background-color: white;
+        transform:scale(1.1)
+      }
+
+      .button-like img {
+        width: 20px; /* Taille de l'image du bouton Like */
+        height: 20px;
+      }
+
+      .button-like div {
+        display: flex;
+        align-items: center;
       }
       @media (max-width: 450px) {
+        .task-left {
+          display: flex;
+          width: 50%;
+          flex-direction: column; /* Aligne les éléments en colonne */
+          justify-content: space-between; /* Aligne verticalement avec un espacement */
+          word-wrap: break-word; /* Ancien nom, pour compatibilité */
+          overflow-wrap: break-word; /* Nom moderne et standard */
+          word-break: break-word; /* Comportement pour les très longs mots */
+          border : 2px solid white !important;
+          border-radius : 8px;
+        }
+
+        .task-right {
+          display: flex;
+          width: 50%;
+          flex-direction: column;
+          justify-content: space-between;
+          word-wrap: break-word; /* Ancien nom, pour compatibilité */
+          overflow-wrap: break-word; /* Nom moderne et standard */
+          word-break: break-word; /* Comportement pour les très longs mots */
+        }
         .container {
           flex-direction: column;
         }
@@ -164,12 +271,12 @@ html(lang="en")
       .form-container
         .titre-container
           p.autres-pages Amigos
-          p.autres-pages Chat commun
-          p.autres-pages Chat privé
-        .formDate
-          .date-time
-            //- #dateJour
-            #heure  
+          p.autres-pages Profil
+          p.autres-pages Chat 
+        //- .formDate
+        //-   .date-time
+        //-     //- #dateJour
+        //-     #heure  
         .titre-container
           p.titre Os compañeros
         form(action="/" method="post")
@@ -179,12 +286,21 @@ html(lang="en")
             button(type="submit" class="button-submit-taches") +
       .tasks-container
         each task in tasks
-          .task(data-task-id=task._id)(class=task.priority)
-            .task-header
-              h3 #{task.name}
-              p #{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(task.date))}
-            p #{task.description}
-            button(type="button" onclick="deleteTask(this)" class="button-delete") Supprimer
+          .task(data-task-id=task._id class=task.priority)
+            .task-left
+              p Avatar
+              p.username-commentaire Username
+            .task-right
+              .task-header
+                
+                p #{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(task.date))}
+              h3 #{task.name}  
+              p #{task.description}
+              .button-container
+                button(type="button" onclick="deleteTask(this)" class="button-like") 
+                  div 
+                    img(src="/assets/like/like.png", alt="like")
+                button(type="button" onclick="deleteTask(this)" class="button-delete") Supprimer    
 
     script(src="/js/script.js")
     script.

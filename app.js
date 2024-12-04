@@ -111,6 +111,67 @@ app.get('/', async (req, res) => {
         res.status(500).send('Erreur lors de la récupération des tâches');
     }
 });
+app.get('/login', async (req, res) => {
+    // const success = req.query.success === 'true'; // Vérification du paramètre de succès
+    // const successCourse = req.query.successCourse === 'true';
+     
+
+    // try {
+    //     const today = new Date();
+    //     today.setHours(0, 0, 0, 0);
+    //     const tomorrow = new Date(today);
+    //     tomorrow.setDate(today.getDate() + 1);
+
+    //     console.log('Today:', today);
+    //     console.log('Tomorrow:', tomorrow);
+
+    //     const collection = db.collection(process.env.MONGODB_COLLECTION);
+    //     const collectionCourses = db.collection('Courses');
+    //     const tasks = await collection.find({}).sort({ date: -1 }).toArray();
+    //     const courses = await collectionCourses.find({}).toArray();
+    //     tasks.forEach(task => {
+    //       console.log('Original Date:', task.date.toString().slice(0, 10));
+          
+    //     });
+
+        res.render('login')
+        ;
+    // } catch (err) {
+    //     console.error('Erreur lors de la récupération des tâches :', err);
+    //     res.status(500).send('Erreur lors de la récupération des tâches');
+    // }
+});
+
+app.get('/register', async (req, res) => {
+    // const success = req.query.success === 'true'; // Vérification du paramètre de succès
+    // const successCourse = req.query.successCourse === 'true';
+     
+
+    // try {
+    //     const today = new Date();
+    //     today.setHours(0, 0, 0, 0);
+    //     const tomorrow = new Date(today);
+    //     tomorrow.setDate(today.getDate() + 1);
+
+    //     console.log('Today:', today);
+    //     console.log('Tomorrow:', tomorrow);
+
+    //     const collection = db.collection(process.env.MONGODB_COLLECTION);
+    //     const collectionCourses = db.collection('Courses');
+    //     const tasks = await collection.find({}).sort({ date: -1 }).toArray();
+    //     const courses = await collectionCourses.find({}).toArray();
+    //     tasks.forEach(task => {
+    //       console.log('Original Date:', task.date.toString().slice(0, 10));
+          
+    //     });
+
+        res.render('register')
+        ;
+    // } catch (err) {
+    //     console.error('Erreur lors de la récupération des tâches :', err);
+    //     res.status(500).send('Erreur lors de la récupération des tâches');
+    // }
+});
 app.delete('/delete-task/:id', async (req, res) => {
     const taskId = req.params.id;
     try {
