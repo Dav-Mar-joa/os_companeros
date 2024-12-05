@@ -115,7 +115,7 @@ html(lang="en")
 
       .task-left {
         display: flex;
-        width: %;
+        width: 0%;
         flex-direction: column; /* Aligne les éléments en colonne */
         justify-content: space-between; /* Aligne verticalement avec un espacement */
         word-wrap: break-word; /* Ancien nom, pour compatibilité */
@@ -209,12 +209,12 @@ html(lang="en")
       }
       .button-like:hover {
         background-color: white;
-        transform:scale(1.1)
+        transform:scale(1.1);
       }
 
       .button-like img {
-        width: 20px; /* Taille de l'image du bouton Like */
-        height: 20px;
+        width: 25px; /* Taille de l'image du bouton Like */
+        height: 25px;
       }
 
       .button-like div {
@@ -231,12 +231,12 @@ html(lang="en")
       }
       .button-delete:hover {
         background-color: black;
-        transform:scale(1.1)
+        transform:scale(1.1);
       }
 
       .button-delete img {
-        width: 20px; /* Taille de l'image du bouton Like */
-        height: 20px;
+        width: 25px; /* Taille de l'image du bouton Like */
+        height: 25px;
       }
 
       .button-delete div {
@@ -302,7 +302,7 @@ html(lang="en")
                 .avatar-container
                   div.avatar Avatar
                   p.username-commentaire Usernam
-                p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(task.date))}
+                p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
               h3 #{task.name}  
               p #{task.description}
               .button-container
