@@ -60,13 +60,10 @@ html(lang="en")
         font-weight: bold;
         transition: background-color 0.3s;
       }
-      .button-submit-taches:hover, .button-submit:hover, .button-delete:hover {
+      .button-submit-taches:hover, .button-submit:hover {
         background-color: #00796b; /* Teinte plus foncée au survol */
         transform:scale(1.05);
         border-radius:15px;
-      }
-      .button-delete {
-        background-color: #f44336; /* Rouge foncé pour la suppression */
       }
       .titre-container {
         display: flex;
@@ -145,20 +142,6 @@ html(lang="en")
       
       }
 
-      button.button-delete {
-        align-self: flex-end; /* Aligne le bouton à droite */
-        color:white;
-        text-shadow: 
-        1px 1px 0px black,  /* Ombre en bas à droite */
-        -1px 1px 0px black, /* Ombre en bas à gauche */
-        1px -1px 0px black, /* Ombre en haut à droite */
-        -1px -1px 0px black; /* Ombre en haut à gauche */
-        font-family: 'Audiowide', sans-serif; 
-        padding: 0.8%;
-        padding-left:2%;
-        padding-right:2%;
-        border-radius:8px;
-      }
       .task h3 {
         margin-top: 0;
         color: #9c27b0; /* Texte violet */
@@ -238,6 +221,28 @@ html(lang="en")
         display: flex;
         align-items: center;
       }
+      .button-delete {
+        align-self: flex-end; /* Aligne le bouton à droite */
+        border: none;
+        cursor: pointer;
+        background-color:white;
+        border-radius:8px;
+        margin-left:3%;
+      }
+      .button-delete:hover {
+        background-color: black;
+        transform:scale(1.1)
+      }
+
+      .button-delete img {
+        width: 20px; /* Taille de l'image du bouton Like */
+        height: 20px;
+      }
+
+      .button-delete div {
+        display: flex;
+        align-items: center;
+      }
       @media (max-width: 400px) {
         .task-left {
           display: flex;
@@ -257,7 +262,7 @@ html(lang="en")
         .form-container, .tasks-container, .purchase-container {
           width: 100%;
         }
-        .button-submit-taches, .button-delete {
+        .button-submit-taches{
           width: 100%;
         }
         .autres-pages {
@@ -304,7 +309,9 @@ html(lang="en")
                 button(type="button" onclick="deleteTask(this)" class="button-like") 
                   div 
                     img(src="/assets/like/like.png", alt="like")
-                button(type="button" onclick="deleteTask(this)" class="button-delete") Supprimer    
+                button(type="button" onclick="deleteTask(this)" class="button-delete")
+                  div 
+                    img(src="/assets/delete/delete.png", alt="delete")    
 
     script(src="/js/script.js")
     script.
