@@ -100,6 +100,21 @@ html(lang="en")
         border:2px solid #00bcd4;
         border-radius : 12px;
       }
+      .avatar-container {
+        display: flex;
+        align-items: center; /* Centre verticalement */
+        justify-content: center; /* Centre horizontalement */
+        gap: 10px; /* Espacement entre l'avatar et le texte */
+        text-align: center;
+      }
+
+      .avatar {
+        width: 50px; /* Ajuste la taille de l'avatar */
+        height: 50px;
+        border-radius: 50%; /* Rend l'avatar rond */
+        border: 2px solid #00c7ff; /* Bordure pour mettre en valeur l'avatar */
+        object-fit: cover; /* Ajuste l'image sans la déformer */
+      }
       .autres-pages:hover {
         transform:scale(1.1);
       }
@@ -177,8 +192,9 @@ html(lang="en")
       }
 
       .avatar {
-        width: 40px; /* Taille de l'avatar */
-        height: 40px;
+        padding-top:0%;
+        width: 50px; /* Taille de l'avatar */
+        height: 50px;
         border-radius: 50%; /* Forme ronde */
         background-color: #ccc; /* Couleur par défaut */
       }
@@ -186,6 +202,7 @@ html(lang="en")
       .avatar-container {
         display: flex;
         align-items: center; /* Vertically centers the avatar and text */
+        margin-bottom:2%;
         justify-content: flex-start; /* Aligns items to the left */
         gap: 10px;
       }
@@ -281,7 +298,9 @@ html(lang="en")
       .form-container
         .titre-container
           p.autres-pages Amigos
-          p.autres-pages Profil
+          .avatar-container
+            img.avatar(src="assets/avatar/avatar5.PNG", alt="avatar profil")
+            span UserName
           p.autres-pages Chat 
         //- .formDate
         //-   .date-time
@@ -301,7 +320,7 @@ html(lang="en")
               .task-header
                 .avatar-container
                   div.avatar Avatar
-                  p.username-commentaire Usernam
+                  p.username-commentaire Username
                 p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
               h3 #{task.name}  
               p #{task.description}
