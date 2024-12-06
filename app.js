@@ -172,6 +172,31 @@ app.get('/register', async (req, res) => {
     //     res.status(500).send('Erreur lors de la récupération des tâches');
     // }
 });
+app.post('/register', async (req, res) => {
+    const user = {
+        userName: req.body.username,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        genre: req.body.genre,
+        email: req.body.email,
+        telephone: req.body.telephone,
+        age: req.body.age,
+        presentation: req.body.presentation,
+        centreInterets: req.body.centreInterets,
+        password: req.body.password,
+        confirmPassword: req.body.confirmPassword
+    };
+    console.log("user : ",user)
+
+    try {
+        const collection = db.collection('Users'); // Utiliser la collection "users"
+        await collection.insertOne(user);
+        res.redirect('/'); // Redirection avec un paramètre de succès pour les courses
+    } catch (err) {
+        console.error('Erreur lors de l\'ajout du compte :', err);
+        res.status(500).send('Erreur lors de l\'ajout du compte');
+    }
+});
 app.delete('/delete-task/:id', async (req, res) => {
     const taskId = req.params.id;
     try {

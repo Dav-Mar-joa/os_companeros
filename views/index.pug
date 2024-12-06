@@ -114,8 +114,8 @@ html(lang="en")
       }
 
       .avatar {
-        width: 80px; /* Ajuste la taille de l'avatar */
-        height: 80px;
+        width: 90px; /* Ajuste la taille de l'avatar */
+        height: 90px;
         border-radius: 50%; /* Rend l'avatar rond */
         border: 2px solid #00c7ff; /* Bordure pour mettre en valeur l'avatar */
         object-fit: cover; /* Ajuste l'image sans la déformer */
@@ -217,6 +217,13 @@ html(lang="en")
         width: 100%;
         gap:10px
       }
+      .avatars-container-head {
+        display: flex;
+        justify-content: center; /* Écart entre les éléments : gauche, centre, droite */
+        align-items: center; /* Centrer les avatars verticalement */
+        width: 100%;
+        gap:10px
+      }
 
       .avatars-container .avatar {
         width: 50px;
@@ -245,6 +252,7 @@ html(lang="en")
         background-color:#00c7ff;
         border-radius:8px;
         margin-left:3%;
+        border : 1px solid black;
       }
       .button-like:hover {
         background-color: white;
@@ -254,6 +262,7 @@ html(lang="en")
       .button-like img {
         width: 25px; /* Taille de l'image du bouton Like */
         height: 25px;
+        transform : scale(0.8);
       }
 
       .button-like div {
@@ -283,6 +292,11 @@ html(lang="en")
         display: flex;
         align-items: center;
       }
+      .button-head{
+        border-radius:50%;
+        background-color:#00c7ff;
+      }
+      
       @media (max-width: 400px) {
         .task-left {
           display: flex;
@@ -317,6 +331,13 @@ html(lang="en")
         justify-content: center; /* Aligns items to the left */
         gap: 10px;
         }
+        .avatar-container-head {
+        display: flex;
+        align-items: center; /* Vertically centers the avatar and text */
+        margin-bottom:6%;
+        justify-content: center; /* Aligns items to the left */
+        gap: 10px;
+        }
       }
       .autres-pages {
         padding-left:12px;
@@ -327,12 +348,29 @@ html(lang="en")
       .form-container
         .titre-container
           //- p.autres-pages Ami
-          .avatar-container
-            img.avatar(src="assets/icons/icon192.png", alt="avatar profil")
-          .avatar-container
-            img.avatar(src="assets/avatar/avatar5.png", alt="avatar profil")
-          .avatar-container
-            img.avatar(src="assets/icons/message.png", alt="avatar profil")
+          div.avatar-container-head
+            form(action='/login' method='get')
+              button.button-head
+                img.avatar(src="assets/icons/icon192.png", alt="friends")
+    
+          div.avatar-container-head
+            form(action='/login' method='get')
+              button.button-head
+                img.avatar(src="assets/avatar/avatar5.png", alt="avatar profil")
+          div.avatar-container-head
+            form(action='/login' method='get')
+              button.button-head
+                img.avatar(src="assets/icons/message.png", alt="messages")
+          div.avatar-container-head
+            form(action='/login' method='get')
+              button.button-head
+                img.avatar(src="assets/icons/logout.png", alt="logout" )      
+          //- .avatar-container
+          //-   img.avatar(src="assets/icons/icon192.png", alt="avatar profil")
+          //- .avatar-container
+          //-   img.avatar(src="assets/avatar/avatar5.png", alt="avatar profil")
+          //- .avatar-container
+          //-   img.avatar(src="assets/icons/message.png", alt="avatar profil")
         //- .formDate
         //-   .date-time
         //-     //- #dateJour
@@ -350,7 +388,8 @@ html(lang="en")
             .task-right
               .task-header
                 .avatar-container
-                  div.avatar Avatar
+                  div.avatar
+                    img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
                   p.username-commentaire Username
                 p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
               h3 #{task.name}  
