@@ -1,5 +1,3 @@
-
-
 function affichageHeure(){
     let jours = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
     let mois = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
@@ -29,10 +27,10 @@ function affichageHeure(){
 
     console.log("clock"+ clock)
     const heure = document.getElementById("heure")
-    heure.innerText = clock
+    // heure.innerText = clock
 
     const dateJour = document.getElementById("dateJour")
-    dateJour.innerText = dateDay
+    // dateJour.innerText = dateDay
 }
 
 setInterval(() => {affichageHeure(); }, 1000)

@@ -14,7 +14,7 @@ html(lang="en")
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        height: 180vh;
       }
       .register-container {
         width: 100%;
@@ -60,6 +60,26 @@ html(lang="en")
       button:hover {
         background-color: #00796b;
       }
+      .avatar-options {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
+
+      .avatar-select {
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #00bcd4;
+        border-radius: 5px;
+        background-color: #121212;
+        color: #b3b3b3;
+        appearance: none; /* Pour un look personnalisé */
+        cursor: pointer;
+      }
+
+      .avatar-select:hover {
+        border-color: #00796b;
+      }
       @media (max-width: 450px) {
         .register-container {
           padding: 15px;
@@ -70,28 +90,48 @@ html(lang="en")
       h1.register-title Inscription
       form(action="/register" method="post")
         .form-group
+          label(for="username") Nom d'utilisateur
+          input(type="text" id="username" name="username" required) 
+        .form-group
           label(for="firstname") Prénom
           input(type="text" id="firstname" name="firstname" required)
         .form-group
           label(for="lastname") Nom
           input(type="text" id="lastname" name="lastname" required)
         .form-group
-          label(for="username") Nom d'utilisateur
-          input(type="text" id="username" name="username" required)
+          label(for="genre") Genre
+          select(id="genre" name="genre" required)
+            option(value="femme") Femme
+            option(value="homme") Homme
+            option(value="non-binaire") Non-binaire
+            option(value="autre") Autre
+            option(value="prefere-pas-dire") Préfère ne pas dire
         .form-group
           label(for="email") Email
           input(type="email" id="email" name="email" required)
+        .form-group
+          label(for="telephone") Téléphone
+          input(type="tel" id="telephone" name="telephone"  required)   
+        .form-group
+          label(for="age") Age
+          input(type="number" id="age" name="age" required min="0")
+        .form-group
+          label(for="presentation") Présentation
+          input(type="text" id="presentation" name="presentation" required)  
+        .form-group
+          label(for="centreInterets") Centre d'intérêts
+          input(type="text" id="centreInterets" name="centreInterets" required)     
         .form-group
           label(for="password") Mot de passe
           input(type="password" id="password" name="password" required)
         .form-group
           label(for="confirmPassword") Confirmer le mot de passe
           input(type="password" id="confirmPassword" name="confirmPassword" required)
+        form(action="/register" method="post")
         .form-group
           label(for="avatar") Choisir un avatar
-          select(id="avatar" name="avatar")
-            option(value="avatar1.png") Avatar 1
-            option(value="avatar2.png") Avatar 2
-            option(value="avatar3.png") Avatar 3
-            //- Ajouter d'autres options selon vos images
+          select(id="avatar" name="avatar" class="avatar-select")
+            option(value="avatar1.png" data-img-src="/assets/avatar/avatar1.png") Avatar 1
+            option(value="avatar2.png" data-img-src="/assets/avatar/avatar2.png") Avatar 2
+            option(value="avatar3.png" data-img-src="/assets/avatar/avatar3.png") Avatar 3  
         button(type="submit") S'inscrire
