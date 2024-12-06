@@ -66,13 +66,17 @@ html(lang="en")
         border-radius:15px;
       }
       .titre-container {
-        display: flex;
-        justify-content: space-between; /* Crée trois colonnes égales */
-        width: 100%; /* Prend toute la largeur */
-        padding-top:0px;
-        padding-bottom:0px;
-        margin-top:0px;
-        margin-bottom:0px;
+          display: flex;
+          justify-content: space-between; /* Espace égal entre les colonnes */
+          width: 100%;
+          padding: 0; /* Supprime les marges internes */
+          margin: 0; /* Supprime les marges externes */
+          gap: 0; /* Aucune espace additionnelle entre les colonnes */
+      }
+
+      .titre-container > * {
+          flex: 1; /* Chaque élément enfant prend un tiers de l'espace */
+          text-align: center; /* Centrer le contenu dans chaque colonne */
       }
       .titre {
         flex: 1; /* La colonne centrale occupe l'espace disponible */
@@ -101,16 +105,17 @@ html(lang="en")
         border-radius : 12px;
       }
       .avatar-container {
+        margin-bottom:3%;
         display: flex;
         align-items: center; /* Centre verticalement */
         justify-content: center; /* Centre horizontalement */
-        gap: 10px; /* Espacement entre l'avatar et le texte */
         text-align: center;
+        gap: 20px;
       }
 
       .avatar {
-        width: 50px; /* Ajuste la taille de l'avatar */
-        height: 50px;
+        width: 80px; /* Ajuste la taille de l'avatar */
+        height: 80px;
         border-radius: 50%; /* Rend l'avatar rond */
         border: 2px solid #00c7ff; /* Bordure pour mettre en valeur l'avatar */
         object-fit: cover; /* Ajuste l'image sans la déformer */
@@ -205,16 +210,27 @@ html(lang="en")
         background-color: #ccc; /* Couleur par défaut */
       }
 
-      .avatar-container {
+      .avatars-container {
         display: flex;
-        align-items: center; /* Vertically centers the avatar and text */
-        margin-bottom:2%;
-        justify-content: flex-start; /* Aligns items to the left */
-        gap: 10px;
+        justify-content: center; /* Écart entre les éléments : gauche, centre, droite */
+        align-items: center; /* Centrer les avatars verticalement */
+        width: 100%;
+        gap:10px
+      }
+
+      .avatars-container .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid #00c7ff; /* Bordure pour mettre en valeur */
+        object-fit: cover; /* Ajuste l'image sans la déformer */
       }
       .dateCommentaire {
+        margin-top:0%;
+        padding-top:0%;
         text-align: right;
         flex: 1;  /* This will make the .dateCommentaire take up the available space */
+        font-size:0.8rem;
       }
 
       .button-container{
@@ -298,7 +314,7 @@ html(lang="en")
         display: flex;
         align-items: center; /* Vertically centers the avatar and text */
         margin-bottom:6%;
-        justify-content: flex-start; /* Aligns items to the left */
+        justify-content: center; /* Aligns items to the left */
         gap: 10px;
         }
       }
@@ -310,10 +326,13 @@ html(lang="en")
     .container
       .form-container
         .titre-container
-          p.autres-pages Ami
+          //- p.autres-pages Ami
+          .avatar-container
+            img.avatar(src="assets/icons/icon192.png", alt="avatar profil")
           .avatar-container
             img.avatar(src="assets/avatar/avatar5.png", alt="avatar profil")
-          p.autres-pages Cha
+          .avatar-container
+            img.avatar(src="assets/icons/message.png", alt="avatar profil")
         //- .formDate
         //-   .date-time
         //-     //- #dateJour
