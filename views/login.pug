@@ -24,6 +24,25 @@ html(lang="en")
         border-radius: 10px;
         background-color: #2a2a2a;
       }
+      .container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 1100px;
+        gap: 20px;
+      }
+      .form-container, .tasks-container, .purchase-container {
+        width: 100%;
+      }
+      .form {
+        border: 2px solid #9c27b0; /* Bordure violette */
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #2a2a2a; /* Fond encore plus sombre pour le formulaire */
+        margin-bottom: 20px;
+      }
       .login-title {
         font-size: 2rem;
         text-align: center;
@@ -59,23 +78,60 @@ html(lang="en")
       button:hover {
         background-color: #00796b;
       }
+      .titre-container {
+          display: flex;
+          justify-content: space-between; /* Espace égal entre les colonnes */
+          width: 100%;
+          padding: 0; /* Supprime les marges internes */
+          margin: 0; /* Supprime les marges externes */
+          gap: 0; /* Aucune espace additionnelle entre les colonnes */
+      }
+
+      .titre-container > * {
+          flex: 1; /* Chaque élément enfant prend un tiers de l'espace */
+          text-align: center; /* Centrer le contenu dans chaque colonne */
+      }
+      .titre {
+        flex: 1; /* La colonne centrale occupe l'espace disponible */
+        font-family: 'Audiowide', sans-serif;
+        font-size: 3rem;
+        color: #00c7ff; /* Bleu néon doux */
+        text-align: center; /* Centrer le titre */
+        width:60%;
+        margin-bottom:3%;
+        margin-top:0%;
+        padding-top:0px;
+        padding-bottom:0px;
+      }
       @media (max-width: 450px) {
         .login-container {
           padding: 15px;
+          width:90%.
         }
+        .container {
+          flex-direction: column;
+        }
+        .form-container, .tasks-container, .purchase-container {
+          width: 100%;
+        }  
+        
       }
   body
-    .login-container
-      h1.login-title Connexion
-      form(action="/login" method="post")
-        .form-group
-          label(for="username") Nom d'utilisateur
-          input(type="text" id="username" name="username" required)
-        .form-group
-          label(for="password") Mot de passe
-          input(type="password" id="password" name="password" required)
-        button(type="submit") Se connecter
-      form(action="/register" method="get")
+    .container
+      .form-container 
+        .titre-container
+          p.titre Os compañeros
+      .login-container
+        h1.login-title Connexion
+        form(action="/login" method="post")
           .form-group
-            button(type="submit") Creation compte    
+            label(for="username") Nom d'utilisateur
+            input(type="text" id="username" name="username" required)
+          .form-group
+            label(for="password") Mot de passe
+            input(type="password" id="password" name="password" required)
+          button(type="submit") Se connecter
+        form(action="/register" method="get")
+            .form-group
+              button(type="submit") Creation compte    
         

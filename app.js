@@ -236,6 +236,7 @@ app.get('/register', async (req, res) => {
 });
 app.post('/register', async (req, res) => {
     const user = {
+        _id: uuidv4(),
         userName: req.body.username,
         firstname: req.body.firstname,
         // lastname: req.body.lastname,
