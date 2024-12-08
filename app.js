@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 const bodyParser = require('body-parser');
 
@@ -42,6 +43,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Route pour soumettre des tâches
 app.post('/', async (req, res) => {
     const task = {
+        id: uuidv4(),
         name: req.body.task,
         date: new Date(), // Convertir la chaîne en un objet Date
         // description: req.body.description,
@@ -141,6 +143,66 @@ app.get('/login', async (req, res) => {
     //     res.status(500).send('Erreur lors de la récupération des tâches');
     // }
 });
+app.get('/find', async (req, res) => {
+    // const success = req.query.success === 'true'; // Vérification du paramètre de succès
+    // const successCourse = req.query.successCourse === 'true';
+     
+
+    // try {
+    //     const today = new Date();
+    //     today.setHours(0, 0, 0, 0);
+    //     const tomorrow = new Date(today);
+    //     tomorrow.setDate(today.getDate() + 1);
+
+    //     console.log('Today:', today);
+    //     console.log('Tomorrow:', tomorrow);
+
+    //     const collection = db.collection(process.env.MONGODB_COLLECTION);
+    //     const collectionCourses = db.collection('Courses');
+    //     const tasks = await collection.find({}).sort({ date: -1 }).toArray();
+    //     const courses = await collectionCourses.find({}).toArray();
+    //     tasks.forEach(task => {
+    //       console.log('Original Date:', task.date.toString().slice(0, 10));
+          
+    //     });
+
+        res.render('find')
+        ;
+    // } catch (err) {
+    //     console.error('Erreur lors de la récupération des tâches :', err);
+    //     res.status(500).send('Erreur lors de la récupération des tâches');
+    // }
+});
+app.get('/profil', async (req, res) => {
+    // const success = req.query.success === 'true'; // Vérification du paramètre de succès
+    // const successCourse = req.query.successCourse === 'true';
+     
+
+    // try {
+    //     const today = new Date();
+    //     today.setHours(0, 0, 0, 0);
+    //     const tomorrow = new Date(today);
+    //     tomorrow.setDate(today.getDate() + 1);
+
+    //     console.log('Today:', today);
+    //     console.log('Tomorrow:', tomorrow);
+
+    //     const collection = db.collection(process.env.MONGODB_COLLECTION);
+    //     const collectionCourses = db.collection('Courses');
+    //     const tasks = await collection.find({}).sort({ date: -1 }).toArray();
+    //     const courses = await collectionCourses.find({}).toArray();
+    //     tasks.forEach(task => {
+    //       console.log('Original Date:', task.date.toString().slice(0, 10));
+          
+    //     });
+
+        res.render('profil')
+        ;
+    // } catch (err) {
+    //     console.error('Erreur lors de la récupération des tâches :', err);
+    //     res.status(500).send('Erreur lors de la récupération des tâches');
+    // }
+});
 
 app.get('/register', async (req, res) => {
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès
@@ -176,17 +238,17 @@ app.post('/register', async (req, res) => {
     const user = {
         userName: req.body.username,
         firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        genre: req.body.genre,
-        email: req.body.email,
-        telephone: req.body.telephone,
-        age: req.body.age,
-        presentation: req.body.presentation,
-        centreInterets: req.body.centreInterets,
-        password: req.body.password,
-        confirmPassword: req.body.confirmPassword
+        // lastname: req.body.lastname,
+        // genre: req.body.genre,
+        // email: req.body.email,
+        // telephone: req.body.telephone,
+        // age: req.body.age,
+        // presentation: req.body.presentation,
+        // centreInterets: req.body.centreInterets,
+        // password: req.body.password,
+        // confirmPassword: req.body.confirmPassword
     };
-    console.log("user : ",user)
+    console.log("user 2: ",user)
 
     try {
         const collection = db.collection('Users'); // Utiliser la collection "users"
