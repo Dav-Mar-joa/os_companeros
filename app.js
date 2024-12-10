@@ -3,6 +3,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 
 const { MongoClient, ObjectId } = require('mongodb');
 
@@ -13,6 +14,18 @@ const app = express();
 const connectionString = process.env.MONGODB_URI;
 const client = new MongoClient(connectionString);
 const dbName = process.env.MONGODB_DBNAME;
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+    },
+    secure: false, // Ajoute cette ligne si tu rencontres des erreurs SSL
+    tls: {
+        rejectUnauthorized: false, // Désactive le rejet des certificats auto-signés
+    },
+});
 
 let db;
 
@@ -260,6 +273,64 @@ app.post('/register', async (req, res) => {
         res.status(500).send('Erreur lors de l\'ajout du compte');
     }
 });
+app.get('/password-email', async (req, res) => {
+    // const success = req.query.success === 'true'; // Vérification du paramètre de succès
+    // const successCourse = req.query.successCourse === 'true';
+     
+
+    // try {
+    //     const today = new Date();
+    //     today.setHours(0, 0, 0, 0);
+    //     const tomorrow = new Date(today);
+    //     tomorrow.setDate(today.getDate() + 1);
+
+    //     console.log('Today:', today);
+    //     console.log('Tomorrow:', tomorrow);
+
+    //     const collection = db.collection(process.env.MONGODB_COLLECTION);
+    //     const collectionCourses = db.collection('Courses');
+    //     const tasks = await collection.find({}).sort({ date: -1 }).toArray();
+    //     const courses = await collectionCourses.find({}).toArray();
+    //     tasks.forEach(task => {
+    //       console.log('Original Date:', task.date.toString().slice(0, 10));
+          
+    //     });
+
+        res.render('password-email')
+        ;
+    // } catch (err) {
+    //     console.error('Erreur lors de la récupération des tâches :', err);
+    //     res.status(500).send('Erreur lors de la récupération des tâches');
+    // }
+});
+
+app.post('/password-email', (req, res) => {
+    const email = req.body.email;
+    console.log(email)
+  
+    // Vérifiez si un email est fourni
+    if (!email) {
+      return res.status(400).send('Email is required');
+    }
+  
+    // Contenu de l'email
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: 'Password Recovery',
+      text: 'This is your password recovery email.',
+    };
+  
+    // Envoyer l'email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).send('Error sending email');
+      }
+      console.log('Email sent: ' + info.response);
+      res.send('Email sent successfully');
+    });
+  });
 app.delete('/delete-task/:id', async (req, res) => {
     const taskId = req.params.id;
     try {

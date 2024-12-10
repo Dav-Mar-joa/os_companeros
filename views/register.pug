@@ -8,13 +8,27 @@ html(lang="en")
       body {
         font-family: 'Audiowide', sans-serif;
         margin: 0;
-        margin-top:5%;
         padding: 20px;
         background-color: #121212;
         color: #b3b3b3;
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
+      }
+      .titre-container {
+        width: 100%;
+        max-width: 400px; /* Alignement avec la largeur du conteneur violet */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .titre {
+        font-size: 3rem;
+        color: #00c7ff; /* Bleu néon doux */
+        text-align: center;
+        margin: 0; /* Pas de marges inutiles */
       }
       .register-container {
         width: 100%;
@@ -34,7 +48,6 @@ html(lang="en")
         display: flex;
         flex-direction: column;
         margin-bottom: 20px;
-        //- text-align:center;
       }
       label {
         margin-bottom: 5px;
@@ -60,114 +73,71 @@ html(lang="en")
       button:hover {
         background-color: #00796b;
       }
-      .avatar-options {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-      }
-
-      .avatar-select {
-        padding: 10px;
-        font-size: 16px;
-        border: 2px solid #00bcd4;
-        border-radius: 5px;
-        background-color: #121212;
-        color: #b3b3b3;
-        appearance: none; /* Pour un look personnalisé */
-        cursor: pointer;
-      }
-      .titre-container {
-        display: flex;
-        justify-content: space-between; /* Espace égal entre les colonnes */
-        width: 100%;
-        padding: 0; /* Supprime les marges internes */
-        margin: 0; /* Supprime les marges externes */
-        gap: 0; /* Aucune espace additionnelle entre les colonnes */
-      }
-
-      .titre-container > * {
-          flex: 1; /* Chaque élément enfant prend un tiers de l'espace */
-          text-align: center; /* Centrer le contenu dans chaque colonne */
-      }
-      .titre {
-        flex: 1; /* La colonne centrale occupe l'espace disponible */
-        font-family: 'Audiowide', sans-serif;
-        font-size: 3rem;
-        color: #00c7ff; /* Bleu néon doux */
-        text-align: center; /* Centrer le titre */
-        width:60%;
-        margin-bottom:3%;
-        margin-top:0%;
-        padding-top:0px;
-        padding-bottom:0px;
-      }
-
-      .avatar-select:hover {
-        border-color: #00796b;
-      }
       @media (max-width: 400px) {
+        .titre-container,
         .register-container {
-          padding: 15px;
-           width:90%;
+          width: 90%; /* Adaptation aux petits écrans */
         }
-        .container {
-          flex-direction: column;
-        }
-        .form-container, .tasks-container, .purchase-container {
-          width: 100%;
-        } 
       }
   body
-    .container
-      .form-container 
-        .titre-container
-          p.titre Os compañeros
-      .register-container
-        h1.register-title Inscription
-        form(action="/register" method="post")
-          .form-group
-            label(for="username") Nom d'utilisateur
-            input(type="text" id="username" name="username" required) 
-          .form-group
-            label(for="firstname") Prénom
-            input(type="text" id="firstname" name="firstname" required)
-          .form-group
-            label(for="lastname") Nom
-            input(type="text" id="lastname" name="lastname" required)
-          .form-group
-            label(for="genre") Genre
-            select(id="genre" name="genre" required)
-              option(value="femme") Femme
-              option(value="homme") Homme
-              option(value="non-binaire") Non-binaire
-              option(value="autre") Autre
-              option(value="prefere-pas-dire") Préfère ne pas dire
-          .form-group
-            label(for="email") Email
-            input(type="email" id="email" name="email" required)
-          .form-group
-            label(for="telephone") Téléphone
-            input(type="tel" id="telephone" name="telephone"  required)   
-          .form-group
-            label(for="age") Age
-            input(type="number" id="age" name="age" required min="0")
-          .form-group
-            label(for="presentation") Présentation
-            input(type="text" id="presentation" name="presentation" required)  
-          .form-group
-            label(for="centreInterets") Centre d'intérêts
-            input(type="text" id="centreInterets" name="centreInterets" required)     
-          .form-group
-            label(for="password") Mot de passe
-            input(type="password" id="password" name="password" required)
-          .form-group
-            label(for="confirmPassword") Confirmer le mot de passe
-            input(type="password" id="confirmPassword" name="confirmPassword" required)
-          form(action="/register" method="post")
-          .form-group
-            label(for="avatar") Choisir un avatar
-            select(id="avatar" name="avatar" class="avatar-select")
-              option(value="avatar1.png" data-img-src="/assets/avatar/avatar1.png") Avatar 1
-              option(value="avatar2.png" data-img-src="/assets/avatar/avatar2.png") Avatar 2
-              option(value="avatar3.png" data-img-src="/assets/avatar/avatar3.png") Avatar 3  
+    .titre-container
+      h1.titre Os compañeros
+    .register-container
+      h1.register-title Inscription
+      form(action="/register" method="post")
+        .form-group
+          label(for="username") Nom d'utilisateur
+          input(type="text" id="username" name="username" required) 
+        .form-group
+          label(for="firstname") Prénom
+          input(type="text" id="firstname" name="firstname" required)
+        .form-group
+          label(for="lastname") Nom
+          input(type="text" id="lastname" name="lastname" required)
+        .form-group
+          label(for="genre") Genre
+          select(id="genre" name="genre" required)
+            option(value="femme") Femme
+            option(value="homme") Homme
+            option(value="non-binaire") Non-binaire
+            option(value="autre") Autre
+            option(value="prefere-pas-dire") Préfère ne pas dire
+        .form-group
+          label(for="email") Email
+          input(type="email" id="email" name="email" required)
+        .form-group
+          label(for="telephone") Téléphone
+          input(type="tel" id="telephone" name="telephone" required)   
+        .form-group
+          label(for="age") Âge
+          input(type="number" id="age" name="age" required min="0")
+        .form-group
+          label(for="presentation") Présentation
+          input(type="text" id="presentation" name="presentation" required)  
+        .form-group
+          label(for="centreInterets") Centres d'intérêts
+          input(type="text" id="centreInterets" name="centreInterets" required)     
+        .form-group
+          label(for="password") Mot de passe
+          input(type="password" id="password" name="password" required)
+        .form-group
+          label(for="confirmPassword") Confirmer le mot de passe
+          input(type="password" id="confirmPassword" name="confirmPassword" required)
+        .form-group
+          label(for="avatar") Choisir un avatar
+          select(id="avatar" name="avatar")
+            option(value="avatar1.png") Avatar 1
+            option(value="avatar2.png") Avatar 2
+            option(value="avatar3.png") Avatar 3  
         button(type="submit") S'inscrire
+    script(src="/js/script.js")
+    script.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }    

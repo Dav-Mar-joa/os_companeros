@@ -392,6 +392,7 @@ html(lang="en")
                     img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
                   p.username-commentaire Username
                 p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
+                
               h3 #{task.name}  
               p #{task.description}
               .button-container

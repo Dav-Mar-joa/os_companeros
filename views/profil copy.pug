@@ -90,18 +90,6 @@ html(lang="en")
         padding-top:0px;
         padding-bottom:0px;
       }
-      .titre-find {
-        flex: 1; /* La colonne centrale occupe l'espace disponible */
-        font-family: 'Audiowide', sans-serif;
-        font-size: 2rem;
-        color: #00c7ff; /* Bleu néon doux */
-        text-align: center; /* Centrer le titre */
-        width:60%;
-        margin-bottom:3%;
-        margin-top:0%;
-        padding-top:0px;
-        padding-bottom:0px;
-      }
       .autres-pages {
         font-family: 'Audiowide', sans-serif;
         font-size: 1.5rem;
@@ -171,7 +159,12 @@ html(lang="en")
 
       .task-header {
         display: flex;
-      
+      }
+
+      .task-header-infos {
+        display: flex;
+        line-height: 1;
+        margin:0;
       }
 
       .task h3 {
@@ -211,7 +204,6 @@ html(lang="en")
       }
       .button-submit-taches {
         width: 100%;
-        padding : 30px; 
         font-size:1.2rem;
       }
 
@@ -310,7 +302,6 @@ html(lang="en")
         background-color:#00c7ff;
       }
       
-      
       @media (max-width: 400px) {
         .task-left {
           display: flex;
@@ -330,23 +321,8 @@ html(lang="en")
         .form-container, .tasks-container, .purchase-container {
           width: 100%;
         }
-        .button-submit-taches {
-          display: flex; /* Active le conteneur flex */
-          justify-content: center; /* Centre horizontalement */
-          align-items: center; /* Centre verticalement */
-          width: 100%; /* Ajuste à la largeur souhaitée */
-          height: 40px; /* Ajuste à la hauteur souhaitée */
-          padding: 0; /* Supprime les marges internes */
-          background-color: #00bcd4; /* Bleu cyan lumineux */
-          border-radius: 5px; /* Coins arrondis */
-          cursor: pointer; /* Pointeur de souris */
-          border: none; /* Supprime les bordures */
-          transition: background-color 0.3s;
-        }
-
-        .button-submit-taches img {
-          max-width: 50%; /* Ajuste la taille de l'image au besoin */
-          max-height: 50%; /* S'assure que l'image ne dépasse pas */
+        .button-submit-taches{
+          width: 100%;
         }
         .autres-pages {
         padding-left:20px;
@@ -372,20 +348,30 @@ html(lang="en")
         padding-left:12px;
         padding-right:12px;
       }
+      .task-header-infos {
+        display: flex;
+        line-height: 1;
+        margin:0;
+      }
+      .username-infos{
+        margin : 0;
+        padding:0;
+        margin-bottom: 5%;
+      }
   body
     .container
       .form-container
         .titre-container
           //- p.autres-pages Ami
           div.avatar-container-head
-            form(action='/' method='get')
+            form(action='/login' method='get')
               button.button-head
-                img.avatar(src="assets/icons/wall.png", alt="friends")
+                img.avatar(src="assets/icons/icon192.png", alt="friends")
     
           div.avatar-container-head
-            form(action='/profil' method='get')
+            form(action='/' method='get')
               button.button-head
-                img.avatar(src="assets/avatar/avatar3.png", alt="wall")
+                img.avatar(src="assets/icons/wall.png", alt="wall")
           div.avatar-container-head
             form(action='/login' method='get')
               button.button-head
@@ -406,27 +392,34 @@ html(lang="en")
         //-     #heure  
         .titre-container
           p.titre Os compañeros
-        .titre-container  
-          p.titre-find 🧐 
-        form(action="/" method="post")
-          .ajoutCommentaire
-          
-            label(for="task")
-            input(type="text" id="task" name="task" required)
-            button(type="submit" class="button-submit-taches") ✅
-      //- .task
-      //-   .task-right
-      //-     .task-header
-      //-       .avatar-container
-      //-         div.avatar
-      //-           img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-      //-         p.username-commentaire Username
-      //-     .task-header
-      //-       .avatar-container
-      //-         p.username-commentaire Username   
-      //-     .task-header
-      //-       .avatar-container
-      //-         p.username-commentaire Username     
+        //- form(action="/" method="post")
+        //-   .ajoutCommentaire
+        //-     label(for="task")
+        //-     input(type="text" id="task" name="task" required)
+        //-     button(type="submit" class="button-submit-taches") +
+      .task
+        .task-right
+          .task-header
+            .avatar-container
+              div.avatar
+                img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
+              p.username-commentaire Username 
+          .task-header-infos
+              p.username-infos Username :
+              p blabla  
+          .task-header-infos
+              p.username-infos Username : 
+          .task-header-infos
+              p.username-infos Username :
+          .task-header-infos
+              p.username-infos Username :
+          .task-header-infos
+              p.username-infos Username :
+          .task-header-infos
+              p.username-infos Username :
+          .task-header-infos
+              p.username-infos Username :    
+                     
               
               
               

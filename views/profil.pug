@@ -2,26 +2,60 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    title Profil
-    link(rel="manifest" href="/manifest.json")
+    title Profil - Os compañeros
     link(href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet")
     style.
       body {
-        font-family: 'Audiowide', sans-serif; /* Police futuriste */
+        font-family: 'Audiowide', sans-serif;
         margin: 0;
         padding: 20px;
-        background-color: #121212; /* Fond sombre inspiré des années 80 */
-        color: #b3b3b3; /* Texte gris clair */
+        background-color: #121212;
+        color: #b3b3b3;
         display: flex;
         justify-content: center;
+        
         min-height: 100vh;
       }
-      .container {
+      .profile-container {
+        width: 100%;
+        max-width: 600px;
+        padding: 20px;
+        border: 2px solid #9c27b0;
+        border-radius: 10px;
+        background-color: #2a2a2a;
+      }
+      .profile-header {
         display: flex;
         flex-direction: column;
-        width: 100%;
-        max-width: 1100px;
-        gap: 20px;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 3px solid #00c7ff;
+        margin-bottom: 10px;
+      }
+      .profile-name {
+        font-size: 2rem;
+        color: #00c7ff;
+        text-align: center;
+      }
+      .profile-section {
+        margin-top: 20px;
+      }
+      .section-title {
+        font-size: 1.5rem;
+        color: #9c27b0;
+        border-bottom: 2px solid #00bcd4;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+      }
+      .section-content {
+        font-size: 1rem;
+        color: #b3b3b3;
+        line-height: 1.5;
       }
       .form-container, .tasks-container, .purchase-container {
         width: 100%;
@@ -35,178 +69,6 @@ html(lang="en")
         background-color: #2a2a2a; /* Fond encore plus sombre pour le formulaire */
         margin-bottom: 20px;
       }
-      .ajoutCommentaire {
-        display: flex;
-        justify-content: center; /* Centre horizontalement */
-        align-items: center; /* Centre verticalement */
-        width: 100%;
-        gap: 10px; /* Espacement entre l'input et le bouton */
-      }
-      .ajoutCommentaire input {
-        width: 60%; /* Champ de texte prend 60% de la largeur */
-        padding: 10px;
-        border: 2px solid #00bcd4;
-        border-radius: 5px;
-        background-color: #2a2a2a;
-        color: #b3b3b3;
-      }
-      .ajoutCommentaire button {
-        width: 10%; /* Le bouton prend 10% de la largeur */
-        background-color: #00bcd4; /* Bleu cyan lumineux */
-        color: #121212; /* Texte sombre pour contraste */
-        border-radius: 5px;
-        cursor: pointer;
-        padding: 10px;
-        font-weight: bold;
-        transition: background-color 0.3s;
-      }
-      .button-submit-taches:hover, .button-submit:hover {
-        background-color: #00796b; /* Teinte plus foncée au survol */
-        transform:scale(1.05);
-        border-radius:15px;
-      }
-      .titre-container {
-          display: flex;
-          justify-content: space-between; /* Espace égal entre les colonnes */
-          width: 100%;
-          padding: 0; /* Supprime les marges internes */
-          margin: 0; /* Supprime les marges externes */
-          gap: 0; /* Aucune espace additionnelle entre les colonnes */
-      }
-
-      .titre-container > * {
-          flex: 1; /* Chaque élément enfant prend un tiers de l'espace */
-          text-align: center; /* Centrer le contenu dans chaque colonne */
-      }
-      .titre {
-        flex: 1; /* La colonne centrale occupe l'espace disponible */
-        font-family: 'Audiowide', sans-serif;
-        font-size: 3rem;
-        color: #00c7ff; /* Bleu néon doux */
-        text-align: center; /* Centrer le titre */
-        width:60%;
-        margin-bottom:3%;
-        margin-top:0%;
-        padding-top:0px;
-        padding-bottom:0px;
-      }
-      .autres-pages {
-        font-family: 'Audiowide', sans-serif;
-        font-size: 1.5rem;
-        color: #00c7ff; /* Bleu néon doux */
-        align-self: center; /* Centrer le texte de la colonne droite */
-        width:12%;
-        text-align:center;
-        margin-top:0;
-        padding : 10px;
-        padding-left:12px;
-        padding-right:12px;
-        border:2px solid #00bcd4;
-        border-radius : 12px;
-      }
-      .avatar-container {
-        margin-bottom:3%;
-        display: flex;
-        align-items: center; /* Centre verticalement */
-        justify-content: center; /* Centre horizontalement */
-        text-align: center;
-        gap: 20px;
-      }
-
-      .avatar {
-        width: 90px; /* Ajuste la taille de l'avatar */
-        height: 90px;
-        border-radius: 50%; /* Rend l'avatar rond */
-        border: 2px solid #00c7ff; /* Bordure pour mettre en valeur l'avatar */
-        object-fit: cover; /* Ajuste l'image sans la déformer */
-      }
-      .autres-pages:hover {
-        transform:scale(1.1);
-      }
-      .task {
-        display: flex;
-        gap: 20px; /* Espacement entre les deux colonnes */
-        border: 2px solid #9c27b0; /* Bordure violette */
-        background-color: #2a2a2a; /* Fond sombre */
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-      }
-
-      .task-left {
-        display: flex;
-        width: 0%;
-        flex-direction: column; /* Aligne les éléments en colonne */
-        justify-content: space-between; /* Aligne verticalement avec un espacement */
-        word-wrap: break-word; /* Ancien nom, pour compatibilité */
-        overflow-wrap: break-word; /* Nom moderne et standard */
-        word-break: break-word; /* Comportement pour les très longs mots */
-        border: 2px solid white !important;
-        border-radius: 8px;
-        text-align:center;
-        padding:5px;
-      }
-
-      .task-right {
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-        justify-content: space-between;
-        word-wrap: break-word; /* Ancien nom, pour compatibilité */
-        overflow-wrap: break-word; /* Nom moderne et standard */
-        word-break: break-word; /* Comportement pour les très longs mots */
-      }
-
-      .task-header {
-        display: flex;
-      }
-
-      .task-header-infos {
-        display: flex;
-        line-height: 1;
-        margin:0;
-      }
-
-      .task h3 {
-        margin-top: 0;
-        color: #FFA500; /* Texte violet */
-        text-align:left;
-        padding:1%;
-        padding-left:5%;
-        padding-right:5%;
-        margin-bottom:0;
-        background-color: grey;
-        border-radius:15px;
-        border:3px solid #00c7ff;
-        letter-spacing: 2px;
-        text-shadow: 
-        -0.5px -0.5px 0 black, 
-         0.5px -0.5px 0 black, 
-        -0.5px  0.5px 0 black, 
-         0.5px  0.5px 0 black; /* Crée un contour noir */
-      }
-      .faible {
-        background-color: #4caf50; /* Vert doux */
-      }
-      .haute {
-        background-color: #d32f2f; /* Rouge foncé */
-      }
-      .moyenne {
-        background-color: #2196f3; /* Bleu moyen */
-      }
-      .priority {
-        margin-bottom: 5%;
-      }
-      .priority-qui-container {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-      }
-      .button-submit-taches {
-        width: 100%;
-        font-size:1.2rem;
-      }
-
       .avatar {
         padding-top:0%;
         width: 50px; /* Taille de l'avatar */
@@ -235,99 +97,58 @@ html(lang="en")
         height: 50px;
         border-radius: 50%;
         border: 2px solid #00c7ff; /* Bordure pour mettre en valeur */
-        object-fit: cover; /* Ajuste l'image sans la déformer */
+        object-fit: cover; /* Ajuste l'image sans la 
+        déformer */
       }
-      .dateCommentaire {
-        margin-top:0%;
-        padding-top:0%;
-        text-align: right;
-        flex: 1;  /* This will make the .dateCommentaire take up the available space */
-        font-size:0.8rem;
-      }
-
-      .button-container{
-        display:flex;
-        gap:10px;
-        justify-content:space-between;
-      }
-      .button-like {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        background-color:#00c7ff;
-        border-radius:8px;
-        margin-left:3%;
-        border : 1px solid black;
-      }
-      .button-like:hover {
-        background-color: white;
-        transform:scale(1.1);
+      .titre-container-head {
+          display: flex;
+          justify-content: space-between; /* Espace égal entre les colonnes */
+          width: 100%;
+          padding: 0; /* Supprime les marges internes */
+          margin: 0; /* Supprime les marges externes */
+          gap: 0; /* Aucune espace additionnelle entre les colonnes */
       }
 
-      .button-like img {
-        width: 25px; /* Taille de l'image du bouton Like */
-        height: 25px;
-        transform : scale(0.8);
-      }
-
-      .button-like div {
-        display: flex;
-        align-items: center;
-      }
-      .button-delete {
-        align-self: flex-end; /* Aligne le bouton à droite */
-        border: none;
-        cursor: pointer;
-        background-color:white;
-        border-radius:8px;
-        margin-left:3%;
-      }
-      .button-delete:hover {
-        background-color: black;
-        transform:scale(1.1);
-        transition: transform 0.3s, background-color 0.3s;
-      }
-
-      .button-delete img {
-        width: 25px; /* Taille de l'image du bouton Like */
-        height: 25px;
-      }
-
-      .button-delete div {
-        display: flex;
-        align-items: center;
+      .titre-container-head > * {
+          flex: 1; /* Chaque élément enfant prend un tiers de l'espace */
+          text-align: center; /* Centrer le contenu dans chaque colonne */
       }
       .button-head{
         border-radius:50%;
         background-color:#00c7ff;
       }
-      
+      .titre {
+        flex: 1; /* La colonne centrale occupe l'espace disponible */
+        font-family: 'Audiowide', sans-serif;
+        font-size: 3rem;
+        color: #00c7ff; /* Bleu néon doux */
+        text-align: center; /* Centrer le titre */
+        width:60%;
+        margin-bottom:3%;
+        margin-top:0%;
+        padding-top:0px;
+        padding-bottom:0px;
+      }
       @media (max-width: 400px) {
-        .task-left {
-          display: flex;
-          width: 50%;
-          flex-direction: column; /* Aligne les éléments en colonne */
-          justify-content: space-between; /* Aligne verticalement avec un espacement */
-          word-wrap: break-word; /* Ancien nom, pour compatibilité */
-          overflow-wrap: break-word; /* Nom moderne et standard */
-          word-break: break-word; /* Comportement pour les très longs mots */
-          border : 2px solid white !important;
-          border-radius : 8px;
+        .profile-container {
+          padding: 15px;
+          width: 90%;
         }
-
         .container {
           flex-direction: column;
         }
         .form-container, .tasks-container, .purchase-container {
           width: 100%;
+        }  
+        .profile-avatar {
+          width: 100px;
+          height: 100px;
         }
-        .button-submit-taches{
-          width: 100%;
+        .profile-name {
+          font-size: 1.5rem;
         }
-        .autres-pages {
-        padding-left:20px;
-        padding-right:20px;
-
+        .section-title {
+          font-size: 1.2rem;
         }
         .avatar-container {
         display: flex;
@@ -344,27 +165,15 @@ html(lang="en")
         gap: 10px;
         }
       }
-      .autres-pages {
-        padding-left:12px;
-        padding-right:12px;
-      }
-      .task-header-infos {
-        display: flex;
-        line-height: 1;
-        margin:0;
-      }
-      .username-infos{
-        margin : 0;
-        padding:0;
-        margin-bottom: 5%;
-      }
+      
   body
+    
     .container
       .form-container
-        .titre-container
+        .titre-container-head
           //- p.autres-pages Ami
           div.avatar-container-head
-            form(action='/login' method='get')
+            form(action='/find' method='get')
               button.button-head
                 img.avatar(src="assets/icons/icon192.png", alt="friends")
     
@@ -390,48 +199,24 @@ html(lang="en")
         //-   .date-time
         //-     //- #dateJour
         //-     #heure  
-        .titre-container
+        .titre-container-head
           p.titre Os compañeros
-        //- form(action="/" method="post")
-        //-   .ajoutCommentaire
-        //-     label(for="task")
-        //-     input(type="text" id="task" name="task" required)
-        //-     button(type="submit" class="button-submit-taches") +
-      .task
-        .task-right
-          .task-header
-            .avatar-container
-              div.avatar
-                img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-              p.username-commentaire Username 
-          .task-header-infos
-              p.username-infos Username :
-              p blabla  
-          .task-header-infos
-              p.username-infos Username : 
-          .task-header-infos
-              p.username-infos Username :
-          .task-header-infos
-              p.username-infos Username :
-          .task-header-infos
-              p.username-infos Username :
-          .task-header-infos
-              p.username-infos Username :
-          .task-header-infos
-              p.username-infos Username :    
-                     
-              
-              
-              
-  
- 
-           
-
-        //- form(action="/" method="post")
-        //-   .ajoutCommentaire
-        //-     label(for="task")
-        //-     input(type="text" id="task" name="task" required)
-        //-     button(type="submit" class="button-submit-taches") +
+        .profile-container
+          .profile-header
+            img.profile-avatar(src="/assets/avatar/avatar1.png" alt="Avatar")
+            h1.profile-name John Doe
+          .profile-section
+            h2.section-title Centres d'intérêts
+            p.section-content Lecture, cinéma, randonnée
+          .profile-section
+            h2.section-title Présentation
+            p.section-content Passionné par le développement web, j'adore explorer de nouvelles technologies et collaborer avec des personnes motivées.
+          .profile-section
+            h2.section-title Contact
+            p.section-content
+              | Email: johndoe@example.com 
+              br
+              | Téléphone: 123-456-7890
     script(src="/js/script.js")
     script.
       if ('serviceWorker' in navigator) {
@@ -442,4 +227,4 @@ html(lang="en")
             console.log('ServiceWorker registration failed: ', err);
           });
         });
-      }
+      }      
