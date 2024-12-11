@@ -73,6 +73,10 @@ html(lang="en")
       button:hover {
         background-color: #00796b;
       }
+      img{
+        border:4px solid #00c7ff;
+        border-radius:50%;
+      }
       @media (max-width: 400px) {
         .titre-container,
         .register-container {
@@ -86,7 +90,7 @@ html(lang="en")
       h1.register-title Inscription
       form(action="/register" method="post")
         .form-group
-          label(for="username") Nom d'utilisateur
+          label(for="username") Username
           input(type="text" id="username" name="username" required) 
         .form-group
           label(for="firstname") Prénom
@@ -94,43 +98,58 @@ html(lang="en")
         .form-group
           label(for="lastname") Nom
           input(type="text" id="lastname" name="lastname" required)
-        .form-group
-          label(for="genre") Genre
-          select(id="genre" name="genre" required)
-            option(value="femme") Femme
-            option(value="homme") Homme
-            option(value="non-binaire") Non-binaire
-            option(value="autre") Autre
-            option(value="prefere-pas-dire") Préfère ne pas dire
-        .form-group
-          label(for="email") Email
-          input(type="email" id="email" name="email" required)
-        .form-group
-          label(for="telephone") Téléphone
-          input(type="tel" id="telephone" name="telephone" required)   
-        .form-group
-          label(for="age") Âge
-          input(type="number" id="age" name="age" required min="0")
-        .form-group
-          label(for="presentation") Présentation
-          input(type="text" id="presentation" name="presentation" required)  
-        .form-group
-          label(for="centreInterets") Centres d'intérêts
-          input(type="text" id="centreInterets" name="centreInterets" required)     
-        .form-group
-          label(for="password") Mot de passe
-          input(type="password" id="password" name="password" required)
-        .form-group
-          label(for="confirmPassword") Confirmer le mot de passe
-          input(type="password" id="confirmPassword" name="confirmPassword" required)
-        .form-group
-          label(for="avatar") Choisir un avatar
-          select(id="avatar" name="avatar")
-            option(value="avatar1.png") Avatar 1
-            option(value="avatar2.png") Avatar 2
-            option(value="avatar3.png") Avatar 3  
+        //- .form-group
+        //-   label(for="genre") Genre
+        //-   select(id="genre" name="genre" required)
+        //-     option(value="femme") Femme
+        //-     option(value="homme") Homme
+        //-     option(value="non-binaire") Non-binaire
+        //-     option(value="autre") Autre
+        //-     option(value="prefere-pas-dire") Préfère ne pas dire
+        //- .form-group
+        //-   label(for="email") Email
+        //-   input(type="email" id="email" name="email" required)
+        //- .form-group
+        //-   label(for="telephone") Téléphone
+        //-   input(type="tel" id="telephone" name="telephone" required)   
+        //- .form-group
+        //-   label(for="age") Âge
+        //-   input(type="number" id="age" name="age" required min="0")
+        //- .form-group
+        //-   label(for="presentation") Présentation
+        //-   input(type="text" id="presentation" name="presentation" required)  
+        //- .form-group
+        //-   label(for="centreInterets") Centres d'intérêts
+        //-   input(type="text" id="centreInterets" name="centreInterets" required)     
+        //- .form-group
+        //-   label(for="password") Mot de passe
+        //-   input(type="password" id="password" name="password" required)
+        //- .form-group
+        //-   label(for="confirmPassword") Confirmer le mot de passe
+        //-   input(type="password" id="confirmPassword" 
+        //-   name="confirmPassword" required)
+        .form-group  
+          label(for="avatar" style="width:50%; display: block; text-align: center;") Choisir un avatar
+          select(id="avatar" name="avatar" style="text-align:center; width:50%; display:block; margin:5px auto;" onchange="updatePreview()")
+            option(value="assets/avatar/avatar1.png") Avatar 1
+            option(value="assets/avatar/avatar2.png") Avatar 2
+            option(value="assets/avatar/avatar3.png") Avatar 3
+            option(value="assets/avatar/avatar4.png") Avatar 4
+            option(value="assets/avatar/avatar5.png") Avatar 5
+            option(value="assets/avatar/avatar6.png") Avatar 6
+            option(value="assets/avatar/avatar7.png") Avatar 7
+            option(value="assets/avatar/avatar8.png") Avatar 8
+            option(value="assets/avatar/avatar9.png") Avatar 9
+            option(value="assets/avatar/avatar10.png") Avatar 10
+          img#preview(src="assets/avatar/avatar1.png", alt="avatar preview", style="width: 50px; height: 50px; margin-top: 10px;") 
         button(type="submit") S'inscrire
     script(src="/js/script.js")
+    script.
+      function updatePreview() {
+        const select = document.getElementById('avatar');
+        const preview = document.getElementById('preview');
+        preview.src = select.value;
+      }
     script.
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {

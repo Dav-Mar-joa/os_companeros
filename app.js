@@ -252,6 +252,7 @@ app.post('/register', async (req, res) => {
         _id: uuidv4(),
         userName: req.body.username,
         firstname: req.body.firstname,
+        avatar:req.body.avatar
         // lastname: req.body.lastname,
         // genre: req.body.genre,
         // email: req.body.email,
