@@ -252,7 +252,7 @@ app.post('/register', async (req, res) => {
         _id: uuidv4(),
         userName: req.body.username,
         firstname: req.body.firstname,
-        avatar:req.body.avatar
+        avatar:req.body.avatar,
         // lastname: req.body.lastname,
         // genre: req.body.genre,
         // email: req.body.email,
@@ -260,19 +260,29 @@ app.post('/register', async (req, res) => {
         // age: req.body.age,
         // presentation: req.body.presentation,
         // centreInterets: req.body.centreInterets,
-        // password: req.body.password,
-        // confirmPassword: req.body.confirmPassword
+        password: req.body.password,
+        confirmPassword: req.body.confirmPassword
     };
     console.log("user 2: ",user)
 
-    try {
+    if(user.password===user.confirmPassword){
+     try {
         const collection = db.collection('Users'); // Utiliser la collection "users"
+        // const usersEmail = await collection.findOne({ EMAIL: joueur });
         await collection.insertOne(user);
         res.redirect('/'); // Redirection avec un paramètre de succès pour les courses
     } catch (err) {
         console.error('Erreur lors de l\'ajout du compte :', err);
         res.status(500).send('Erreur lors de l\'ajout du compte');
+    }   
     }
+    else{
+        
+        res.render('register',{
+            message:"Passwords do not match !"
+        })
+      
+    }  
 });
 app.get('/password-email', async (req, res) => {
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès

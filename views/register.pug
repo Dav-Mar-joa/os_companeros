@@ -121,15 +121,17 @@ html(lang="en")
         //- .form-group
         //-   label(for="centreInterets") Centres d'intérêts
         //-   input(type="text" id="centreInterets" name="centreInterets" required)     
-        //- .form-group
-        //-   label(for="password") Mot de passe
-        //-   input(type="password" id="password" name="password" required)
-        //- .form-group
-        //-   label(for="confirmPassword") Confirmer le mot de passe
-        //-   input(type="password" id="confirmPassword" 
-        //-   name="confirmPassword" required)
+        .form-group
+          label(for="password") Mot de passe
+          input(type="password" id="password" name="password" required)
+        .form-group
+          label(for="confirmPassword") Confirmer le mot de passe
+          input(type="password" id="confirmPassword" 
+          name="confirmPassword" required)
+          if message
+           p#message(style="color: red") #{message}
         .form-group  
-          label(for="avatar" style="width:50%; display: block; text-align: center;") Choisir un avatar
+          label(for="avatar" style="width:50%; display: block; text-align: center;") Avatar
           select(id="avatar" name="avatar" style="text-align:center; width:50%; display:block; margin:5px auto;" onchange="updatePreview()")
             option(value="assets/avatar/avatar1.png") Avatar 1
             option(value="assets/avatar/avatar2.png") Avatar 2
