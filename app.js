@@ -101,15 +101,15 @@ app.get('/', async (req, res) => {
         const tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1);
 
-        console.log('Today:', today);
-        console.log('Tomorrow:', tomorrow);
+        // console.log('Today:', today);
+        // console.log('Tomorrow:', tomorrow);
 
         const collection = db.collection(process.env.MONGODB_COLLECTION);
         const collectionCourses = db.collection('Courses');
         const tasks = await collection.find({}).sort({ date: -1 }).toArray();
         const courses = await collectionCourses.find({}).toArray();
         tasks.forEach(task => {
-          console.log('Original Date:', task.date.toString().slice(0, 10));
+        //   console.log('Original Date:', task.date.toString().slice(0, 10));
           
         });
 
@@ -255,7 +255,7 @@ app.post('/register', async (req, res) => {
         avatar:req.body.avatar,
         // lastname: req.body.lastname,
         // genre: req.body.genre,
-        // email: req.body.email,
+        email: req.body.email,
         // telephone: req.body.telephone,
         // age: req.body.age,
         // presentation: req.body.presentation,
@@ -263,26 +263,34 @@ app.post('/register', async (req, res) => {
         password: req.body.password,
         confirmPassword: req.body.confirmPassword
     };
-    console.log("user 2: ",user)
+    console.log("New user : ",user)
 
-    if(user.password===user.confirmPassword){
-     try {
-        const collection = db.collection('Users'); // Utiliser la collection "users"
-        // const usersEmail = await collection.findOne({ EMAIL: joueur });
-        await collection.insertOne(user);
-        res.redirect('/'); // Redirection avec un paramètre de succès pour les courses
-    } catch (err) {
-        console.error('Erreur lors de l\'ajout du compte :', err);
-        res.status(500).send('Erreur lors de l\'ajout du compte');
-    }   
-    }
-    else{
-        
-        res.render('register',{
-            message:"Passwords do not match !"
-        })
-      
-    }  
+    const collection = db.collection('Users'); // Utiliser la collection "users"
+    const userEmail = await collection.findOne({ email: user.email });
+    console.log("userEmail : ",userEmail)
+        if(!userEmail){
+            console.log("email different !")
+            if(user.password===user.confirmPassword){
+                    try {
+                        await collection.insertOne(user);
+                        res.redirect('/'); // Redirection avec un paramètre de succès pour les courses
+                    } catch (err) {
+                        console.error('Erreur lors de l\'ajout du compte :', err);
+                        res.status(500).send('Erreur lors de l\'ajout du compte');
+                    }   
+            }
+            else{
+                res.render('register',{
+                    messagePsw:"Passwords do not match !"
+                })
+            }
+        }
+        else{
+            res.render('register',{
+                messageEmail:"Email déja utilisé !"
+            })
+        }
+              
 });
 app.get('/password-email', async (req, res) => {
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès

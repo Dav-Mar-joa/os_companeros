@@ -11,13 +11,13 @@ function affichageHeure(){
     let numberDay = date.getDate()
     let month = date.getMonth()
 
-    console.log("date "+date)
-    console.log("heure "+hour)
-    console.log("min "+min)
-    console.log("sec "+sec)
-    console.log("day "+jours[day])
-    console.log("month "+month)
-    console.log("number Day "+numberDay)
+    // console.log("date "+date)
+    // console.log("heure "+hour)
+    // console.log("min "+min)
+    // console.log("sec "+sec)
+    // console.log("day "+jours[day])
+    // console.log("month "+month)
+    // console.log("number Day "+numberDay)
 
 
     hour = hour < 10 ? '0' + hour : hour;
@@ -27,7 +27,7 @@ function affichageHeure(){
     const clock = hour + ":" +min + ":" + sec
     const dateDay = jours[day] + " "+ numberDay + " " + mois[month]
 
-    console.log("clock"+ clock)
+    // console.log("clock"+ clock)
     const heure = document.getElementById("heure")
     heure.innerText = clock
 

@@ -106,9 +106,11 @@ html(lang="en")
         //-     option(value="non-binaire") Non-binaire
         //-     option(value="autre") Autre
         //-     option(value="prefere-pas-dire") Préfère ne pas dire
-        //- .form-group
-        //-   label(for="email") Email
-        //-   input(type="email" id="email" name="email" required)
+        .form-group
+          label(for="email") Email
+          input(type="email" id="email" name="email" required)
+          if messageEmail
+           p#message(style="color: red") #{messageEmail}
         //- .form-group
         //-   label(for="telephone") Téléphone
         //-   input(type="tel" id="telephone" name="telephone" required)   
@@ -128,8 +130,8 @@ html(lang="en")
           label(for="confirmPassword") Confirmer le mot de passe
           input(type="password" id="confirmPassword" 
           name="confirmPassword" required)
-          if message
-           p#message(style="color: red") #{message}
+          if messagePsw
+           p#message(style="color: red") #{messagePsw}
         .form-group  
           label(for="avatar" style="width:50%; display: block; text-align: center;") Avatar
           select(id="avatar" name="avatar" style="text-align:center; width:50%; display:block; margin:5px auto;" onchange="updatePreview()")
