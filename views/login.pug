@@ -53,8 +53,8 @@ html(lang="en")
       .login-new-user {
         font-size: 2rem;
         text-align: center;
-        margin-top:0px;
-        margin-bottom:20px;
+        margin-top:5px;
+        margin-bottom:0px;
         color: #00c7ff;
       }
       .form-group {
@@ -162,15 +162,14 @@ html(lang="en")
             if message
               p#message(style="color: red") #{message}
           .form-boutton  
-            button(type="submit") Se connecter
-  
-        form(action="/password-email" method="get")
-          .forgot-password-container
-              button(type="submit" class="forgot-password") Forgot password  
+            button(type="submit") Se connecter  
         form(action="/register" method="get")
           .form-group
             h1.login-new-user New user
-            button(type="submit" class="button-new-user") Create new accompte   
+            button(type="submit" class="button-new-user") Create new accompte  
+        form(action="/password-email" method="get")
+          .forgot-password-container
+              button(type="submit" class="forgot-password") Forgot password      
     script(src="/js/script.js")
     script.
       if ('serviceWorker' in navigator) {

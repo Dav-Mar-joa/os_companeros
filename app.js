@@ -162,7 +162,7 @@ app.post('/login', async (req, res) => {
     // const successCourse = req.query.successCourse === 'true';
      const user={
         username:req.body.username,
-        passwword:req.body.password
+        password:req.body.password
      }
 
     try {
@@ -175,7 +175,7 @@ app.post('/login', async (req, res) => {
         // console.log(userLogged.password)
         // // console.log("UserLogged",userLogged)
         // console.log("----------------------")
-        if(userLogged.userName===user.username &&userLogged.password===user.passwword ){
+        if(userLogged && userLogged.password===user.password ){
             res.redirect('/') 
         }
 

@@ -379,19 +379,23 @@ html(lang="en")
           //- p.autres-pages Ami
           div.avatar-container-head
             form(action='/' method='get')
+              p Wall
               button.button-head
-                img.avatar(src="assets/icons/wall.png", alt="friends")
+                img.avatar(src="assets/icons/wall.png", alt="wall")
     
           div.avatar-container-head
             form(action='/profil' method='get')
+              p Profil
               button.button-head
-                img.avatar(src="assets/avatar/avatar3.png", alt="wall")
+                img.avatar(src="assets/avatar/avatar3.png", alt="profil avatar")
           div.avatar-container-head
             form(action='/login' method='get')
+              p Chat
               button.button-head
                 img.avatar(src="assets/icons/message.png", alt="messages")
           div.avatar-container-head
             form(action='/login' method='get')
+              p Logout
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )      
           //- .avatar-container
@@ -414,6 +418,7 @@ html(lang="en")
             label(for="task")
             input(type="text" id="task" name="task" required)
             button(type="submit" class="button-submit-taches") ✅
+            
       //- .task
       //-   .task-right
       //-     .task-header
