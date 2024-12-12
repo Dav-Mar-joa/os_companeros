@@ -156,6 +156,50 @@ app.get('/login', async (req, res) => {
     //     res.status(500).send('Erreur lors de la récupération des tâches');
     // }
 });
+
+app.post('/login', async (req, res) => {
+    // const success = req.query.success === 'true'; // Vérification du paramètre de succès
+    // const successCourse = req.query.successCourse === 'true';
+     const user={
+        username:req.body.username,
+        passwword:req.body.password
+     }
+
+    try {
+
+
+        const collection = db.collection('Users');
+        const userLogged = await collection.findOne({userName:user.username})
+        // console.log("----------------------")
+        // console.log(userLogged.userName)
+        // console.log(userLogged.password)
+        // // console.log("UserLogged",userLogged)
+        // console.log("----------------------")
+        if(userLogged.userName===user.username &&userLogged.password===user.passwword ){
+            res.redirect('/') 
+        }
+
+        else{
+            res.render('login',{
+                message:"Login ou mot de pass erroné !"
+            })
+        }
+
+    //     const collectionCourses = db.collection('Courses');
+    //     const tasks = await collection.find({}).sort({ date: -1 }).toArray();
+    //     const courses = await collectionCourses.find({}).toArray();
+    //     tasks.forEach(task => {
+    //       console.log('Original Date:', task.date.toString().slice(0, 10));
+          
+    //     });
+
+        
+        ;
+     } catch (err) {
+        console.error('Erreur lors de la récupération des tâches :', err);
+        res.status(500).send('Erreur lors de la récupération des tâches');
+    }
+});
 app.get('/find', async (req, res) => {
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès
     // const successCourse = req.query.successCourse === 'true';
@@ -263,13 +307,12 @@ app.post('/register', async (req, res) => {
         password: req.body.password,
         confirmPassword: req.body.confirmPassword
     };
-    console.log("New user : ",user)
+
 
     const collection = db.collection('Users'); // Utiliser la collection "users"
     const userEmail = await collection.findOne({ email: user.email });
-    console.log("userEmail : ",userEmail)
+
         if(!userEmail){
-            console.log("email different !")
             if(user.password===user.confirmPassword){
                     try {
                         await collection.insertOne(user);

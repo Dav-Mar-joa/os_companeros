@@ -159,6 +159,8 @@ html(lang="en")
           .form-group
             label(for="password") Mot de passe
             input(type="password" id="password" name="password" )
+            if message
+              p#message(style="color: red") #{message}
           .form-boutton  
             button(type="submit") Se connecter
   
