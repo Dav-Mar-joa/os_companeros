@@ -67,10 +67,11 @@ app.post('/', async (req, res) => {
     const task = {
         id: uuidv4(),
         name: req.body.task,
-        date: new Date(), // Convertir la chaîne en un objet Date
-        // description: req.body.description,
-        // priority: req.body.priority
+        date: new Date(),
+       username: req.session.user ? req.session.user.username : "Anonyme",
+    avatar: req.session.user ? req.session.user.avatar : "/assets/avatar/default.png"
     };
+    console.log("task : ",task)
 
     try {
         const collection = db.collection(process.env.MONGODB_COLLECTION);
