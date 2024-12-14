@@ -227,7 +227,18 @@ app.get('/find', async (req, res) => {
     const user = req.session.user || "";
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès
     // const successCourse = req.query.successCourse === 'true';
-     
+     try {
+        const users = await db.collection('Users').find({}).toArray();
+        console.log("users",users)
+        res.render('find',{
+            user,
+            users
+        })
+        ;
+     } catch (error) {
+        console.error('Erreur lors de la récupération des userst :', err);
+        res.status(500).send('Erreur lors de la récupération des users');
+     }
 
     // try {
     //     const today = new Date();
@@ -247,15 +258,14 @@ app.get('/find', async (req, res) => {
           
     //     });
 
-        res.render('find',{
-            user
-        })
-        ;
+       
     // } catch (err) {
     //     console.error('Erreur lors de la récupération des tâches :', err);
     //     res.status(500).send('Erreur lors de la récupération des tâches');
     // }
 });
+
+
 app.get('/profil', async (req, res) => {
     const user = req.session.user || "";
     console.log("user dans profil ",user)
