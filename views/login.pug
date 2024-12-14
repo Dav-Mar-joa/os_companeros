@@ -163,14 +163,14 @@ html(lang="en")
             if message
               p#message(style="color: red") #{message}
           .form-boutton  
-            button(type="submit") Se connecter  
+            button(type="submit") Connexion  
         form(action="/register" method="get")
           .form-group
-            h1.login-new-user New user
-            button(type="submit" class="button-new-user") Create new accompte  
+            h1.login-new-user Nouvel utilisateur
+            button(type="submit" class="button-new-user") Création d'un nouveau compte  
         form(action="/password-email" method="get")
           .forgot-password-container
-              button(type="submit" class="forgot-password") Forgot password      
+              button(type="submit" class="forgot-password") Mot de pass oublié      
     script(src="/js/script.js")
     script.
       if ('serviceWorker' in navigator) {

@@ -11,21 +11,30 @@ const app = express();
 
 // Connexion à MongoDB
 // const connectionString = `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}`;
+
+const session = require('express-session');
+
+app.use(session({
+    secret: 'my-application-oscompaneros',  // Remplacez par une clé secrète
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }   // Utilisez 'true' en production avec HTTPS
+}));
 const connectionString = process.env.MONGODB_URI;
 const client = new MongoClient(connectionString);
 const dbName = process.env.MONGODB_DBNAME;
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-    },
-    secure: false, // Ajoute cette ligne si tu rencontres des erreurs SSL
-    tls: {
-        rejectUnauthorized: false, // Désactive le rejet des certificats auto-signés
-    },
-});
+// const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: process.env.EMAIL,
+//         pass: process.env.EMAIL_PASSWORD,
+//     },
+//     secure: false, // Ajoute cette ligne si tu rencontres des erreurs SSL
+//     tls: {
+//         rejectUnauthorized: false, // Désactive le rejet des certificats auto-signés
+//     },
+// });
 
 let db;
 
@@ -93,7 +102,10 @@ app.post('/Courses', async (req, res) => {
 app.get('/', async (req, res) => {
     const success = req.query.success === 'true'; // Vérification du paramètre de succès
     const successCourse = req.query.successCourse === 'true';
-     
+    const user = req.session.user || "";
+    console.log('req.session.user BIS /',user)
+
+
 
     try {
         const today = new Date();
@@ -119,7 +131,8 @@ app.get('/', async (req, res) => {
             tasks: tasks || [], 
             courses: courses || [],
             successCourse,
-            success 
+            success ,
+            user
         });
     } catch (err) {
         console.error('Erreur lors de la récupération des tâches :', err);
@@ -176,6 +189,16 @@ app.post('/login', async (req, res) => {
         // // console.log("UserLogged",userLogged)
         // console.log("----------------------")
         if(userLogged && userLogged.password===user.password ){
+
+            req.session.user = {
+                username: userLogged.userName,
+                firstname : userLogged.firstname,
+                lastname : userLogged.lastname,
+                email : userLogged.email,
+                avatar: userLogged.avatar // Assurez-vous que l'avatar est bien dans la base de données
+            }
+
+
             res.redirect('/') 
         }
 
@@ -201,6 +224,7 @@ app.post('/login', async (req, res) => {
     }
 });
 app.get('/find', async (req, res) => {
+    const user = req.session.user || "";
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès
     // const successCourse = req.query.successCourse === 'true';
      
@@ -223,7 +247,9 @@ app.get('/find', async (req, res) => {
           
     //     });
 
-        res.render('find')
+        res.render('find',{
+            user
+        })
         ;
     // } catch (err) {
     //     console.error('Erreur lors de la récupération des tâches :', err);
@@ -231,6 +257,8 @@ app.get('/find', async (req, res) => {
     // }
 });
 app.get('/profil', async (req, res) => {
+    const user = req.session.user || "";
+    console.log("user dans profil ",user)
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès
     // const successCourse = req.query.successCourse === 'true';
      
@@ -253,7 +281,9 @@ app.get('/profil', async (req, res) => {
           
     //     });
 
-        res.render('profil')
+        res.render('profil',{
+            user
+        })
         ;
     // } catch (err) {
     //     console.error('Erreur lors de la récupération des tâches :', err);
@@ -297,7 +327,7 @@ app.post('/register', async (req, res) => {
         userName: req.body.username,
         firstname: req.body.firstname,
         avatar:req.body.avatar,
-        // lastname: req.body.lastname,
+        lastname: req.body.lastname,
         // genre: req.body.genre,
         email: req.body.email,
         // telephone: req.body.telephone,
@@ -316,7 +346,7 @@ app.post('/register', async (req, res) => {
             if(user.password===user.confirmPassword){
                     try {
                         await collection.insertOne(user);
-                        res.redirect('/'); // Redirection avec un paramètre de succès pour les courses
+                        res.redirect('/login'); // Redirection avec un paramètre de succès pour les courses
                     } catch (err) {
                         console.error('Erreur lors de l\'ajout du compte :', err);
                         res.status(500).send('Erreur lors de l\'ajout du compte');
@@ -377,7 +407,7 @@ app.post('/password-email', (req, res) => {
   
     // Contenu de l'email
     const mailOptions = {
-      from: process.env.EMAIL,
+      from: "alt.fi-0ox8z6xo@yopmail.com",
       to: email,
       subject: 'Password Recovery',
       text: 'This is your password recovery email.',

@@ -350,14 +350,14 @@ html(lang="en")
           //- p.autres-pages Ami
           div.avatar-container-head
             form(action='/find' method='get')
-              p Friends
+              p Amis
               button.button-head
                 img.avatar(src="assets/icons/icon192.png", alt="friends")
           div.avatar-container-head
             form(action='/profil' method='get')
-              p Profil
+              p Profile
               button.button-head
-                img.avatar(src="assets/avatar/avatar5.png", alt="avatar profil")   
+                img.avatar(src=user.avatar, alt="avatar profil")   
           div.avatar-container-head
             form(action='/login' method='get')
               p Chat 
@@ -365,7 +365,7 @@ html(lang="en")
                 img.avatar(src="assets/icons/message.png", alt="messages") 
           div.avatar-container-head
             form(action='/login' method='get')
-              p Logout
+              p Déconnexion
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )        
           //- .avatar-container
@@ -392,8 +392,9 @@ html(lang="en")
               .task-header
                 .avatar-container
                   div.avatar
-                    img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-                  p.username-commentaire Username
+                    //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
+                    img.avatar(src=user.avatar, alt="avatar profil")
+                  p.username-commentaire #{user.username}
                 p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
                 
               h3 #{task.name}  

@@ -174,13 +174,13 @@ html(lang="en")
           //- p.autres-pages Ami
           div.avatar-container-head
             form(action='/find' method='get')
-              p Friends
+              p Amis
               button.button-head
                 img.avatar(src="assets/icons/icon192.png", alt="friends")
     
           div.avatar-container-head
             form(action='/' method='get')
-              p Wall
+              p Mur
               button.button-head
                 img.avatar(src="assets/icons/wall.png", alt="wall")
           div.avatar-container-head
@@ -190,7 +190,7 @@ html(lang="en")
                 img.avatar(src="assets/icons/message.png", alt="messages")
           div.avatar-container-head
             form(action='/login' method='get')
-              p Logout
+              p Déconnexion
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )      
           //- .avatar-container
@@ -207,14 +207,14 @@ html(lang="en")
           p.titre Os compañeros
         .profile-container
           .profile-header
-            img.profile-avatar(src="/assets/avatar/avatar1.png" alt="Avatar")
-            h1.profile-name John Doe
+            img.profile-avatar(src=user.avatar alt="Avatar")
+            h1.profile-name #{user.username}
           .profile-section
             h2.section-title Informations
             p.section-content 
-              | Prenom : john 
+              | Prenom : #{user.lastname}
               br
-              | Nom : Doe  
+              | Nom : #{user.firstname}  
               br
               | Grenre : XXXX 
               br
@@ -230,7 +230,7 @@ html(lang="en")
           .profile-section
             h2.section-title Contact
             p.section-content
-              | Email: johndoe@example.com 
+              | Email: #{user.email}
               br
               | Téléphone: 123-456-7890
     script(src="/js/script.js")
