@@ -100,44 +100,47 @@ app.post('/Courses', async (req, res) => {
 
 // Route pour la page d'accueil
 app.get('/', async (req, res) => {
-    const success = req.query.success === 'true'; // Vérification du paramètre de succès
-    const successCourse = req.query.successCourse === 'true';
-    const user = req.session.user || "";
-    console.log('req.session.user BIS /',user)
+    if(req.session.user){
+const success = req.query.success === 'true'; // Vérification du paramètre de succès
+                const successCourse = req.query.successCourse === 'true';
+                const user = req.session.user || "";
+                console.log('req.session.user BIS /',user)
+                try {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(today.getDate() + 1);
 
+                    // console.log('Today:', today);
+                    // console.log('Tomorrow:', tomorrow);
 
+                    const collection = db.collection(process.env.MONGODB_COLLECTION);
+                    const collectionCourses = db.collection('Courses');
+                    const tasks = await collection.find({}).sort({ date: -1 }).toArray();
+                    const courses = await collectionCourses.find({}).toArray();
+                    tasks.forEach(task => {
+                    //   console.log('Original Date:', task.date.toString().slice(0, 10));
+                    
+                    });
 
-    try {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
-
-        // console.log('Today:', today);
-        // console.log('Tomorrow:', tomorrow);
-
-        const collection = db.collection(process.env.MONGODB_COLLECTION);
-        const collectionCourses = db.collection('Courses');
-        const tasks = await collection.find({}).sort({ date: -1 }).toArray();
-        const courses = await collectionCourses.find({}).toArray();
-        tasks.forEach(task => {
-        //   console.log('Original Date:', task.date.toString().slice(0, 10));
-          
-        });
-
-        res.render('index', { 
-            title: 'Mon site', 
-            message: 'Bienvenue sur ma montre digitale', 
-            tasks: tasks || [], 
-            courses: courses || [],
-            successCourse,
-            success ,
-            user
-        });
-    } catch (err) {
-        console.error('Erreur lors de la récupération des tâches :', err);
-        res.status(500).send('Erreur lors de la récupération des tâches');
+                    res.render('index', { 
+                        title: 'Mon site', 
+                        message: 'Bienvenue sur ma montre digitale', 
+                        tasks: tasks || [], 
+                        courses: courses || [],
+                        successCourse,
+                        success ,
+                        user
+                    });
+                } catch (err) {
+                    console.error('Erreur lors de la récupération des tâches :', err);
+                    res.status(500).send('Erreur lors de la récupération des tâches');
+                }
     }
+    else{
+        res.redirect('/login');
+    }
+                
 });
 app.get('/login', async (req, res) => {
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès
