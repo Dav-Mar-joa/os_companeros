@@ -100,7 +100,7 @@ app.post('/Courses', async (req, res) => {
 
 // Route pour la page d'accueil
 app.get('/', async (req, res) => {
-    if(req.session.user){
+    // if(req.session.user){
 const success = req.query.success === 'true'; // Vérification du paramètre de succès
                 const successCourse = req.query.successCourse === 'true';
                 const user = req.session.user || "";
@@ -136,10 +136,10 @@ const success = req.query.success === 'true'; // Vérification du paramètre de 
                     console.error('Erreur lors de la récupération des tâches :', err);
                     res.status(500).send('Erreur lors de la récupération des tâches');
                 }
-    }
-    else{
-        res.redirect('/login');
-    }
+    // }
+    // else{
+    //     res.redirect('/login');
+    // }
                 
 });
 app.get('/login', async (req, res) => {
