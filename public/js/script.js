@@ -1,3 +1,4 @@
+
 function affichageHeure(){
     let jours = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
     let mois = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
@@ -9,13 +10,13 @@ function affichageHeure(){
     let numberDay = date.getDate()
     let month = date.getMonth()
 
-    console.log("date "+date)
-    console.log("heure "+hour)
-    console.log("min "+min)
-    console.log("sec "+sec)
-    console.log("day "+jours[day])
-    console.log("month "+month)
-    console.log("number Day "+numberDay)
+    // console.log("date "+date)
+    // console.log("heure "+hour)
+    // console.log("min "+min)
+    // console.log("sec "+sec)
+    // console.log("day "+jours[day])
+    // console.log("month "+month)
+    // console.log("number Day "+numberDay)
 
 
     hour = hour < 10 ? '0' + hour : hour;
@@ -25,7 +26,7 @@ function affichageHeure(){
     const clock = hour + ":" +min + ":" + sec
     const dateDay = jours[day] + " "+ numberDay + " " + mois[month]
 
-    console.log("clock"+ clock)
+    // console.log("clock"+ clock)
     const heure = document.getElementById("heure")
     // heure.innerText = clock
 
@@ -61,3 +62,13 @@ function deleteCourse(button) {
         }
     }).catch(error => console.error('Erreur lors de la suppression de la course :', error));
 }
+
+document.getElementById("toggle-friends").onclick = function() {
+    const friendsDiv = document.querySelector(".friends-container");
+    console.log("ETAT : ",friendsDiv.style.display)
+    if (friendsDiv.style.display === "none" || friendsDiv.style.display === "") {
+        friendsDiv.style.display = "FLEX"; // Afficher
+    } else {
+        friendsDiv.style.display = "none"; // Cacher
+    }
+};

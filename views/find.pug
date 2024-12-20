@@ -389,6 +389,35 @@ html(lang="en")
         padding-left:12px;
         padding-right:12px;
       }
+      /* Style général de l'ajoutCommentaire */
+      .ajoutUsers {
+        display: flex;
+        flex-direction: column; /* Organiser l'avatar, le texte et le bouton en colonne */
+        align-items: flex-start; /* Aligner tous les éléments à gauche */
+        background-color: #f2f2f2; /* Couleur de fond douce */
+        padding: 1rem;
+        border-radius: 8px; /* Coins arrondis */
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre subtile pour créer de la profondeur */
+        transition: background-color 0.3s ease; /* Transition fluide pour un effet au survol */
+      }
+
+      .ajoutUsers:hover {
+        background-color: #e6e6e6; /* Changement de fond au survol */
+      }
+      .avatar-containerUsers {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+      .avatarUsers {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%; /* Avatar rond */
+        object-fit: cover; /* Remplissage du conteneur */
+        margin-right: 1rem; /* Espacement entre l'avatar et le texte */
+        border: 2px solid #4caf50; /* Bordure colorée pour l'avatar */
+      }
   body
     .container
       .form-container
@@ -436,6 +465,17 @@ html(lang="en")
             form(action="/addUser" method="post")
               input(type="hidden" name="userId" value=userExist._id.toString())
               button(type="submit" class="button-submit-tache") +  
+        //- each userExist in users 
+        //-   .ajoutUsers
+        //-     .avatar-containerUsers
+        //-           div.avatarUsers
+        //-             //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
+        //-             img.avatarUsers(src=userExist.avatar, alt="avatar profil")
+        //-     p #{userExist.userName}
+        //-     p (#{userExist.lastname})
+        //-     form(action="/addUser" method="post")
+        //-       input(type="hidden" name="userId" value=userExist._id.toString())
+        //-       button(type="submit" class="button-submit-tache") +
       
       //- .task
       //-   .task-right
