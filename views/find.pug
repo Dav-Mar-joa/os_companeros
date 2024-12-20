@@ -41,6 +41,7 @@ html(lang="en")
         align-items: center; /* Centre verticalement */
         width: 100%;
         gap: 10px; /* Espacement entre l'input et le bouton */
+        margin-bottom:3%;
       }
       .ajoutCommentaire input {
         width: 60%; /* Champ de texte prend 60% de la largeur */
@@ -117,7 +118,7 @@ html(lang="en")
         border-radius : 12px;
       }
       .avatar-container {
-        margin-bottom:3%;
+        margin-bottom:0%;
         display: flex;
         align-items: center; /* Centre verticalement */
         justify-content: center; /* Centre horizontalement */
@@ -312,6 +313,14 @@ html(lang="en")
       
       
       @media (max-width: 400px) {
+        .ajoutCommentaire {
+          display: flex;
+          justify-content: center; /* Centre horizontalement */
+          align-items: center; /* Centre verticalement */
+          width: 100%;
+          gap: 10px; /* Espacement entre l'input et le bouton */
+          margin-bottom:7%;
+        }
         .task-left {
           display: flex;
           width: 50%;
@@ -322,6 +331,13 @@ html(lang="en")
           word-break: break-word; /* Comportement pour les très longs mots */
           border : 2px solid white !important;
           border-radius : 8px;
+        }
+        .avatar {
+          padding-top:0%;
+          width: 50px; /* Taille de l'avatar */
+          height: 50px;
+          border-radius: 50%; /* Forme ronde */
+          background-color: #ccc; /* Couleur par défaut */
         }
 
         .container {
@@ -356,9 +372,10 @@ html(lang="en")
         .avatar-container {
         display: flex;
         align-items: center; /* Vertically centers the avatar and text */
-        margin-bottom:6%;
+        margin-bottom:0%;
         justify-content: center; /* Aligns items to the left */
         gap: 10px;
+        
         }
         .avatar-container-head {
         display: flex;
@@ -397,30 +414,28 @@ html(lang="en")
             form(action='/login' method='get')
               p Bye
               button.button-head
-                img.avatar(src="assets/icons/logout.png", alt="logout" )      
-          //- .avatar-container
-          //-   img.avatar(src="assets/icons/icon192.png", alt="avatar profil")
-          //- .avatar-container
-          //-   img.avatar(src="assets/avatar/avatar5.png", alt="avatar profil")
-          //- .avatar-container
-          //-   img.avatar(src="assets/icons/message.png", alt="avatar profil")
-        //- .formDate
-        //-   .date-time
-        //-     //- #dateJour
-        //-     #heure  
+                img.avatar(src="assets/icons/logout.png", alt="logout" )        
         .titre-container
           p.titre Os compañeros
         .titre-container  
           p.titre-find 🧐 
         form(action="/" method="post")
-          .ajoutCommentaire
+          //- .ajoutCommentaire
           
-            label(for="task")
-            input(type="text" id="task" name="task" required)
-            button(type="submit" class="button-submit-taches") ✅
-        each user in users 
+          //-   label(for="task")
+          //-   input(type="text" id="task" name="task" required)
+          //-   button(type="submit" class="button-submit-taches") ✅
+        each userExist in users 
           .ajoutCommentaire
-            p #{user.userName}
+            .avatar-container
+                  div.avatar
+                    //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
+                    img.avatar(src=userExist.avatar, alt="avatar profil")
+            p #{userExist.userName}
+            p (#{userExist.lastname})
+            form(action="/addUser" method="post")
+              input(type="hidden" name="userId" value=userExist._id.toString())
+              button(type="submit" class="button-submit-tache") +  
       
       //- .task
       //-   .task-right

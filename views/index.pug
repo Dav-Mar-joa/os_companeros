@@ -43,7 +43,7 @@ html(lang="en")
         gap: 10px; /* Espacement entre l'input et le bouton */
       }
       .ajoutCommentaire input {
-        width: 60%; /* Champ de texte prend 60% de la largeur */
+        width: 100%; /* Champ de texte prend 60% de la largeur */
         padding: 10px;
         border: 2px solid #00bcd4;
         border-radius: 5px;
@@ -59,6 +59,55 @@ html(lang="en")
         padding: 10px;
         font-weight: bold;
         transition: background-color 0.3s;
+      }
+      .ajoutReponse {
+        display: flex;
+        justify-content: space-between; /* Répartir harmonieusement les éléments */
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        padding: 5px;
+        border: 2px solid #9c27b0; /* Bordure violette */
+        border-radius: 10px;
+        background-color: #1e1e1e; /* Fond légèrement différent pour se démarquer */
+      }
+
+      .ajoutReponse input {
+        flex: 1; /* Prend tout l'espace disponible */
+        padding: 10px;
+        border: 2px solid #00bcd4; /* Contour cyan lumineux */
+        border-radius: 5px;
+        width: 100%;
+        background-color: #2a2a2a;
+        color: #b3b3b3;
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        resize: vertical;
+      }
+
+      .ajoutReponse input:focus {
+        border-color: #00e5ff; /* Couleur plus lumineuse au focus */
+        width: 100%;
+        box-shadow: 0 0 5px #00e5ff;
+      }
+
+      .ajoutReponse button {
+        flex-shrink: 0; /* Garde une taille fixe */
+        width: 15%; /* Taille ajustée pour être plus visible */
+        background-color: #9c27b0; /* Violet pour contraster */
+        color: #ffffff; /* Texte blanc pour contraste */
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: transform 0.3s, background-color 0.3s;
+      }
+
+      .ajoutReponse button:hover {
+        background-color: #7b1fa2; /* Violet plus foncé au survol */
+        transform: scale(1.1);
       }
       .button-submit-taches:hover, .button-submit:hover {
         background-color: #00796b; /* Teinte plus foncée au survol */
@@ -402,10 +451,15 @@ html(lang="en")
               .button-container
                 button(type="button" onclick="deleteTask(this)" class="button-like") 
                   div 
-                    img(src="/assets/like/like.png", alt="like")
+                   img(src="/assets/like/like.png" alt="like")
+                   P 1
                 button(type="button" onclick="deleteTask(this)" class="button-delete")
                   div 
                     img(src="/assets/delete/delete.png", alt="delete")    
+                .ajoutReponse 
+                  label(for="task-reponse")
+                    input(type="text" id="task-reponse" name="task-reponse" required)
+                  button(type="submit" class="button-submit-taches") +   
 
     script(src="/js/script.js")
     script.

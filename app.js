@@ -67,6 +67,7 @@ app.post('/', async (req, res) => {
     const task = {
         id: uuidv4(),
         name: req.body.task,
+
         date: new Date(),
        username: req.session.user ? req.session.user.username : "Anonyme",
     avatar: req.session.user ? req.session.user.avatar : "/assets/avatar/default.png"
@@ -105,7 +106,7 @@ app.get('/', async (req, res) => {
 const success = req.query.success === 'true'; // Vérification du paramètre de succès
                 const successCourse = req.query.successCourse === 'true';
                 const user = req.session.user || "";
-                console.log('req.session.user BIS /',user)
+                // console.log('req.session.user BIS /',user)
                 try {
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
@@ -195,14 +196,13 @@ app.post('/login', async (req, res) => {
         if(userLogged && userLogged.password===user.password ){
 
             req.session.user = {
+                 _id: userLogged._id,
                 username: userLogged.userName,
                 firstname : userLogged.firstname,
                 lastname : userLogged.lastname,
                 email : userLogged.email,
                 avatar: userLogged.avatar // Assurez-vous que l'avatar est bien dans la base de données
-            }
-
-
+            }  
             res.redirect('/') 
         }
 
@@ -229,11 +229,32 @@ app.post('/login', async (req, res) => {
 });
 app.get('/find', async (req, res) => {
     const user = req.session.user || "";
+
+    const userId = req.session.user._id || "";
+    // console.log("dans find userID",user)
+
+    const usersLoggedFriends = await db.collection('Users').find({_id:{$eq:userId}}).toArray();
+    console.log("aaaaaaaaaaaaaaaaa",usersLoggedFriends[0].friends)
+
+    if (!usersLoggedFriends[0].friends) {
+        // Si la propriété 'friends' n'existe pas, on l'initialise avec un tableau vide
+        usersLoggedFriends[0].friends = [];
+    }
+
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès
     // const successCourse = req.query.successCourse === 'true';
      try {
-        const users = await db.collection('Users').find({}).toArray();
-        console.log("users",users)
+        const users = await db.collection('Users')
+    .find({ 
+        _id: { 
+            $ne: userId,
+            $nin:usersLoggedFriends[0].friends
+        }
+    })
+    .sort({userName:1})
+    .toArray();
+        // console.log("users",users)
+        // console.log("users",users)
         res.render('find',{
             user,
             users
@@ -268,11 +289,97 @@ app.get('/find', async (req, res) => {
     //     res.status(500).send('Erreur lors de la récupération des tâches');
     // }
 });
+app.post('/addUser', async (req, res) => {
+    try {
+        const { userId } = req.body; // ID de l'utilisateur à ajouter
+        const currentUser = req.session.user;
+        console.log("user ID", req.session.user._id);
+
+        if (!currentUser) {
+            return res.status(401).send('Utilisateur non connecté');
+        }
+
+        if (!userId) {
+            return res.status(400).send('ID de l\'ami manquant');
+        }
+
+
+        // Vérifie si l'utilisateur à ajouter existe
+        const userToAdd = await db
+            .collection('Users')
+            .findOne({ _id: userId });
+
+        if (!userToAdd) {
+            return res.status(404).send('Utilisateur non trouvé');
+        }
+
+        // Initialisation de la liste d'amis si elle n'existe pas
+        if (!currentUser.friends) {
+            currentUser.friends = [];
+        }
+
+        // Vérifie si l'utilisateur est déjà un ami
+        if (currentUser.friends.includes(userId)) {
+            return res.status(400).send('Cet utilisateur est déjà votre ami');
+        }
+
+        // Ajoute l'utilisateur à la liste d'amis de l'utilisateur actuel
+        currentUser.friends.push(userId);
+
+        // Met à jour l'utilisateur dans la base de données
+        await db.collection('Users').updateOne(
+            { _id: currentUser._id }, // Identifie l'utilisateur actuel
+            { $set: { friends: currentUser.friends } } // Met à jour la liste des amis
+        );
+
+        await db.collection('Users').updateOne(
+            { _id: userToAdd._id }, // Identifie l'utilisateur ajouté
+            { $push: { friends: currentUser._id } } // Ajoute l'utilisateur actuel à la liste des amis de l'utilisateur ajouté
+        );
+
+        // Met à jour la session
+        req.session.user = currentUser;
+
+        console.log('Liste des amis mise à jour :', currentUser.friends);
+
+        // Redirige vers la page précédente
+        res.redirect('/find');
+    } catch (err) {
+        console.error('Erreur lors de l\'ajout de l\'utilisateur à la liste des amis :', err);
+        res.status(500).send('Erreur serveur');
+    }
+});
+
 
 
 app.get('/profil', async (req, res) => {
     const user = req.session.user || "";
-    console.log("user dans profil ",user)
+
+    const userId = req.session.user._id || "";
+    const usersLoggedFriends = await db.collection('Users')
+    .find({_id:{$eq:userId}})
+    .toArray();
+
+    let nbUsersLoggedFriends = 0
+   
+    if (usersLoggedFriends[0].friends) {
+        nbUsersLoggedFriends = usersLoggedFriends[0].friends.length 
+    }
+
+    const friendsId = usersLoggedFriends[0].friends; // Tableau des IDs des amis
+
+    console.log("friendsId : ",friendsId)
+
+    //     // Récupérer les informations des amis en une seule requête
+        const friends = await db.collection('Users')
+            .find({ _id: { $in: friendsId } })
+            // .project({ userName: 1,_id : 0}) 
+            // .sort({userName:1})
+            .toArray();
+
+        console.log("Amis trouvés :", friends);
+
+    // console.log("user dans profil ",user)
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès
     // const successCourse = req.query.successCourse === 'true';
      
@@ -296,7 +403,9 @@ app.get('/profil', async (req, res) => {
     //     });
 
         res.render('profil',{
-            user
+            user,
+            nbUsersLoggedFriends,
+            friends
         })
         ;
     // } catch (err) {
@@ -412,7 +521,7 @@ app.get('/password-email', async (req, res) => {
 
 app.post('/password-email', (req, res) => {
     const email = req.body.email;
-    console.log(email)
+    // console.log(email)
   
     // Vérifiez si un email est fourni
     if (!email) {
