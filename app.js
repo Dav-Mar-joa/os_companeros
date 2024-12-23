@@ -64,13 +64,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Route pour soumettre des tâches
 app.post('/', async (req, res) => {
+    const user = req.session.user || "";
     const task = {
         id: uuidv4(),
         name: req.body.task,
-
+        idUser:user._id,
         date: new Date(),
-       username: req.session.user ? req.session.user.username : "Anonyme",
-    avatar: req.session.user ? req.session.user.avatar : "/assets/avatar/default.png"
+        username: req.session.user ? req.session.user.username : "Anonyme",
+        avatar: req.session.user ? req.session.user.avatar : "/assets/avatar/default.png"
     };
     console.log("task : ",task)
 
@@ -84,66 +85,69 @@ app.post('/', async (req, res) => {
     }
 });
 
-app.post('/Courses', async (req, res) => {
-    const course = {
-        name: req.body.buy,
-        priority2: req.body.priority2
-    };
+// app.post('/Courses', async (req, res) => {
+//     const course = {
+//         name: req.body.buy,
+//         priority2: req.body.priority2
+//     };
 
-    try {
-        const collection = db.collection('Courses'); // Utiliser la collection "courses"
-        await collection.insertOne(course);
-        res.redirect('/?successCourse=true'); // Redirection avec un paramètre de succès pour les courses
-    } catch (err) {
-        console.error('Erreur lors de l\'ajout de la course :', err);
-        res.status(500).send('Erreur lors de l\'ajout de la course');
-    }
-});
+//     try {
+//         const collection = db.collection('Courses'); // Utiliser la collection "courses"
+//         await collection.insertOne(course);
+//         res.redirect('/?successCourse=true'); // Redirection avec un paramètre de succès pour les courses
+//     } catch (err) {
+//         console.error('Erreur lors de l\'ajout de la course :', err);
+//         res.status(500).send('Erreur lors de l\'ajout de la course');
+//     }
+// });
 
 // Route pour la page d'accueil
 app.get('/', async (req, res) => {
-    // if(req.session.user){
-const success = req.query.success === 'true'; // Vérification du paramètre de succès
-                const successCourse = req.query.successCourse === 'true';
-                const user = req.session.user || "";
-                // console.log('req.session.user BIS /',user)
-                try {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    const tomorrow = new Date(today);
-                    tomorrow.setDate(today.getDate() + 1);
+    const success = req.query.success === 'true';
+    const successCourse = req.query.successCourse === 'true';
+    const user = req.session.user || "";
 
-                    // console.log('Today:', today);
-                    // console.log('Tomorrow:', tomorrow);
+    try {
+        if (!user) {
+            return res.redirect('/login'); // Redirection si l'utilisateur n'est pas connecté
+        }
 
-                    const collection = db.collection(process.env.MONGODB_COLLECTION);
-                    const collectionCourses = db.collection('Courses');
-                    const tasks = await collection.find({}).sort({ date: -1 }).toArray();
-                    const courses = await collectionCourses.find({}).toArray();
-                    tasks.forEach(task => {
-                    //   console.log('Original Date:', task.date.toString().slice(0, 10));
-                    
-                    });
+        const collection = db.collection(process.env.MONGODB_COLLECTION);
+        const collectionUsers = db.collection('Users');
 
-                    res.render('index', { 
-                        title: 'Mon site', 
-                        message: 'Bienvenue sur ma montre digitale', 
-                        tasks: tasks || [], 
-                        courses: courses || [],
-                        successCourse,
-                        success ,
-                        user
-                    });
-                } catch (err) {
-                    console.error('Erreur lors de la récupération des tâches :', err);
-                    res.status(500).send('Erreur lors de la récupération des tâches');
-                }
-    // }
-    // else{
-    //     res.redirect('/login');
-    // }
-                
+        // Récupération de l'utilisateur connecté
+        const currentUser = await collectionUsers.findOne({ _id: user._id });
+
+        if (!currentUser) {
+            return res.status(400).send("Utilisateur introuvable !");
+        }
+
+        // Récupérer les IDs des amis
+        const friendsIds = currentUser.friends || [];
+
+        // Ajouter l'ID de l'utilisateur connecté pour inclure ses propres messages
+        friendsIds.push(currentUser._id);
+
+        // Filtrer les tâches par `idUser`
+        const tasks = await collection
+            .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
+            .sort({ date: -1 })
+            .toArray();
+
+        res.render('index', {
+            title: 'Mon site',
+            message: 'Bienvenue sur ma montre digitale',
+            tasks: tasks || [],
+            successCourse,
+            success,
+            user
+        });
+    } catch (err) {
+        console.error('Erreur lors de la récupération des tâches :', err);
+        res.status(500).send('Erreur lors de la récupération des tâches');
+    }
 });
+
 app.get('/login', async (req, res) => {
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès
     // const successCourse = req.query.successCourse === 'true';
@@ -422,7 +426,7 @@ app.get('/profil', async (req, res) => {
         nbUsersLoggedFriends = usersLoggedFriends[0].friends.length 
     }
 
-    const friendsId = usersLoggedFriends[0].friends; // Tableau des IDs des amis
+    const friendsId = usersLoggedFriends[0].friends || []; // Tableau des IDs des amis
 
     // console.log("friendsId : ",friendsId)
 
@@ -431,6 +435,7 @@ app.get('/profil', async (req, res) => {
             .find({ _id: { $in: friendsId } })
             // .project({ userName: 1,_id : 0}) 
             // .sort({userName:1})
+            .sort({userName:1})
             .toArray();
 
         // console.log("Amis trouvés :", friends);
@@ -543,6 +548,56 @@ app.post('/register', async (req, res) => {
             })
         }
               
+});
+app.get('/admin', async (req, res) => {
+    console.log('dans admin get');
+    try {
+        const collection = db.collection('Users'); // Utiliser la collection "Users"
+        const users = await collection.find().toArray();
+
+        res.render('admin', {
+            users // Passe les utilisateurs au template
+        });
+    } catch (err) {
+        console.error("Erreur lors de la récupération des utilisateurs :", err);
+        res.status(500).send("Erreur lors de la récupération des utilisateurs");
+    }
+});
+
+// app.post('/admin', async (req, res) => {
+//     console.log('dans admin post');
+//     try {
+//         // Traiter les actions du formulaire ici si nécessaire
+//         const collection = db.collection('Users');
+//         const users = await collection.find().toArray();
+
+//         res.render('admin', {
+//             users // Passe les utilisateurs au template
+//         });
+//     } catch (err) {
+//         console.error('Erreur lors de la récupération des utilisateurs:', err);
+//         res.status(500).send('Erreur lors de la récupération des utilisateurs');
+//     }
+// })
+
+app.post('/admin', async (req, res) => {
+    const { userId } = req.body;
+    console.log('del user', userId);
+    try {
+        const collection = db.collection('Users');
+        // Supprimer l'utilisateur
+        await collection.deleteOne({ _id: userId });
+
+        // Récupérer à nouveau la liste des utilisateurs après la suppression
+        const users = await collection.find().toArray();
+
+        res.render('admin', {
+            users // Passe les utilisateurs après suppression au template
+        });
+    } catch (err) {
+        console.error('Erreur lors de la suppression de l\'utilisateur :', err);
+        res.status(500).send('Erreur lors de la suppression de l\'utilisateur');
+    }
 });
 app.get('/password-email', async (req, res) => {
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès

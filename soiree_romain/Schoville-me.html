@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot Sauce Reviews</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(90deg, #ff0000, #ff6600);
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: bold;
+            border-bottom: 12px solid #ffcc00;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .sauce-card {
+            background-color: #2a2a2a;
+            border: 3px solid #ff6600;
+            border-radius: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            text-align: center;
+        }
+
+        .sauce-card img {
+            max-width: 40%;
+            height: auto;
+            border-radius: 5px;
+            border: 2px solid #ffcc00;
+            margin-bottom: 10px;
+        }
+
+        .sauce-card h3 {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #ff0000;
+        }
+
+        .vote-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .echelleSchoville{
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .echelleSchoville button {
+            background-color: #ff3300;
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: #1a1a1a;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .vote-buttons button {
+            background-color: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: #1a1a1a;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .vote-buttons button:hover {
+            background-color: #ff6600;
+            color: white;
+        }
+
+        .comments {
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .comment {
+            background-color: #333333;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            border-left: 5px solid #ff6600;
+        }
+
+        .add-comment {
+            margin-top: 15px;
+        }
+
+        .add-comment input,
+        .add-comment button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ff6600;
+            font-size: 14px;
+        }
+
+        .add-comment input {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ff6600;
+            font-size: 14px;
+        }
+
+        .add-comment button {
+            background-color: #ff6600;
+            color: white;
+            cursor: pointer;
+        }
+
+        .add-comment button:hover {
+            background-color: #ffcc00;
+            color: #1a1a1a;
+        }
+
+        .spice-level {
+            margin-top: 15px;
+        }
+
+        .spice-level label {
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .spice-level select {
+            background-color: #1a1a1a;
+            color: white;
+            border: 2px solid #ff6600;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        🔥 Schoville me ? ☠ 🔥
+    </header>
+    <div class="container">
+        <!-- Example Sauce Card -->
+        <div class="sauce-card">
+            <img src="da-bomb-ground-zero-sauce.jpg" alt="Hot Sauce">
+            <h3>La bomb</h3>
+
+            <!-- Spice Level Dropdown -->
+            <div class="spice-level">
+                <label for="spice-level">🔥 Danger Level:</label>
+                <select id="spice-level">
+                    <option value="1">1 - Mild</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5 - Spicy</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10 - Extreme</option>
+                </select>
+            </div>
+
+            <div class="echelleSchoville">
+                <button>Schoville : 200 000</button>
+            </div>
+
+            <div class="vote-buttons">
+                <button>👍 Upvote</button>
+                <button>👎 Downvote</button>
+            </div>
+
+            <div class="comments">
+                <div class="comment">"This sauce burned my soul! Absolutely loved it."</div>
+                <div class="comment">"Too spicy for me, but the flavor was amazing."</div>
+            </div>
+
+            <div class="add-comment">
+                <input type="text" placeholder="Add your review...">
+                <button>Submit</button>
+            </div>
+        </div>
+        <div class="sauce-card">
+            <img src="Murdoch's – Whisker Bomb.jpg" alt="Hot Sauce">
+            <h3>Murdoch's</h3>
+
+            <!-- Spice Level Dropdown -->
+            <div class="spice-level">
+                <label for="spice-level">🔥 Danger Level:</label>
+                <select id="spice-level">
+                    <option value="1">1 - Mild</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5 - Spicy</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10 - Extreme</option>
+                </select>
+            </div>
+
+            <div class="echelleSchoville">
+                <button>Schoville : 10 000</button>
+            </div>
+
+            <div class="vote-buttons">
+                <button>👍 Upvote</button>
+                <button>👎 Downvote</button>
+            </div>
+
+            <div class="comments">
+                <div class="comment">"This sauce burned my soul! Absolutely loved it."</div>
+                <div class="comment">"Too spicy for me, but the flavor was amazing."</div>
+            </div>
+
+            <div class="add-comment">
+                <input type="text" placeholder="Add your review...">
+                <button>Submit</button>
+            </div>
+        </div>
+        <!-- Add more sauce cards here -->
+    </div>
+</body>
+</html>

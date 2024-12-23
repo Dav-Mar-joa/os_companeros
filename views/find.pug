@@ -30,7 +30,6 @@ html(lang="en")
         border: 2px solid #9c27b0; /* Bordure violette */
         justify-content: center; /* Centre horizontalement */
         align-items: center; /* Centre verticalement */
-        padding: 15px;
         border-radius: 10px;
         background-color: #2a2a2a; /* Fond encore plus sombre pour le formulaire */
         margin-bottom: 20px;
@@ -52,7 +51,6 @@ html(lang="en")
         color: #b3b3b3;
       }
       .ajoutCommentaire button {
-        width: 10%; /* Le bouton prend 10% de la largeur */
         background-color: #00bcd4; /* Bleu cyan lumineux */
         color: #121212; /* Texte sombre pour contraste */
         border-radius: 5px;
@@ -214,6 +212,7 @@ html(lang="en")
         width: 100%;
         padding : 30px; 
         font-size:1.2rem;
+        border-radius:20px;
       }
 
       .avatar {
@@ -310,6 +309,11 @@ html(lang="en")
         border-radius:50%;
         background-color:#00c7ff;
       }
+      .button-head:hover{
+        background-color: #00796b; /* Teinte plus foncée au survol */
+        transform:scale(1.05);
+        border-radius:15px;
+      }
       
       
       @media (max-width: 400px) {
@@ -347,22 +351,19 @@ html(lang="en")
           width: 100%;
         }
         .button-submit-taches {
-          display: flex; /* Active le conteneur flex */
-          justify-content: center; /* Centre horizontalement */
-          align-items: center; /* Centre verticalement */
-          width: 100%; /* Ajuste à la largeur souhaitée */
-          height: 40px; /* Ajuste à la hauteur souhaitée */
-          padding: 0; /* Supprime les marges internes */
-          background-color: #00bcd4; /* Bleu cyan lumineux */
-          border-radius: 5px; /* Coins arrondis */
-          cursor: pointer; /* Pointeur de souris */
-          border: none; /* Supprime les bordures */
-          transition: background-color 0.3s;
+          font-size: 1.2rem;
+          padding: 15px;
+          background: linear-gradient(90deg, #00bcd4, #9c27b0);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .button-submit-taches img {
-          max-width: 50%; /* Ajuste la taille de l'image au besoin */
-          max-height: 50%; /* S'assure que l'image ne dépasse pas */
+        .button-submit-taches:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
         .autres-pages {
         padding-left:20px;

@@ -20,6 +20,7 @@ html(lang="en")
         width: 100%;
         max-width: 600px;
         padding: 20px;
+        padding-bottom:0;
         border: 2px solid #9c27b0;
         border-radius: 10px;
         background-color: #2a2a2a;
@@ -29,6 +30,8 @@ html(lang="en")
         width: 100%;
         max-width: 600px;
         padding: 20px;
+        padding-bottom:0;
+        margin-bottom:20px;
         border: 2px solid #9c27b0;
         border-radius: 10px;
         background-color: #2a2a2a;
@@ -62,7 +65,6 @@ html(lang="en")
       .section-title {
         font-size: 1.5rem;
         color: #9c27b0;
-        border-bottom: 2px solid #00bcd4;
         padding-bottom: 5px;
         margin-bottom: 10px;
       }
@@ -70,14 +72,13 @@ html(lang="en")
         font-size: 1.8rem;
         color: #00c7ff;
         text-align:center;
-        width:100%;
         margin:auto;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
       }
       .section-content {
         font-size: 1rem;
-        color: #b3b3b3;
+        color:rgb(238, 233, 233);
         line-height: 1.5;
       }
       .form-container, .tasks-container, .purchase-container {
@@ -140,6 +141,11 @@ html(lang="en")
         border-radius:50%;
         background-color:#00c7ff;
       }
+      .button-head:hover{
+        background-color: #00796b; /* Teinte plus foncée au survol */
+        transform:scale(1.05);
+        border-radius:15px;
+      }
       .titre {
         flex: 1; /* La colonne centrale occupe l'espace disponible */
         font-family: 'Audiowide', sans-serif;
@@ -158,8 +164,10 @@ html(lang="en")
         justify-content: space-between;
         border-bottom: 2px solid #00c7ff;; /* Bordure violette */
         background-color: #2a2a2a; /* Fond sombre */
-        padding: 10px;
-        margin-bottom: 15px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
         width:96%
       }
 
@@ -183,17 +191,17 @@ html(lang="en")
       .container-friends form {
         display: flex;
         align-items: center;
-        padding-top:4%;
       }
 
       .container-friends .button-submit-tache {
         background-color: #9c27b0; /* Violet pour correspondre au style global */
         width:100%;
-        font-size:1.6rem;
+        font-size:1.3rem;
         color: #fff; /* Texte blanc */
-        border: none;
+        border: 2px solid black;
         border-radius: 12px;
-        padding: 4px 17px;
+        margin-top:25px;
+        padding: 4px 20px;
         cursor: pointer;
         transition: background-color 0.3s ease;
       }
@@ -206,7 +214,7 @@ html(lang="en")
           margin-top: 0%;
           margin-bottom: 0%;
           margin-left: 80%;
-          background-color: #ffffff;
+          background-color:rgb(251, 249, 249);
           color: black;
       }
       /* Bouton */
@@ -216,7 +224,7 @@ html(lang="en")
           color: #000000;
           border: none;
           border-radius: 30%;
-          padding-top:0px;
+
           cursor: pointer;
           font-size: 2rem; /* Texte plus grand dans le bouton */
           transition: background-color 0.3s;
@@ -226,6 +234,72 @@ html(lang="en")
           background-color: #00cc99;
 
       }
+
+      .friends-container {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        background-color:rgb(129, 128, 128);
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .section-title-amis {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+        text-align:center;
+      }
+
+      .container-friends {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-width: 350px;
+        height:30px;
+        background-color: #fff;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .container-friends img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .container-friends p {
+        flex: 1;
+        font-size: 1rem;
+        color: #555;
+        margin: 0;
+      }
+
+      .container-friends form {
+        margin-left: 15px;
+      }
+
+      .button-submit-tache {
+        background-color: #ff4d4d;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .button-submit-tache:hover {
+        background-color: #e03b3b;
+      }
+
 
       @media (max-width: 400px) {
         .profile-container {
@@ -237,6 +311,7 @@ html(lang="en")
           display:none;
           width: 82%;
           margin: 10px auto;
+          
         }
         .bouton-friends{ 
           margin-left: 50%;
@@ -256,6 +331,13 @@ html(lang="en")
         }
         .section-title {
           font-size: 1.2rem;
+        }
+        .section-title-amis {
+          font-size: 1.2rem;
+          text-align:center;
+        }
+        .container-friends {
+          min-width: 180px;
         }
         .avatar-container {
           display: flex;
@@ -349,7 +431,7 @@ html(lang="en")
               | Téléphone: 123-456-7890
         br 
       .friends-container
-        h2.section-title Liste d'amis
+        h2.section-title-amis Liste d'amis
           each friend in friends 
             if(friend) 
               .container-friends
