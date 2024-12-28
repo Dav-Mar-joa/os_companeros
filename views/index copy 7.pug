@@ -595,30 +595,18 @@ html(lang="en")
                   div 
                     img(src="/assets/delete/delete.png", alt="delete")  
               .affichageCommentaire 
-                //- .ajoutReponse 
-                //-   form(action='/comment' method='POST')
-                //-     input(type='hidden' name='parentCommentId' value=task._id) 
-                //-     textarea(name='comment' placeholder='Répondre à ce commentaire...' required)  
-                //-     button(type='submit' class='button-submit-taches') +
-                  //- each response in task.responses || []
-                  //-   .response
-                  //-     .avatar-container-reponse
-                  //-       img.avatar-reponse(src=response.avatar, alt="Avatar utilisateur réponse")
-                  //-     p.username-reponse #{response.username}
-                  //-     p.commentaire-reponse #{response.commentaire}
-                  //-     p.date-reponse #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(response.date))}
-
-
-
-
-
-                //- .ajoutReponse
-                //-   .avatar-container
-                //-     img.avatar(src=task.avatar, alt="avatar profil")
-                //-     p.username-commentaire #{task.username}
+                .ajoutReponse 
+                  label(for="task-reponse")
+                    input(type="text" id="task-reponse" name="task-reponse" required)
+                  button(type="submit" class="button-submit-taches") + 
+                
+                .ajoutReponse
+                  .avatar-container
+                    img.avatar(src=task.avatar, alt="avatar profil")
+                    p.username-commentaire #{task.username}
                     
-                //-     p #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
-                //-     p bla blaeddddddddddddddddddddddddddd     
+                    p #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
+                    p bla blaeddddddddddddddddddddddddddd     
                 
               //- each response in task.responses || []
               //-   .response

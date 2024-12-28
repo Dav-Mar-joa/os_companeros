@@ -71,7 +71,8 @@ app.post('/', async (req, res) => {
         idUser:user._id,
         date: new Date(),
         username: req.session.user ? req.session.user.username : "Anonyme",
-        avatar: req.session.user ? req.session.user.avatar : "/assets/avatar/default.png"
+        avatar: req.session.user ? req.session.user.avatar : "/assets/avatar/default.png",
+        responses: []  
     };
     console.log("task : ",task)
 
@@ -84,22 +85,6 @@ app.post('/', async (req, res) => {
         res.status(500).send('Erreur lors de l\'ajout de la tâche');
     }
 });
-
-// app.post('/Courses', async (req, res) => {
-//     const course = {
-//         name: req.body.buy,
-//         priority2: req.body.priority2
-//     };
-
-//     try {
-//         const collection = db.collection('Courses'); // Utiliser la collection "courses"
-//         await collection.insertOne(course);
-//         res.redirect('/?successCourse=true'); // Redirection avec un paramètre de succès pour les courses
-//     } catch (err) {
-//         console.error('Erreur lors de l\'ajout de la course :', err);
-//         res.status(500).send('Erreur lors de l\'ajout de la course');
-//     }
-// });
 
 // Route pour la page d'accueil
 app.get('/', async (req, res) => {
@@ -134,6 +119,7 @@ app.get('/', async (req, res) => {
             .sort({ date: -1 })
             .toArray();
 
+
         res.render('index', {
             title: 'Mon site',
             message: 'Bienvenue sur ma montre digitale',
@@ -147,6 +133,45 @@ app.get('/', async (req, res) => {
         res.status(500).send('Erreur lors de la récupération des tâches');
     }
 });
+
+app.post('/comment', async (req, res) => {
+    const user = req.session.user || "";
+    const { comment, parentCommentId } = req.body; // Récupérer le commentaire et le parent ID
+    console.log("Dans /comment user : ", user);
+    console.log("Commentaire : ", comment);
+    console.log("Parent Comment ID : ", parentCommentId);
+
+    const newComment = {
+        idUser: user._id,
+        username: user.username,
+        avatar: user.avatar || "/assets/avatar/default.png",
+        commentaire: comment,
+        date: new Date(),
+        parentCommentId: parentCommentId || null,  // Si c'est une réponse, on met le parentCommentId
+    };
+
+    console.log("Message ajouté : ", newComment);
+
+    try {
+        const collection = db.collection('Wall2'); // La collection des commentaires
+        await collection.insertOne(newComment);  // Insertion du commentaire ou réponse
+
+        // if (parentCommentId) {
+        //     // Si c'est une réponse, on met à jour la tâche dans la collection de tâches
+        //     const tasksCollection = db.collection(process.env.MONGODB_COLLECTION);
+        //     await tasksCollection.updateOne(
+        //         { _id: parentCommentId }, // Trouver la tâche correspondante
+        //         { $push: { responses: newComment } } // Ajouter la réponse au tableau 'responses'
+        //     );
+        // }
+
+        res.redirect('/'); // Redirection après l'ajout
+    } catch (err) {
+        console.error('Erreur lors de l\'ajout du commentaire :', err);
+        res.status(500).send('Erreur lors de l\'ajout du commentaire');
+    }
+});
+
 
 app.get('/login', async (req, res) => {
     // const success = req.query.success === 'true'; // Vérification du paramètre de succès

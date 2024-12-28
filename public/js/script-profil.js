@@ -63,22 +63,14 @@ function deleteCourse(button) {
     }).catch(error => console.error('Erreur lors de la suppression de la course :', error));
 }
 
-// document.getElementById("toggle-friends").onclick = function() {
-//     const friendsDiv = document.querySelector(".friends-container");
-//     console.log("ETAT : ",friendsDiv.style.display)
-//     if (friendsDiv.style.display === "none" || friendsDiv.style.display === "") {
-//         friendsDiv.style.display = "FLEX"; // Afficher
-//     } else {
-//         friendsDiv.style.display = "none"; // Cacher
-//     }
-// };
-
-document.getElementById("toggle-commentaires").onclick = function() {
-    const friendsDiv = document.querySelector(".affichageCommentaire");
+document.getElementById("toggle-friends").onclick = function() {
+    const friendsDiv = document.querySelector(".friends-container");
     console.log("ETAT : ",friendsDiv.style.display)
     if (friendsDiv.style.display === "none" || friendsDiv.style.display === "") {
-        friendsDiv.style.display = "block"; // Afficher
+        friendsDiv.style.display = "FLEX"; // Afficher
     } else {
         friendsDiv.style.display = "none"; // Cacher
     }
 };
+
+

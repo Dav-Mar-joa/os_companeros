@@ -53,6 +53,11 @@ html(lang="en")
         font-size: 2rem;
         color: #00c7ff;
         text-align: center;
+        word-wrap: break-word; /* Permet de couper le texte à l'intérieur du conteneur */
+        overflow-wrap: break-word; /* Compatible avec davantage de navigateurs modernes */
+        white-space: normal;
+        max-width: 80%; /* Ou une valeur spécifique comme 300px */
+        margin: 0 auto;
       }
       .profile-list-amis {
         font-size: 2rem;
@@ -80,6 +85,11 @@ html(lang="en")
         font-size: 1rem;
         color:rgb(238, 233, 233);
         line-height: 1.5;
+        word-wrap: break-word; /* Permet de couper le texte à l'intérieur du conteneur */
+        overflow-wrap: break-word; /* Compatible avec davantage de navigateurs modernes */
+        white-space: normal;
+        max-width: 80%; /* Ou une valeur spécifique comme 300px */
+        margin: 0 auto;
       }
       .form-container, .tasks-container, .purchase-container {
         width: 100%;
@@ -303,14 +313,17 @@ html(lang="en")
 
       @media (max-width: 400px) {
         .profile-container {
-          width: 82%;
+          width: 80%;
           margin: 10px auto;
+          max-width: 350px;
+
 
         }
         .friends-container {
           display:none;
           width: 82%;
           margin: 10px auto;
+          margin-bottom:20px;
           
         }
         .bouton-friends{ 
@@ -355,7 +368,16 @@ html(lang="en")
         }
         .container-friends p {
           font-size: 1rem;
-          //- display:flex
+          max-width:70%;
+           height:auto;
+        }
+        .friends.username{
+          max-width:150px;
+          word-wrap: break-word; /* Permet de couper le texte à l'intérieur du conteneur */
+          overflow-wrap: break-word; /* Compatible avec davantage de navigateurs modernes */
+          white-space: normal;
+         
+
         }
       }
       
@@ -436,7 +458,7 @@ html(lang="en")
             if(friend) 
               .container-friends
                 img(src=friend.avatar , alt="") 
-                p #{friend.userName}
+                p.friends.username #{friend.userName}
                 form(action="/delUser" method="post")
                   input(type="hidden" name="userId" value=friend._id.toString())
                   button(type="submit" class="button-submit-tache") x
@@ -452,7 +474,7 @@ html(lang="en")
         //-           button(type="submit" class="button-submit-tache") x
 
             
-    script(src="/js/script.js")
+    script(src="/js/script-profil.js")
     script.
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
