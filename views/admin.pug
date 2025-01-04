@@ -434,6 +434,10 @@ html(lang="en")
               button.button-head
                 img.avatar(src="assets/icons/wall.png", alt="wall")
           div.avatar-container-head
+            p Communauté : #{nbUsers}    
+            button.button-head
+              img.avatar(src="assets/icons/icon512.png", alt="wall") 
+          div.avatar-container-head
             form(action='/login' method='get')
               p Bye
               button.button-head
@@ -461,7 +465,7 @@ html(lang="en")
                     td.hidden-md #{user.firstname}
                     td.hidden-md #{user.lastname}
                     //- td.hidden-md #{user.lastname}
-                    td.hidden-md Date
+                    td.hidden-md #{user.date}
                     td
                       form(action="/adminDelUser" method="post")
                         input(type="hidden" name="userId" value=user._id.toString())

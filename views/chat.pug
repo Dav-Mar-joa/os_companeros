@@ -36,6 +36,7 @@ html(lang="en")
         margin-bottom: 20px;
       }
       .ajoutCommentaire {
+        text-align:center;
         display: flex;
         justify-content: center; /* Centre horizontalement */
         align-items: center; /* Centre verticalement */
@@ -51,15 +52,20 @@ html(lang="en")
         color: #b3b3b3;
       }
       .ajoutCommentaire button {
-        width: 10%; /* Le bouton prend 10% de la largeur */
-        background-color: #00bcd4; /* Bleu cyan lumineux */
-        color: #121212; /* Texte sombre pour contraste */
-        border-radius: 5px;
+        display: flex; /* Permet un alignement plus précis */
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        width: 100px;
+        background-color: #00bcd4;
+        color: #121212;
+        border-radius: 10px;
         cursor: pointer;
         padding: 10px;
         font-weight: bold;
         transition: background-color 0.3s;
-      }
+        font-size: 17px;
+        
+        }
       .ajoutReponse {
         display: flex;
         justify-content: center; /* Répartir harmonieusement les éléments */
@@ -482,8 +488,58 @@ html(lang="en")
         color: #666;
       }
 
+      .profile-container-public {
+        width: 100%;
+        max-width: 450px;
+        padding: 20px;
+        display: flex;
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        margin: 0 auto; /* Centre dans l'espace disponible */
+        text-align: center; /* Centre le texte */
+        border: 2px solid #9c27b0;
+        border-radius: 10px;
+        background-color: #2a2a2a;
+        margin-top:10%;
+        margin-bottom:5%;
+        transition: transform 0.3s, background-color 0.3s;
+      }
+
+      .profile-container-public:hover , .profile-container-prive:hover {
+        border: 2px solid rgb(225, 183, 232);
+        border-radius:15px;
+        background-color:rgb(75, 72, 72);
+      }
+      .profile-container-prive {
+        width: 100%;
+        max-width: 450px;
+        padding: 20px;
+        display: flex;
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        margin: 0 auto; /* Centre dans l'espace disponible */
+        text-align: center; /* Centre le texte */
+        border: 2px solid #9c27b0;
+        border-radius: 10px;
+        background-color: #2a2a2a;
+        margin-bottom:5%;
+        transition: transform 0.3s, background-color 0.3s;
+      }
+
       
       @media (max-width: 400px) {
+        .profile-container-prive , .profile-container-public   {
+          width: 80%;
+          margin-top:20%;
+          margin: 10px auto;
+          max-width: 300px;
+          margin-bottom:8%;
+        }
+        .profile-container-public:hover , .profile-container-prive:hover {
+        border: 2px solid rgb(225, 183, 232);
+        border-radius:25px;
+        background-color:rgb(75, 72, 72);
+      }
         .task-left {
           display: flex;
           width: 50%;
@@ -529,7 +585,61 @@ html(lang="en")
         padding-left:12px;
         padding-right:12px;
       }
-  body
+
+      .chat-public-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centre horizontalement tous les éléments enfants */
+        justify-content: center;
+        gap: 10px;
+        }
+
+        .chat-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #00bcd4; /* Vous pouvez personnaliser la couleur */
+        text-align: center;
+        margin-bottom: 10px;
+        }
+
+        .avatars-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-bottom:5%;
+        }
+
+        .go-button {
+       
+        padding: 10px 20px;
+        background-color: #00bcd4;
+        color: #121212;
+        border-radius: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        }
+
+        .go-button:hover {
+        background-color:rgb(36, 210, 54);
+        border-radius:15px;
+        transform: scale(1.1);
+        }
+        .titre-find {
+        flex: 1; /* La colonne centrale occupe l'espace disponible */
+        font-family: 'Audiowide', sans-serif;
+        font-size: 2rem;
+        color: #00c7ff; /* Bleu néon doux */
+        text-align: center; /* Centrer le titre */
+        width:60%;
+        margin-bottom:3%;
+        margin-top:0%;
+        padding-top:0px;
+        padding-bottom:0px;
+      }
+
+body
     .container
       .form-container
         .titre-container
@@ -545,10 +655,10 @@ html(lang="en")
               button.button-head
                 img.avatar(src=user.avatar, alt="avatar profil")   
           div.avatar-container-head
-            form(action='/chat' method='get')
-              p Chat 
+            form(action='/' method='get')
+              p Mur 
               button.button-head
-                img.avatar(src="assets/icons/message.png", alt="messages") 
+                img.avatar(src="assets/icons/wall.png", alt="messages") 
           div.avatar-container-head
             form(action='/login' method='get')
               p Bye
@@ -566,93 +676,54 @@ html(lang="en")
         //-     #heure  
         .titre-container
           p.titre Os compañeros
-        form(action="/" method="post")
-          .ajoutCommentaire
-            label(for="task")
-            input(type="text" id="task" name="task" required)
-            button(type="submit" class="button-submit-taches") +
-      .tasks-container
-        each task in tasks
-          if task
-            .task(data-task-id=task._id class=task.priority)
-              .task-right
-                .task-header
-                  .avatar-container
-                    div.avatar
-                      //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-                      img.avatar(src=task.avatar, alt="avatar profil")
-                    p.username-commentaire #{task.username}
-                  p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
+        .profile-container-public  
+            form(action="/" method="post")
+            .ajoutCommentaire
+                .chat-public-container
+                    .chat-title Chat public
+                    .avatars-container
+                        img.avatar(src="assets/avatar/avatar9.png", alt="Avatar 1")
+                        img.avatar(src="assets/avatar/avatar14.png", alt="Avatar 2")
+                        img.avatar(src="assets/avatar/avatar3.png", alt="Avatar 3")
+                        img.avatar(src="assets/avatar/avatar7.png", alt="Avatar 3")
+                    form(action='/chatPublic' method='get')    
+                        button.go-button Go
+        .profile-container-prive 
+            form(action="/" method="post")
+            .ajoutCommentaire
+                .chat-public-container
+                    .chat-title Chat privé
+                    .avatars-container
+                        form(action='/login' method='get') 
+                            p.titre-find 🤫
+                            button.go-button Go     
+
+//- vb              
+    //-   .tasks-container
+    //-     each task in tasks
+    //-       if task
+    //-         .task(data-task-id=task._id class=task.priority)
+    //-           .task-right
+    //-             .task-header
+    //-               .avatar-container
+    //-                 div.avatar
+    //-                   //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
+    //-                   img.avatar(src=task.avatar, alt="avatar profil")
+    //-                 p.username-commentaire #{task.username}
+    //-               p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
                   
-                h3 #{task.name}  
-                p #{task.description}
-                .button-container
-                  button(type="button" onclick="deleteTask(this)" class="button-like") 
-                    div 
-                    img(src="/assets/like/like.png" alt="like")
-                    P 1
-                  button#toggle-commentaires(type="button" class="button-ajoutReponse") Commentaires
-                  button(type="button" onclick="deleteTask(this)" class="button-like")
-                    div 
-                      img(src="/assets/delete/delete.png", alt="delete")  
-              //- .affichageCommentaire 
-                //- .ajoutReponse 
-                //-   form(action='/comment' method='POST')
-                //-     input(type='hidden' name='parentCommentId' value=task._id) 
-                //-     textarea(name='comment' placeholder='Répondre à ce commentaire...' required)  
-                //-     button(type='submit' class='button-submit-taches') +
-                  //- each response in task.responses || []
-                  //-   .response
-                  //-     .avatar-container-reponse
-                  //-       img.avatar-reponse(src=response.avatar, alt="Avatar utilisateur réponse")
-                  //-     p.username-reponse #{response.username}
-                  //-     p.commentaire-reponse #{response.commentaire}
-                  //-     p.date-reponse #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(response.date))}
-
-
-
-
-
-                //- .ajoutReponse
-                //-   .avatar-container
-                //-     img.avatar(src=task.avatar, alt="avatar profil")
-                //-     p.username-commentaire #{task.username}
-                    
-                //-     p #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
-                //-     p bla blaeddddddddddddddddddddddddddd     
-                
-              //- each response in task.responses || []
-              //-   .response
-              //-     .avatar-container-reponse
-              //-       img.avatar-reponse(src=response.avatar, alt="avatar profil")
-              //-     p.username-commentaire-reponse #{response.username}
-              //-     p.commentaire-reponse #{response.commentaire}
-              //-     p.dateCommentaireReponse #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(response.date))}
-
-              //-     // Formulaire pour ajouter un sous-commentaire
-              //-     .ajoutReponse
-              //-       form(action='/comment' method='POST')
-              //-         input(type='hidden' name='parentCommentId' value=task._id)  
-              //-         textarea(name='comment' placeholder='Répondre à ce commentaire...') 
-              //-         button(type='submit') Répondre
-
-                //- .ajoutReponse
-                //-   .avatar-container-reponse
-                //-     img.avatar-reponse(src=task.avatar, alt="avatar profil")
-                //-     p.username-commentaire-reponse #{task.username}
-                //-   p.commentaire-reponse bla blaeddddddddddddddddddddddddddd33333333333333333333333333333333333333333333333333333333333333333333333333333333333
-                //- p #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
-                    
-              //- .task-header
-              //-   .avatar-container
-              //-     div.avatar
-              //-       //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-              //-       img.avatar(src=task.avatar, alt="avatar profil")
-              //-     p.username-commentaire #{task.username}
-              //-   p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
-                
-              //- h3 #{task.name}  
-              //- p #{task.description}
+    //-             h3 #{task.name}  
+    //-             p #{task.description}
+    //-             .button-container
+    //-               button(type="button" onclick="deleteTask(this)" class="button-like") 
+    //-                 div 
+    //-                 img(src="/assets/like/like.png" alt="like")
+    //-                 P 1
+    //-               button#toggle-commentaires(type="button" class="button-ajoutReponse") Commentaires
+    //-               button(type="button" onclick="deleteTask(this)" class="button-like")
+    //-                 div 
+    //-                   img(src="/assets/delete/delete.png", alt="delete")  
+              
     script(src="/js/script.js")
     script.
       if ('serviceWorker' in navigator) {

@@ -328,11 +328,11 @@ app.get('/find', async (req, res) => {
 });
 app.post('/addUser', async (req, res) => {
     try {
+        const { userId } = req.body; // ID de l'utilisateur à ajouter
+        const currentUser = req.session.user;
+        // console.log("user ID", req.session.user._id);
 
-        const { userId } = req.body; 
-        const currentUserId = req.session.user._id;
-
-        if (!req.session.user) {
+        if (!currentUser) {
             return res.status(401).send('Utilisateur non connecté');
         }
 
@@ -340,132 +340,52 @@ app.post('/addUser', async (req, res) => {
             return res.status(400).send('ID de l\'ami manquant');
         }
 
-        const userToAdd = await db.collection('Users').findOne({ _id: userId });
+
+        // Vérifie si l'utilisateur à ajouter existe
+        const userToAdd = await db
+            .collection('Users')
+            .findOne({ _id: userId });
+
         if (!userToAdd) {
             return res.status(404).send('Utilisateur non trouvé');
         }
 
-        // Vérifiez si l'utilisateur est déjà un ami
-        const currentUser = await db.collection('Users').findOne({ _id: currentUserId });
-        if (currentUser.friends && currentUser.friends.includes(userId)) {
+        // Initialisation de la liste d'amis si elle n'existe pas
+        if (!currentUser.friends) {
+            currentUser.friends = [];
+        }
+
+        // Vérifie si l'utilisateur est déjà un ami
+        if (currentUser.friends.includes(userId)) {
             return res.status(400).send('Cet utilisateur est déjà votre ami');
         }
 
-        // Transactions pour ajouter les deux utilisateurs dans leurs listes d'amis
+        // Ajoute l'utilisateur à la liste d'amis de l'utilisateur actuel
+        currentUser.friends.push(userId);
+
+        // Met à jour l'utilisateur dans la base de données
         await db.collection('Users').updateOne(
-            { _id: currentUserId },
-            { $push: { friends: userId } }
-        );
-        await db.collection('Users').updateOne(
-            { _id: userId },
-            { $push: { friends: currentUserId } }
+            { _id: currentUser._id }, // Identifie l'utilisateur actuel
+            { $set: { friends: currentUser.friends } } // Met à jour la liste des amis
         );
 
-        // Synchronisez les données avec la session
-        const updatedUser = await db.collection('Users').findOne({ _id: currentUserId });
-        req.session.user = updatedUser;
+        await db.collection('Users').updateOne(
+            { _id: userToAdd._id }, // Identifie l'utilisateur ajouté
+            { $push: { friends: currentUser._id } } // Ajoute l'utilisateur actuel à la liste des amis de l'utilisateur ajouté
+        );
 
+        // Met à jour la session
+        req.session.user = currentUser;
+
+        // console.log('Liste des amis mise à jour :', currentUser.friends);
+
+        // Redirige vers la page précédente
         res.redirect('/find');
     } catch (err) {
         console.error('Erreur lors de l\'ajout de l\'utilisateur à la liste des amis :', err);
         res.status(500).send('Erreur serveur');
     }
 });
-
-app.get('/chat',async (req,res)=>{
-    const success = req.query.success === 'true';
-    const successCourse = req.query.successCourse === 'true';
-    const user = req.session.user || "";
-
-    try {
-        if (!user) {
-            return res.redirect('/login'); // Redirection si l'utilisateur n'est pas connecté
-        }
-
-        const collection = db.collection(process.env.MONGODB_COLLECTION);
-        const collectionUsers = db.collection('Users');
-
-        // Récupération de l'utilisateur connecté
-        const currentUser = await collectionUsers.findOne({ _id: user._id });
-
-        if (!currentUser) {
-            return res.status(400).send("Utilisateur introuvable !");
-        }
-
-        // Récupérer les IDs des amis
-        const friendsIds = currentUser.friends || [];
-
-        // Ajouter l'ID de l'utilisateur connecté pour inclure ses propres messages
-        friendsIds.push(currentUser._id);
-
-        // Filtrer les tâches par `idUser`
-        const tasks = await collection
-            .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
-            .sort({ date: -1 })
-            .toArray();
-
-
-        res.render('chat', {
-            title: 'Mon site',
-            message: 'Bienvenue sur ma montre digitale',
-            tasks: tasks || [],
-            successCourse,
-            success,
-            user
-        });
-    } catch (err) {
-        console.error('Erreur lors de la récupération des tâches :', err);
-        res.status(500).send('Erreur lors de la récupération des tâches');
-    }
-})
-
-app.get('/chatPublic',async (req,res)=>{
-    const success = req.query.success === 'true';
-    const successCourse = req.query.successCourse === 'true';
-    const user = req.session.user || "";
-
-    try {
-        if (!user) {
-            return res.redirect('/login'); // Redirection si l'utilisateur n'est pas connecté
-        }
-
-        const collection = db.collection(process.env.MONGODB_COLLECTION);
-        const collectionUsers = db.collection('Users');
-
-        // Récupération de l'utilisateur connecté
-        const currentUser = await collectionUsers.findOne({ _id: user._id });
-
-        if (!currentUser) {
-            return res.status(400).send("Utilisateur introuvable !");
-        }
-
-        // Récupérer les IDs des amis
-        const friendsIds = currentUser.friends || [];
-
-        // Ajouter l'ID de l'utilisateur connecté pour inclure ses propres messages
-        friendsIds.push(currentUser._id);
-
-        // Filtrer les tâches par `idUser`
-        const tasks = await collection
-            .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
-            .sort({ date: -1 })
-            .toArray();
-
-
-        res.render('chatPublic', {
-            title: 'Mon site',
-            message: 'Bienvenue sur ma montre digitale',
-            tasks: tasks || [],
-            successCourse,
-            success,
-            user
-        });
-    } catch (err) {
-        console.error('Erreur lors de la récupération des tâches :', err);
-        res.status(500).send('Erreur lors de la récupération des tâches');
-    }
-})
-
 
 app.post('/delUser', async (req, res) => {
     try {
@@ -523,6 +443,8 @@ app.post('/delUser', async (req, res) => {
         res.status(500).send('Erreur serveur');
     }
 });
+
+
 
 app.get('/profil', async (req, res) => {
     const user = req.session.user || "";
@@ -618,11 +540,6 @@ app.get('/register', async (req, res) => {
     // }
 });
 app.post('/register', async (req, res) => {
-    const date = new Date()
-    const day=date.getDate()
-    const month=date.getMonth()+1
-    const year=date.getFullYear()
-    const dateAccount=day+'/'+month+'/'+year
     const user = {
         _id: uuidv4(),
         userName: req.body.username,
@@ -637,10 +554,9 @@ app.post('/register', async (req, res) => {
         // centreInterets: req.body.centreInterets,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
-        isAdmin:"n",
-        date:dateAccount
+        isAdmin:"n"
     };
-    console.log(dateAccount)
+
 
     const collection = db.collection('Users'); // Utiliser la collection "users"
     const userEmail = await collection.findOne({ email: user.email });
@@ -671,18 +587,13 @@ app.post('/register', async (req, res) => {
 app.get('/admin', async (req, res) => {
     console.log('dans admin get');
     try {
-        const collection = db.collection('Users');
-        let nbUsers = await collection.countDocuments()
-        nbUsers=nbUsers-1
-        // nbUsers=nbUsers-1
-        console.log("nbUSERS ",nbUsers) // Utiliser la collection "Users"
+        const collection = db.collection('Users'); // Utiliser la collection "Users"
         const users = await collection
         .find({ isAdmin: { $ne: "y"} })
         .toArray();
 
         res.render('admin', {
-            users,
-            nbUsers // Passe les utilisateurs au template
+            users // Passe les utilisateurs au template
         });
     } catch (err) {
         console.error("Erreur lors de la récupération des utilisateurs :", err);
@@ -713,17 +624,12 @@ app.post('/admin', async (req, res) => {
         const collection = db.collection('Users');
         // Supprimer l'utilisateur
         await collection.deleteOne({ _id: userId });
-        let nbUsers = await collection.countDocuments()
-        nbUsers=nbUsers-1
-        console.log("nbUSERS ",nbUsers)
+
         // Récupérer à nouveau la liste des utilisateurs après la suppression
-        const users = await collection
-        .find({ isAdmin: { $ne: "y"} })
-        .toArray();
+        const users = await collection.find().toArray();
 
         res.render('admin', {
-            users,
-            nbUsers // Passe les utilisateurs après suppression au template
+            users // Passe les utilisateurs après suppression au template
         });
     } catch (err) {
         console.error('Erreur lors de la suppression de l\'utilisateur :', err);

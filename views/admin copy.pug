@@ -30,6 +30,7 @@ html(lang="en")
         border: 2px solid #9c27b0; /* Bordure violette */
         justify-content: center; /* Centre horizontalement */
         align-items: center; /* Centre verticalement */
+        padding: 15px;
         border-radius: 10px;
         background-color: #2a2a2a; /* Fond encore plus sombre pour le formulaire */
         margin-bottom: 20px;
@@ -50,27 +51,18 @@ html(lang="en")
         background-color: #2a2a2a;
         color: #b3b3b3;
       }
-      .ajoutCommentaire button {
-        background-color: #00bcd4; /* Bleu cyan lumineux */
-        color: #121212; /* Texte sombre pour contraste */
-        border-radius: 5px;
-        cursor: pointer;
-        padding: 10px;
-        font-weight: bold;
-        transition: background-color 0.3s;
-      }
       .button-submit-taches:hover, .button-submit:hover {
         background-color: #00796b; /* Teinte plus foncée au survol */
         transform:scale(1.05);
         border-radius:15px;
       }
       .titre-container {
-          display: flex;
-          justify-content: space-between; /* Espace égal entre les colonnes */
-          width: 100%;
-          padding: 0; /* Supprime les marges internes */
-          margin: 0; /* Supprime les marges externes */
-          gap: 0; /* Aucune espace additionnelle entre les colonnes */
+        display: flex;
+        justify-content: space-between; /* Espace égal entre les colonnes */
+        width: 100%;
+        padding: 0; /* Supprime les marges internes */
+        margin: 0; /* Supprime les marges externes */
+        gap: 0; /* Aucune espace additionnelle entre les colonnes */
       }
 
       .titre-container > * {
@@ -84,7 +76,7 @@ html(lang="en")
         color: #00c7ff; /* Bleu néon doux */
         text-align: center; /* Centrer le titre */
         width:60%;
-        margin-bottom:3%;
+        margin-bottom:5%;
         margin-top:0%;
         padding-top:0px;
         padding-bottom:0px;
@@ -116,20 +108,17 @@ html(lang="en")
         border-radius : 12px;
       }
       .avatar-container {
-        margin-bottom:2%;
+        margin-bottom:0%;
         display: flex;
         align-items: center; /* Centre verticalement */
         justify-content: center; /* Centre horizontalement */
         text-align: center;
-        gap:30px;
-        width :15%;
-        background-color:white;
-        border-radius:20px;
+        gap: 20px;
       }
 
       .avatar {
-        width: 120px;
-        height:120px;
+        width: 90px; /* Ajuste la taille de l'avatar */
+        height: 90px;
         border-radius: 50%; /* Rend l'avatar rond */
         border: 2px solid #00c7ff; /* Bordure pour mettre en valeur l'avatar */
         object-fit: cover; /* Ajuste l'image sans la déformer */
@@ -215,12 +204,6 @@ html(lang="en")
         width: 100%;
         padding : 30px; 
         font-size:1.2rem;
-        border-radius:20px;
-        display: flex;
-        align-items: center; /* Centrer verticalement */
-        justify-content: center;
-        align-self: center;
-        margin-top:50%;
       }
 
       .avatar {
@@ -229,11 +212,9 @@ html(lang="en")
         height: 50px;
         border-radius: 50%; /* Forme ronde */
         background-color: #ccc; /* Couleur par défaut */
-        justify-content:center;
-
       }
 
-      .avatars-container{
+      .avatars-container {
         display: flex;
         justify-content: center; /* Écart entre les éléments : gauche, centre, droite */
         align-items: center; /* Centrer les avatars verticalement */
@@ -268,65 +249,78 @@ html(lang="en")
         gap:10px;
         justify-content:space-between;
       }
-      .button-like {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        background-color:#00c7ff;
-        border-radius:8px;
-        margin-left:3%;
-        border : 1px solid black;
-      }
-      .button-like:hover {
-        background-color: white;
-        transform:scale(1.1);
-      }
-
-      .button-like img {
-        width: 25px; /* Taille de l'image du bouton Like */
-        height: 25px;
-        transform : scale(0.8);
-      }
-
-      .button-like div {
-        display: flex;
-        align-items: center;
-      }
+    
       .button-delete {
-        align-self: flex-end; /* Aligne le bouton à droite */
-        border: none;
+        align-self: flex-end; /* Aligne le bouton à droite dans son conteneur */
+        border: 2px solid black;
         cursor: pointer;
-        background-color:white;
-        border-radius:8px;
-        margin-left:3%;
+        background-color: #00c7ff;
+        border-radius: 8px;
+        margin-left: 20%;
+        width: 60px; /* Définit une largeur explicite */
+        height: 40px; /* Ajoute une hauteur suffisante */
+        display: flex; /* Active le modèle Flexbox */
+        justify-content: center; /* Centre horizontalement le contenu */
+        align-items: center; /* Centre verticalement le contenu */
       }
+
       .button-delete:hover {
-        background-color: black;
-        transform:scale(1.1);
+        background-color: red;
+        transform: scale(1.1);
         transition: transform 0.3s, background-color 0.3s;
-      }
-
-      .button-delete img {
-        width: 25px; /* Taille de l'image du bouton Like */
-        height: 25px;
-      }
-
-      .button-delete div {
-        display: flex;
-        align-items: center;
       }
       .button-head{
         border-radius:50%;
         background-color:#00c7ff;
       }
-      .button-head:hover{
-        background-color: #00796b; /* Teinte plus foncée au survol */
-        transform:scale(1.05);
-        border-radius:15px;
+      /* Style global pour le tableau */
+      table {
+        width: 30%;
+        border-collapse: collapse;
+        background-color: #f8f9fa; /* Fond clair pour le tableau */
+        border-radius: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align:center;
+        border-radius:20px;
+        overflow: hidden;
+      }
+
+      /* Style pour les en-têtes de tableau */
+      thead {
+        background-color: #007bff; /* Bleu clair */
+        color: white;
+      }
+
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        text-align:center;
+      }
+
+      /* Style pour les lignes de données */
+      tbody tr:nth-child(odd) {
+        background-color: #e7f4ff; /* Ligne bleue claire */
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #ffffff; /* Lignes blanches */
+      }
+
+      .hidden-md {
+        display: table-cell;
       }
       
       @media (max-width: 400px) {
+        table {
+          width: 70%;
+          border-radius: 20px;
+      }
+        .hidden-md {
+          display: none; /* Affiche la cellule comme une colonne dans le tableau */
+      }
         .ajoutCommentaire {
+          border-radius:20px;
           display: flex;
           justify-content: center; /* Centre horizontalement */
           align-items: center; /* Centre verticalement */
@@ -360,54 +354,40 @@ html(lang="en")
           width: 100%;
         }
         .button-submit-taches {
-          justify-content:center;
-          font-size: 1.2rem;
-          padding: 15px;
-          margin-bottom:6%;
-          background: linear-gradient(90deg, #00bcd4, #9c27b0);
-          color: white;
-          border: none;
-          border-radius: 12px;
-          cursor: pointer;
-          transition: transform 0.3s, box-shadow 0.3s;
-          display: flex;
-          align-items: center; /* Centrer verticalement */
-          justify-content: center;
-          align-self: center;
+          display: flex; /* Active le conteneur flex */
+          justify-content: center; /* Centre horizontalement */
+          align-items: center; /* Centre verticalement */
+          width: 100%; /* Ajuste à la largeur souhaitée */
+          height: 40px; /* Ajuste à la hauteur souhaitée */
+          padding: 0; /* Supprime les marges internes */
+          background-color: #00bcd4; /* Bleu cyan lumineux */
+          border-radius: 5px; /* Coins arrondis */
+          cursor: pointer; /* Pointeur de souris */
+          border: none; /* Supprime les bordures */
+          transition: background-color 0.3s;
         }
 
-        .button-submit-taches:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        .button-submit-taches img {
+          max-width: 50%; /* Ajuste la taille de l'image au besoin */
+          max-height: 50%; /* S'assure que l'image ne dépasse pas */
         }
         .autres-pages {
-        padding-left:20px;
-        padding-right:20px;
-
+          padding-left:20px;
+          padding-right:20px;
         }
         .avatar-container {
           display: flex;
-          align-items: center; /* Centre verticalement l'avatar et le texte */
-          justify-content: center; /* Aligne les éléments au centre horizontalement */
-          background-color: white; /* Couleur de fond par défaut */
-          margin-bottom: 6%;
+          align-items: center; /* Vertically centers the avatar and text */
+          margin-bottom:0%;
+          justify-content: center; /* Aligns items to the left */
           gap: 10px;
-          width: auto; /* Ajuste la largeur automatiquement à la taille du contenu */
-          max-width: 30%; /* Limite la largeur à 30% de la taille de l'écran */
-          min-width:8%; 
-          padding: 10px; /* Ajoute un espace autour du texte */
-          word-wrap: break-word; /* Permet la coupure des mots */
-          word-break: break-word; /* Assure la coupure des mots si nécessaire */
-          overflow-wrap: break-word; /* Gère le retour à la ligne automatique */
-          text-align: center; /* Centre le texte */
-          border: 1px solid #ccc; /* Optionnel : ajoute une bordure pour mieux visualiser */
-      }
+        }
         .avatar-container-head {
-        display: flex;
-        align-items: center; /* Vertically centers the avatar and text */
-        margin-bottom:6%;
-        justify-content: center; /* Aligns items to the left */
-        gap: 10px;
+          display: flex;
+          align-items: center; /* Vertically centers the avatar and text */
+          margin-bottom:6%;
+          justify-content: center; /* Aligns items to the left */
+          gap: 10px;
         }
       }
       .autres-pages {
@@ -449,87 +429,65 @@ html(lang="en")
         .titre-container
           //- p.autres-pages Ami
           div.avatar-container-head
-            form(action='/' method='get')
+            form(action='/admin' method='post')
               p Mur
               button.button-head
                 img.avatar(src="assets/icons/wall.png", alt="wall")
-    
-          div.avatar-container-head
-            form(action='/profil' method='get')
-              p Profile
-              button.button-head
-                img.avatar(src=user.avatar alt="profil avatar")
-          div.avatar-container-head
-            form(action='/chat' method='get')
-              p Chat
-              button.button-head
-                img.avatar(src="assets/icons/message.png", alt="messages")
           div.avatar-container-head
             form(action='/login' method='get')
               p Bye
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )        
         .titre-container
-          p.titre Os compañeros
-        .titre-container  
-          p.titre-find 🧐 
-        form(action="/" method="post")
-          //- .ajoutCommentaire
-          
-          //-   label(for="task")
-          //-   input(type="text" id="task" name="task" required)
-          //-   button(type="submit" class="button-submit-taches") ✅
-          if(users)
-            .ajoutCommentaire
-              p
-              p.avatar-container Uername
-              p.avatar-container Lastname
-              p
-        each userExist in users 
+          p.titre Admin 🧐  
+        form(action="/admin" method="post")
           .ajoutCommentaire
-            img.avatar(src=userExist.avatar, alt="avatar profil")
-            p.avatar-container #{userExist.userName}
-            p.avatar-container (#{userExist.lastname})
-            form(action="/addUser" method="post")
-              input(type="hidden" name="userId" value=userExist._id.toString())
-              button(type="submit" class="button-submit-taches") +  
-        //- each userExist in users 
-        //-   .ajoutUsers
-        //-     .avatar-containerUsers
-        //-           div.avatarUsers
-        //-             //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-        //-             img.avatarUsers(src=userExist.avatar, alt="avatar profil")
-        //-     p #{userExist.userName}
-        //-     p (#{userExist.lastname})
-        //-     form(action="/addUser" method="post")
-        //-       input(type="hidden" name="userId" value=userExist._id.toString())
-        //-       button(type="submit" class="button-submit-tache") +
-      
-      //- .task
-      //-   .task-right
-      //-     .task-header
-      //-       .avatar-container
-      //-         div.avatar
-      //-           img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-      //-         p.username-commentaire Username
-      //-     .task-header
-      //-       .avatar-container
-      //-         p.username-commentaire Username   
-      //-     .task-header
-      //-       .avatar-container
-      //-         p.username-commentaire Username     
-              
-              
-              
-  
- 
-           
+            .avatar-container
+             table
+              thead
+                tr
+                  th Avatar
+                  th Nom d'utilisateur
+                  th.hidden-md  Prénom
+                  th.hidden-md  Nom
+                  th.hidden-md  Date de création
+                  th Suppression
+              tbody
+                each user in users
+                  tr
+                    td
+                      img.avatar(src=user.avatar, alt="avatar profil")
+                    td #{user.userName}
+                    td.hidden-md #{user.firstname}
+                    td.hidden-md #{user.lastname}
+                    //- td.hidden-md #{user.lastname}
+                    td.hidden-md AAAAAA
+                    //- td.hidden-md #{user.date}
+                    td
+                      form(action="/adminDelUser" method="post")
+                        input(type="hidden" name="userId" value=user._id.toString())
+                        button(type="submit" class="button-delete") X
+                        
 
-        //- form(action="/" method="post")
-        //-   .ajoutCommentaire
-        //-     label(for="task")
-        //-     input(type="text" id="task" name="task" required)
-        //-     button(type="submit" class="button-submit-taches") +
+        //-  table.table-container
+        //- thead
+        //-   tr
+        //-     th Avatar
+        //-     th Nom
+        //-     th Email
+        //-     th Actions
+        //- tbody
+        //-   each user in users
+        //-     tr
+        //-       td
+        //-         img.avatar(src=user.avatar, alt=`Avatar de ${user.name}`)
+        //-       td #{user.name}
+        //-       td #{user.email}
+        //-       td
+        //-         .button-container
+        //-           button.button-like Like
+        //-           button.button-delete Delete           
+    
     script(src="/js/script.js")
     script.
       if ('serviceWorker' in navigator) {
