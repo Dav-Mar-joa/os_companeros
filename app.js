@@ -346,6 +346,9 @@ app.get('/chatPublic', async (req, res) => {
         const collection = db.collection(process.env.MONGODB_COLLECTION);
         const collectionUsers = db.collection('Users');
 
+        const collectionMessages = db.collection('Chat');
+        const messages = await collectionMessages.find().sort({ date: 1 }).toArray(); // Tri par date croissante
+
         // Récupération de l'utilisateur connecté
         const currentUser = await collectionUsers.findOne({ _id: user._id });
 
@@ -353,23 +356,23 @@ app.get('/chatPublic', async (req, res) => {
             return res.status(400).send("Utilisateur introuvable !");
         }
 
-        // Récupérer les IDs des amis
-        const friendsIds = currentUser.friends || [];
-        friendsIds.push(currentUser._id);
+        // // Récupérer les IDs des amis
+        // const friendsIds = currentUser.friends || [];
+        // friendsIds.push(currentUser._id);
 
-        // Filtrer les tâches par `idUser`
-        const tasks = await collection
-            .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
-            .sort({ date: -1 })
-            .toArray();
+        // // Filtrer les tâches par `idUser`
+        // const tasks = await collection
+        //     .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
+        //     .sort({ date: -1 })
+        //     .toArray();
 
         res.render('chatPublic', {
             title: 'Mon site',
             message: 'Bienvenue sur ma montre digitale',
-            tasks: tasks || [],
             successCourse,
             success,
-            user
+            user,
+            messages // Passer les messages au template
         });
     } catch (err) {
         console.error('Erreur lors de la récupération des tâches :', err);
@@ -625,30 +628,39 @@ server.listen(PORT, () => {
 
 io.on('connection', (socket) => {
     const req = socket.request;
-    console.log('Nouvelle connexion:', socket.id);
-    console.log('Nom d\'utilisateur connecté :', socket.username);
-    socket.emit('username', socket.username);
-    // Vérification et affichage du nom d'utilisateur de la session
-    const user = req.session.user || {};
-    console.log("user dans io on 'connection'",user)
-    if (user && user.username) {
-        console.log(`Nom d'utilisateur dans la session (Socket.IO) : ${user.username}`);
-    } else {
-        console.log('Aucun utilisateur dans la session (Socket.IO)');
-    }
+    const user = req.session.user || {}; // Récupérer les informations de l'utilisateur connecté
 
-    // Lorsque vous recevez un message du chat, vous pouvez l'envoyer en utilisant l'utilisateur
-    socket.on('messageChat', (message) => {
-        console.log("Message reçu:", message, "de", user.username);
+    console.log('Nouvelle connexion:', socket.id);
+    console.log('Nom d\'utilisateur connecté :', user.username || 'Anonyme');
+
+    socket.on('messageChat', async (message) => {
+        console.log("Message reçu:", message, "de", user.username || 'Anonyme');
+
         const date = new Date();
         const min = date.getMinutes().toString().padStart(2, '0'); // Format 2 chiffres
         const hour = date.getHours().toString().padStart(2, '0');  // Format 2 chiffres
         const timeMessage = `${hour}:${min}`; // Format HH:mm
-        io.emit('nouveauMessage', {
+
+        // Objet à enregistrer dans la base de données
+        const messageData = {
             content: message,
             time: timeMessage,
-            username: user.username,
-        });
+            username: user.username || 'Anonyme',
+            userId: user._id || null
+        };
+
+        try {
+            // Enregistrer dans la base de données MongoDB
+            const collectionMessages = db.collection('Chat');
+            await collectionMessages.insertOne(messageData);
+            console.log('Message enregistré dans la base de données:', messageData);
+
+            // Diffuser le message aux autres utilisateurs
+            io.emit('nouveauMessage', messageData);
+        } catch (err) {
+            console.error('Erreur lors de l\'enregistrement du message :', err);
+        }
     });
 });
+
 

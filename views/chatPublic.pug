@@ -463,12 +463,15 @@ body
         .titre-container
           p.titre Os compañeros
         .profile-container-public  
-          form#form(action="/" method="post")
-              div#chat-container
-                  .chat-title Chat public
-                  div#messages-container
-                  textarea#messageInput(rows="6") 
-              button#envoyerMessage(type="button") Envoyer
+          div#chat-container
+              .chat-title Chat public
+              div#messages-container
+                  each message in messages
+                      div.message
+                        p.content=message.time + ' - ' + message.username
+                        p.content=message.content
+              textarea#messageInput(rows="6") 
+          button#envoyerMessage(type="button") Envoyer
               
     //- script(src="/js/scriptChat.js")
     script.
