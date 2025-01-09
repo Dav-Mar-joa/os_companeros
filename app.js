@@ -331,76 +331,52 @@ app.get('/chat',async (req,res)=>{
     }
 })
 
-// app.get('/chatPublic', async (req, res) => {
-//     const success = req.query.success === 'true';
-//     const successCourse = req.query.successCourse === 'true';
-//     const user = req.session.user || '';
-//     console.log("Nom d'utilisateur dans la session (HTTP) :", user);
-
-
-//     try {
-//         if (!user) {
-//             return res.redirect('/login'); // Redirection si l'utilisateur n'est pas connecté
-//         }
-
-//         const collection = db.collection(process.env.MONGODB_COLLECTION);
-//         const collectionUsers = db.collection('Users');
-
-//         const collectionMessages = db.collection('Chat');
-//         const messages = await collectionMessages.find().sort({ date: 1 }).toArray(); // Tri par date croissante
-
-//         // Récupération de l'utilisateur connecté
-//         const currentUser = await collectionUsers.findOne({ _id: user._id });
-
-//         if (!currentUser) {
-//             return res.status(400).send("Utilisateur introuvable !");
-//         }
-
-//         // // Récupérer les IDs des amis
-//         // const friendsIds = currentUser.friends || [];
-//         // friendsIds.push(currentUser._id);
-
-//         // // Filtrer les tâches par `idUser`
-//         // const tasks = await collection
-//         //     .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
-//         //     .sort({ date: -1 })
-//         //     .toArray();
-
-//         res.render('chatPublic', {
-//             title: 'Mon site',
-//             message: 'Bienvenue sur ma montre digitale',
-//             successCourse,
-//             success,
-//             user,
-//             messages // Passer les messages au template
-//         });
-//     } catch (err) {
-//         console.error('Erreur lors de la récupération des tâches :', err);
-//         res.status(500).send('Erreur lors de la récupération des tâches');
-//     }
-// });
-
 app.get('/chatPublic', async (req, res) => {
     const success = req.query.success === 'true';
     const successCourse = req.query.successCourse === 'true';
     const user = req.session.user || '';
     console.log("Nom d'utilisateur dans la session (HTTP) :", user);
 
+
     try {
         if (!user) {
             return res.redirect('/login'); // Redirection si l'utilisateur n'est pas connecté
         }
 
+        const collection = db.collection(process.env.MONGODB_COLLECTION);
+        const collectionUsers = db.collection('Users');
+
+        const collectionMessages = db.collection('Chat');
+        const messages = await collectionMessages.find().sort({ date: 1 }).toArray(); // Tri par date croissante
+
+        // Récupération de l'utilisateur connecté
+        const currentUser = await collectionUsers.findOne({ _id: user._id });
+
+        if (!currentUser) {
+            return res.status(400).send("Utilisateur introuvable !");
+        }
+
+        // // Récupérer les IDs des amis
+        // const friendsIds = currentUser.friends || [];
+        // friendsIds.push(currentUser._id);
+
+        // // Filtrer les tâches par `idUser`
+        // const tasks = await collection
+        //     .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
+        //     .sort({ date: -1 })
+        //     .toArray();
+
         res.render('chatPublic', {
-            title: 'Chat Public',
-            message: 'Bienvenue dans le chat en temps réel',
+            title: 'Mon site',
+            message: 'Bienvenue sur ma montre digitale',
             successCourse,
             success,
-            user
+            user,
+            messages // Passer les messages au template
         });
     } catch (err) {
-        console.error('Erreur lors du chargement du chat public :', err);
-        res.status(500).send('Erreur lors du chargement du chat public');
+        console.error('Erreur lors de la récupération des tâches :', err);
+        res.status(500).send('Erreur lors de la récupération des tâches');
     }
 });
 
