@@ -131,6 +131,14 @@ html(lang="en")
         border-radius: 50%; /* Forme ronde */
         background-color: #ccc; /* Couleur par défaut */
       }
+      .avatarChat {
+        padding-top:0%;
+        width: 40px; /* Taille de l'avatar */
+        height: 40px;
+        border-radius: 50%; /* Forme ronde */
+        background-color: #ccc; /* Couleur par défaut */
+        margin-right:8%;
+      }
 
       .avatars-container {
         display: flex;
@@ -201,8 +209,6 @@ html(lang="en")
         margin-top:5%;
       }
 
-
-
       .date-reponse {
         position: absolute;
         bottom: 10px;
@@ -251,8 +257,9 @@ html(lang="en")
 
 
       #messages-container {
-        width: 100%; /* Par défaut, utilise toute la largeur disponible du parent */
-        max-width: 100%; /* Ne dépasse pas la largeur du parent */
+        max-height: 400px;
+        width: 99%; /* 90% de la largeur du conteneur parent */
+        max-width: 100%; 
         line-height: 1.5;
         padding: 20px;
         display: flex;
@@ -268,11 +275,13 @@ html(lang="en")
         overflow-wrap: break-word;
         word-break: break-word;
         box-sizing: border-box; /* Inclut padding et bordures dans la largeur */
+        overflow-y: auto;
       }
+      
       #messageInput {
         padding-top:5px;
         padding-bottom:5px;
-        width: calc(100% - 60px);
+        width: calc(70% - 60px);
         height: 30px;
         background-color: #000;
         color: white;
@@ -302,16 +311,34 @@ html(lang="en")
         transform:scale(1.1);
         border:2px solid black;
       }
+      .message {
+        display: flex;
+        align-items: center; /* Aligne verticalement l'avatar et le contenu */
+      }
 
+      .content{
+        margin-top:5px;
+        margin-bottom:0px;
+      }
+      .contentEnd{
+        background:rgb(80, 80, 79);
+        border-radius : 10px;
+        margin-top:10px;
+        margin-bottom:20px;
+        padding:3px;
+        padding-left: 10px;
+        margin-right: 10px;
+        color:white;
+      }
 
       @media (max-width: 768px) {
         .profile-container-public {
-          width: 90%; /* Plus large pour petits écrans */
+          width: 95%; /* Plus large pour petits écrans */
           margin-top: 5%;
           padding: 15px;
         }
         #messages-container {
-          width: 85%; /* Largeur par défaut */
+          width: 100%; /* Largeur par défaut */
           
         }
 
@@ -321,7 +348,7 @@ html(lang="en")
       @media (max-width: 400px) {
 
         #messages-container {
-          width: 75%; /* Largeur par défaut */
+          width: 99%; /* Largeur par défaut */
           min-width: 190px; 
         }
         #messageInput {
@@ -465,12 +492,18 @@ body
         .profile-container-public  
           div#chat-container
               .chat-title Chat public
-              div#messages-container
-                  each message in messages
-                      div.message
-                        p.content=message.time + ' - ' + message.username
-                        p.content=message.content
-              textarea#messageInput(rows="6") 
+          div#messages-container
+            each message in messages
+                //- div.message
+                //-   img.avatarChat(src=message.avatar , alt="avatar")
+                //-   p.content=message.username
+                //- p.content=message.time + ' : ' + message.content
+                div.message
+                  img.avatarChat(src=message.avatar , alt="avatar")
+                  p.content=message.username
+                p.contentEnd=message.time + ' : ' + message.content
+                  //- p.content=message.content
+          textarea#messageInput(rows="6", placeholder="message ...") 
           button#envoyerMessage(type="button") Envoyer
               
     //- script(src="/js/scriptChat.js")

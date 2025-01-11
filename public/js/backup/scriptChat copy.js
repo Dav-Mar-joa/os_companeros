@@ -98,20 +98,49 @@ document.addEventListener('DOMContentLoaded', () => {
     //     messagesContainer.appendChild(messageElement); // Ajoute le message au conteneur
     //     messagesContainer.scrollTop = messagesContainer.scrollHeight; // Défilement vers le bas
     // });
+    // socket.on('nouveauMessage', (data) => {
+    //     // `data` contient le message, l'heure et le nom d'utilisateur
+    //     const { content, time, username,avatar } = data;
+    
+    //     // Créer un élément pour afficher le message
+    //     const messageElement = document.createElement('div');
+    //     messageElement.innerHTML = `${time} <strong>${username}</strong> --> ${content} ${avatar}`;
+    
+    //     // Ajouter le message au conteneur
+    //     messagesContainer.appendChild(messageElement);
+    
+    //     // Faire défiler vers le bas
+    //     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    // });
     socket.on('nouveauMessage', (data) => {
-        // `data` contient le message, l'heure et le nom d'utilisateur
-        const { content, time, username } = data;
+    // `data` contient le message, l'heure, le nom d'utilisateur et l'avatar
+    const { content, time, username, avatar } = data;
+
+    // Créer un élément conteneur pour le message
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+
+    // Ajouter l'avatar
+    const avatarElement = document.createElement('img');
+    avatarElement.src = avatar || 'default-avatar.png'; // Utilisez une image par défaut si l'avatar est manquant
+    avatarElement.alt = `${username}'s avatar`;
+    avatarElement.classList.add('avatarChat');
+
+    // Ajouter le contenu du message
+    const contentElement = document.createElement('p');
+    contentElement.innerHTML = `${time} <strong>${username}</strong> --> ${content}`;
+
+    // Ajouter l'avatar et le contenu au conteneur du message
+    messageElement.appendChild(avatarElement);
+    messageElement.appendChild(contentElement);
+
+    // Ajouter le message au conteneur principal
+    messagesContainer.appendChild(messageElement);
+
+    // Faire défiler vers le bas
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+});
     
-        // Créer un élément pour afficher le message
-        const messageElement = document.createElement('div');
-        messageElement.innerHTML = `${time} <strong>${username}</strong> --> ${content}`;
-    
-        // Ajouter le message au conteneur
-        messagesContainer.appendChild(messageElement);
-    
-        // Faire défiler vers le bas
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    });
 });
 
 

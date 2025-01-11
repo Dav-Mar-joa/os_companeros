@@ -275,7 +275,7 @@ html(lang="en")
       }
       /* Style global pour le tableau */
       table {
-        width: 30%;
+        width: 80%;
         border-collapse: collapse;
         background-color: #f8f9fa; /* Fond clair pour le tableau */
         border-radius: 15px;
@@ -283,6 +283,7 @@ html(lang="en")
         text-align:center;
         border-radius:20px;
         overflow: hidden;
+        table-layout: fixed;
       }
 
       /* Style pour les en-têtes de tableau */
@@ -296,6 +297,10 @@ html(lang="en")
         text-align: left;
         border-bottom: 1px solid #ddd;
         text-align:center;
+        max-width: 10%; /* 1/6 de la largeur du conteneur */
+        word-wrap: break-word; /* Permet de couper le texte si nécessaire */
+        white-space: normal;
+        
       }
 
       /* Style pour les lignes de données */
@@ -313,7 +318,7 @@ html(lang="en")
       
       @media (max-width: 400px) {
         table {
-          width: 70%;
+          width: 98%;
           border-radius: 20px;
       }
         .hidden-md {
@@ -451,11 +456,11 @@ html(lang="en")
               thead
                 tr
                   th Avatar
-                  th Nom d'utilisateur
+                  th Pseudo
                   th.hidden-md  Prénom
                   th.hidden-md  Nom
                   th.hidden-md  Date de création
-                  th Suppression
+                  th 🗑
               tbody
                 each user in users
                   tr

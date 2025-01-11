@@ -116,7 +116,6 @@ html(lang="en")
         border-radius : 12px;
       }
       .avatar-container {
-        margin-bottom:2%;
         display: flex;
         align-items: center; /* Centre verticalement */
         justify-content: center; /* Centre horizontalement */
@@ -125,6 +124,22 @@ html(lang="en")
         width :15%;
         background-color:white;
         border-radius:20px;
+        word-wrap: break-word; /* Permet de couper le texte si nécessaire */
+        white-space: normal;
+        display: flex;
+          align-items: center; /* Centre verticalement l'avatar et le texte */
+          justify-content: center; /* Aligne les éléments au centre horizontalement */
+          background-color: white; /* Couleur de fond par défaut */
+          gap: 10px;
+          width: auto; /* Ajuste la largeur automatiquement à la taille du contenu */
+          
+          min-width:30%; 
+          padding: 10px; /* Ajoute un espace autour du texte */
+          word-wrap: break-word; /* Permet la coupure des mots */
+          word-break: break-word; /* Assure la coupure des mots si nécessaire */
+          overflow-wrap: break-word; /* Gère le retour à la ligne automatique */
+          text-align: center; /* Centre le texte */
+          border: 1px solid #ccc;
       }
 
       .avatar {
@@ -212,16 +227,26 @@ html(lang="en")
         align-items: center;
       }
       .button-submit-taches {
-        width: 100%;
-        padding : 30px; 
-        font-size:1.2rem;
-        border-radius:20px;
-        display: flex;
-        align-items: center; /* Centrer verticalement */
-        justify-content: center;
-        align-self: center;
-        margin-top:50%;
-      }
+          justify-content:center;
+          font-size: 1.2rem;
+          background: linear-gradient(90deg, #00bcd4, #9c27b0);
+          color: white;
+          margin-top:15px;
+          border: none;
+          padding-top:2%;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: transform 0.3s, box-shadow 0.3s;
+          display: flex;
+          align-items: center; /* Centrer verticalement */
+          justify-content: center;
+          align-self: center;
+        }
+
+        .button-submit-taches:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
 
       .avatar {
         padding-top:0%;
@@ -234,11 +259,14 @@ html(lang="en")
       }
 
       .avatars-container{
+        padding-top:20%;
         display: flex;
         justify-content: center; /* Écart entre les éléments : gauche, centre, droite */
         align-items: center; /* Centrer les avatars verticalement */
         width: 100%;
-        gap:10px
+        gap:10px;
+        word-wrap: break-word; /* Permet de couper le texte si nécessaire */
+        white-space: normal;
       }
       .avatars-container-head {
         display: flex;
@@ -254,6 +282,8 @@ html(lang="en")
         border-radius: 50%;
         border: 2px solid #00c7ff; /* Bordure pour mettre en valeur */
         object-fit: cover; /* Ajuste l'image sans la déformer */
+        word-wrap: break-word; /* Permet de couper le texte si nécessaire */
+        white-space: normal;
       }
       .dateCommentaire {
         margin-top:0%;
@@ -261,6 +291,7 @@ html(lang="en")
         text-align: right;
         flex: 1;  /* This will make the .dateCommentaire take up the available space */
         font-size:0.8rem;
+        
       }
 
       .button-container{
@@ -330,9 +361,11 @@ html(lang="en")
           display: flex;
           justify-content: center; /* Centre horizontalement */
           align-items: center; /* Centre verticalement */
-          width: 100%;
+          width: 80%;
           gap: 10px; /* Espacement entre l'input et le bouton */
           margin-bottom:7%;
+          margin-right:10%;
+          margin-left:10%;
         }
         .task-left {
           display: flex;
@@ -385,22 +418,15 @@ html(lang="en")
         padding-right:20px;
 
         }
-        .avatar-container {
-          display: flex;
-          align-items: center; /* Centre verticalement l'avatar et le texte */
-          justify-content: center; /* Aligne les éléments au centre horizontalement */
-          background-color: white; /* Couleur de fond par défaut */
-          margin-bottom: 6%;
-          gap: 10px;
-          width: auto; /* Ajuste la largeur automatiquement à la taille du contenu */
-          max-width: 30%; /* Limite la largeur à 30% de la taille de l'écran */
-          min-width:8%; 
-          padding: 10px; /* Ajoute un espace autour du texte */
-          word-wrap: break-word; /* Permet la coupure des mots */
-          word-break: break-word; /* Assure la coupure des mots si nécessaire */
-          overflow-wrap: break-word; /* Gère le retour à la ligne automatique */
-          text-align: center; /* Centre le texte */
-          border: 1px solid #ccc; /* Optionnel : ajoute une bordure pour mieux visualiser */
+        .avatars-container{
+        padding-top:20%;
+        display: flex;
+        justify-content: center; /* Écart entre les éléments : gauche, centre, droite */
+        align-items: center; /* Centrer les avatars verticalement */
+        width: 80%;
+        gap:10px;
+        word-wrap: break-word; /* Permet de couper le texte si nécessaire */
+        white-space: normal;
       }
         .avatar-container-head {
         display: flex;
@@ -480,11 +506,11 @@ html(lang="en")
           //-   input(type="text" id="task" name="task" required)
           //-   button(type="submit" class="button-submit-taches") ✅
           if(users)
-            .ajoutCommentaire
-              p
-              p.avatar-container Uername
-              p.avatar-container Lastname
-              p
+            //- .ajoutCommentaire
+            //-   p
+            //-   p.avatar-container Uername
+            //-   p.avatar-container Lastname
+            //-   p
         each userExist in users 
           .ajoutCommentaire
             img.avatar(src=userExist.avatar, alt="avatar profil")

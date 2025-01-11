@@ -15,7 +15,8 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
 app.use(cookieParser());
-app.use(session({
+
+const sessionMiddleware = session({
     secret: 'my-application-oscompaneros', 
     resave: false, 
     saveUninitialized: false, 
@@ -23,7 +24,10 @@ app.use(session({
     cookie: { 
         secure: false, 
     },
-}));
+});
+app.use(sessionMiddleware);
+io.engine.use(sessionMiddleware);
+
 const connectionString = process.env.MONGODB_URI;
 const client = new MongoClient(connectionString);
 const dbName = process.env.MONGODB_DBNAME;
@@ -69,13 +73,16 @@ io.use((socket, next) => {
             return next(err);
         }
 
-        console.log('Session Socket.IO:', req.session);
+        //console.log('Session Socket.IO:', req.session);
          // Afficher la session pour vérifier si l'utilisateur est bien défini
+         //console.log("req.sssion : ", req.session.user);
         if (req.session && req.session.user) {
             socket.username = req.session.user.username; // Assurez-vous que le user est bien dans la session
         } else {
             socket.username = 'Anonyme'; // Valeur par défaut si le nom d'utilisateur n'est pas trouvé
         }
+
+        console.log("Socket username : ", socket.username);
 
         req.session.save((err) => {
             if (err) {
@@ -84,7 +91,6 @@ io.use((socket, next) => {
                 console.log('Session Socket.IO sauvegardée.');
             }
         });
-
         next();
     });
 });
@@ -331,6 +337,54 @@ app.get('/chat',async (req,res)=>{
     }
 })
 
+// app.get('/chatPublic', async (req, res) => {
+//     const success = req.query.success === 'true';
+//     const successCourse = req.query.successCourse === 'true';
+//     const user = req.session.user || '';
+//     console.log("Nom d'utilisateur dans la session (HTTP) :", user);
+
+
+//     try {
+//         if (!user) {
+//             return res.redirect('/login'); // Redirection si l'utilisateur n'est pas connecté
+//         }
+
+//         const collection = db.collection(process.env.MONGODB_COLLECTION);
+//         const collectionUsers = db.collection('Users');
+
+//         const collectionMessages = db.collection('Chat');
+//         const messages = await collectionMessages.find().sort({ date: 1 }).toArray(); // Tri par date croissante
+
+//         // Récupération de l'utilisateur connecté
+//         const currentUser = await collectionUsers.findOne({ _id: user._id });
+
+//         if (!currentUser) {
+//             return res.status(400).send("Utilisateur introuvable !");
+//         }
+
+//         // // Récupérer les IDs des amis
+//         // const friendsIds = currentUser.friends || [];
+//         // friendsIds.push(currentUser._id);
+
+//         // // Filtrer les tâches par `idUser`
+//         // const tasks = await collection
+//         //     .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
+//         //     .sort({ date: -1 })
+//         //     .toArray();
+
+//         res.render('chatPublic', {
+//             title: 'Mon site',
+//             message: 'Bienvenue sur ma montre digitale',
+//             successCourse,
+//             success,
+//             user,
+//             messages // Passer les messages au template
+//         });
+//     } catch (err) {
+//         console.error('Erreur lors de la récupération des tâches :', err);
+//         res.status(500).send('Erreur lors de la récupération des tâches');
+//     }
+// });
 app.get('/chatPublic', async (req, res) => {
     const success = req.query.success === 'true';
     const successCourse = req.query.successCourse === 'true';
@@ -347,7 +401,7 @@ app.get('/chatPublic', async (req, res) => {
         const collectionUsers = db.collection('Users');
 
         const collectionMessages = db.collection('Chat');
-        const messages = await collectionMessages.find().sort({ date: 1 }).toArray(); // Tri par date croissante
+        const messages = await collectionMessages.find().sort({ date: -1 }).toArray(); // Tri par date croissante
 
         // Récupération de l'utilisateur connecté
         const currentUser = await collectionUsers.findOne({ _id: user._id });
@@ -360,7 +414,7 @@ app.get('/chatPublic', async (req, res) => {
         // const friendsIds = currentUser.friends || [];
         // friendsIds.push(currentUser._id);
 
-        // // Filtrer les tâches par `idUser`
+        // // Filtrer les tâches par idUser
         // const tasks = await collection
         //     .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
         //     .sort({ date: -1 })
@@ -378,8 +432,7 @@ app.get('/chatPublic', async (req, res) => {
         console.error('Erreur lors de la récupération des tâches :', err);
         res.status(500).send('Erreur lors de la récupération des tâches');
     }
-});
-
+}); 
 app.post('/delUser', async (req, res) => {
     try {
         const { userId } = req.body; // ID de l'utilisateur à enlever
@@ -629,20 +682,23 @@ io.on('connection', (socket) => {
     const user = req.session.user || {}; // Récupérer les informations de l'utilisateur connecté
 
     console.log('Nouvelle connexion:', socket.id);
-    console.log('Nom d\'utilisateur connecté :', user.username || 'Anonyme');
+    console.log('Nom d\'utilisateur connecté :', user || 'Anonyme');
 
     socket.on('messageChat', async (message) => {
         console.log("Message reçu:", message, "de", user.username || 'Anonyme');
     
         const date = new Date();
+        const day = date.getDate();
+        const month = date.getMonth();
         const min = date.getMinutes().toString().padStart(2, '0'); // Format 2 chiffres
         const hour = date.getHours().toString().padStart(2, '0');  // Format 2 chiffres
-        const timeMessage = `${hour}:${min}`; // Format HH:mm
+        const timeMessage = `${day}/${month+1} ( ${hour}:${min} )`; // Format HH:mm
     
         const messageData = {
             content: message,
             time: timeMessage,
             username: user.username || 'Anonyme',
+            avatar:user.avatar,
             userId: user._id || null
         };
     
