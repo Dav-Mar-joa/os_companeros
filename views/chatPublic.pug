@@ -442,6 +442,11 @@ html(lang="en")
         font-weight: bold;
         transition: background-color 0.3s;
         }
+        #nb-connected{
+          font-size:0.9rem;
+          color:white;
+
+        }
 
         .go-button:hover {
         background-color:rgb(36, 210, 54);
@@ -492,17 +497,14 @@ body
         .profile-container-public  
           div#chat-container
               .chat-title Chat public
+               p#nb-connected (Online : 0)
+              //- p.(#nbConnected on line)
           div#messages-container
             each message in messages
-                //- div.message
-                //-   img.avatarChat(src=message.avatar , alt="avatar")
-                //-   p.content=message.username
-                //- p.content=message.time + ' : ' + message.content
                 div.message
                   img.avatarChat(src=message.avatar , alt="avatar")
                   p.content=message.username
                 p.contentEnd=message.time + ' : ' + message.content
-                  //- p.content=message.content
           textarea#messageInput(rows="6", placeholder="message ...") 
           button#envoyerMessage(type="button") Envoyer
               

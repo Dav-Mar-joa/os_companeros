@@ -265,7 +265,7 @@ html(lang="en")
       }
 
       .button-delete:hover {
-        background-color: red;
+        background-color: green;
         transform: scale(1.1);
         transition: transform 0.3s, background-color 0.3s;
       }
@@ -434,22 +434,29 @@ html(lang="en")
         .titre-container
           //- p.autres-pages Ami
           div.avatar-container-head
-            form(action='/admin' method='post')
+            form(action='/' method='get')
               p Mur
               button.button-head
                 img.avatar(src="assets/icons/wall.png", alt="wall")
+    
           div.avatar-container-head
-            p Commu' : #{nbUsers}    
-            //- button.button-head
-              //- img.avatar(src="assets/icons/icon512.png", alt="wall") 
+            form(action='/profil' method='get')
+              p Profile
+              button.button-head
+                img.avatar(src=user.avatar alt="profil avatar")
+          div.avatar-container-head
+            form(action='/chat' method='get')
+              p Chat
+              button.button-head
+                img.avatar(src="assets/icons/message.png", alt="messages")
           div.avatar-container-head
             form(action='/login' method='get')
               p Bye
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )        
         .titre-container
-          p.titre Admin 🧐  
-        form(action="/admin" method="post")
+          p.titre 🧐  
+        form(action="/" method="post")
           .ajoutCommentaire
             .avatar-container
              table
@@ -459,22 +466,20 @@ html(lang="en")
                   th Pseudo
                   th.hidden-md  Prénom
                   th.hidden-md  Nom
-                  th.hidden-md  Date de création
-                  th 🗑
+                  th Ajouter
               tbody
-                each user in users
+                each userExist in users 
                   tr
                     td
-                      img.avatar(src=user.avatar, alt="avatar profil")
-                    td #{user.userName}
-                    td.hidden-md #{user.firstname}
-                    td.hidden-md #{user.lastname}
+                      img.avatar(src=userExist.avatar, alt="avatar profil")
+                    td #{userExist.userName}
+                    td.hidden-md #{userExist.firstname}
+                    td.hidden-md #{userExist.lastname}
                     //- td.hidden-md #{user.lastname}
-                    td.hidden-md #{user.date}
                     td
-                      form(action="/adminDelUser" method="post")
-                        input(type="hidden" name="userId" value=user._id.toString())
-                      button(type="submit" class="button-delete") X
+                      form(action="/addUser" method="post")
+                        input(type="hidden" name="userId" value=userExist._id.toString())
+                      button(type="submit" class="button-delete") +
                         
 
         //-  table.table-container

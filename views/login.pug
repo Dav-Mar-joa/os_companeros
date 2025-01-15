@@ -52,7 +52,7 @@ html(lang="en")
         color: #00c7ff;
       }
       .login-new-user {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         text-align: center;
         margin-top:5px;
         margin-bottom:0px;
@@ -89,11 +89,12 @@ html(lang="en")
         transition: background-color 0.3s;
       }
       button:hover {
-        background-color: #00796b;
+        background-color:rgb(27, 233, 209);
       }
       .button-new-user{
-        margin-top:20px;
-      }
+        margin-top:10px;
+        font-size:1rem;      
+        }
       .titre-container {
           display: flex;
           justify-content: space-between; /* Espace égal entre les colonnes */
@@ -123,7 +124,7 @@ html(lang="en")
       }
 
       .forgot-password:hover {
-        background-color: #00796b;
+        background-color:rgb(80, 221, 205);
       }
 
       .titre {
@@ -140,6 +141,7 @@ html(lang="en")
       }
       @media (max-width: 400px) {
         .login-container {
+          margin-top:5px
           padding: 15px;
           width:90%;
         }
@@ -149,6 +151,18 @@ html(lang="en")
         .form-container, .tasks-container, .purchase-container {
           width: 100%;
         }  
+        .titre {
+        font-size: 3rem;
+        flex: 1; /* La colonne centrale occupe l'espace disponible */
+        font-family: 'Audiowide', sans-serif;
+        color: #00c7ff; /* Bleu néon doux */
+        text-align: center; /* Centrer le titre */
+        width:60%;
+        margin-bottom:1%;
+        margin-top:2%;
+        padding-top:0px;
+        padding-bottom:0px;
+      }
         
       }
   body
@@ -167,14 +181,15 @@ html(lang="en")
             if message
               p#message(style="color: red") #{message}
           .form-boutton  
-            button(type="submit") Connexion  
+            button(type="submit" class="button-new-user") Connexion 
+        form(action="/password-email" method="get")
+          .forgot-password-container
+            button(type="submit" class="forgot-password") Mot de pass oublié      
         form(action="/register" method="get")
           .form-group
             h1.login-new-user Nouvel utilisateur
             button(type="submit" class="button-new-user") Création d'un nouveau compte  
-        form(action="/password-email" method="get")
-          .forgot-password-container
-              button(type="submit" class="forgot-password") Mot de pass oublié      
+            
     script(src="/js/script.js")
     script.
       if ('serviceWorker' in navigator) {

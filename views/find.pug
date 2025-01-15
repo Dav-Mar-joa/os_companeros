@@ -355,6 +355,47 @@ html(lang="en")
         transform:scale(1.05);
         border-radius:15px;
       }
+      table {
+        width: 80%;
+        border-collapse: collapse;
+        background-color: #f8f9fa; /* Fond clair pour le tableau */
+        border-radius: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align:center;
+        border-radius:20px;
+        overflow: hidden;
+        table-layout: fixed;
+      }
+
+      /* Style pour les en-têtes de tableau */
+      thead {
+        background-color: #007bff; /* Bleu clair */
+        color: white;
+      }
+
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        text-align:center;
+        max-width: 10%; /* 1/6 de la largeur du conteneur */
+        word-wrap: break-word; /* Permet de couper le texte si nécessaire */
+        white-space: normal;
+        
+      }
+
+      /* Style pour les lignes de données */
+      tbody tr:nth-child(odd) {
+        background-color: #e7f4ff; /* Ligne bleue claire */
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #ffffff; /* Lignes blanches */
+      }
+
+      .hidden-md {
+        display: table-cell;
+      }
       
       @media (max-width: 400px) {
         .ajoutCommentaire {
@@ -511,6 +552,7 @@ html(lang="en")
             //-   p.avatar-container Uername
             //-   p.avatar-container Lastname
             //-   p
+            //--------------------
         each userExist in users 
           .ajoutCommentaire
             img.avatar(src=userExist.avatar, alt="avatar profil")
@@ -519,43 +561,6 @@ html(lang="en")
             form(action="/addUser" method="post")
               input(type="hidden" name="userId" value=userExist._id.toString())
               button(type="submit" class="button-submit-taches") +  
-        //- each userExist in users 
-        //-   .ajoutUsers
-        //-     .avatar-containerUsers
-        //-           div.avatarUsers
-        //-             //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-        //-             img.avatarUsers(src=userExist.avatar, alt="avatar profil")
-        //-     p #{userExist.userName}
-        //-     p (#{userExist.lastname})
-        //-     form(action="/addUser" method="post")
-        //-       input(type="hidden" name="userId" value=userExist._id.toString())
-        //-       button(type="submit" class="button-submit-tache") +
-      
-      //- .task
-      //-   .task-right
-      //-     .task-header
-      //-       .avatar-container
-      //-         div.avatar
-      //-           img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-      //-         p.username-commentaire Username
-      //-     .task-header
-      //-       .avatar-container
-      //-         p.username-commentaire Username   
-      //-     .task-header
-      //-       .avatar-container
-      //-         p.username-commentaire Username     
-              
-              
-              
-  
- 
-           
-
-        //- form(action="/" method="post")
-        //-   .ajoutCommentaire
-        //-     label(for="task")
-        //-     input(type="text" id="task" name="task" required)
-        //-     button(type="submit" class="button-submit-taches") +
     script(src="/js/script.js")
     script.
       if ('serviceWorker' in navigator) {

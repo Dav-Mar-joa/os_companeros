@@ -57,12 +57,7 @@ socket.on('updateNbConnected', (nbConnected) => {
         //     location.reload();  // Recharge la page après 5 
         //     messageElement.style.display="block"
         // }, 1);
-        messageElement.innerHTML = `
-         <div class="message">
-                <img class="avatarChat" src="${avatar || '/images/default-avatar.png'}" alt="avatar">
-                <p class="content">m${username}e</p>  <br />
-                <p class="contentEnd">${time} : ${content}</p>
-            </div>`;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
         // Ajouter le message au conteneur
         messagesContainer.appendChild(messageElement);
 setTimeout(() => {
@@ -74,7 +69,6 @@ setTimeout(() => {
         // Faire défiler automatiquement vers le bas
         
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        messageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
         // messageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
     });
 

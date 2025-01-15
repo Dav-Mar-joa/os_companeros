@@ -95,6 +95,19 @@ io.use((socket, next) => {
     });
 });
 
+const transporter = nodemailer.createTransport({
+    host: 'sandbox.smtp.mailtrap.io',
+    port: 2525,
+    auth: {
+      user: '4f82b80e4f4e33',
+      pass: '400d03e2790f20'
+    },
+    secure: false, // STARTTLS est requis
+    tls: {
+      rejectUnauthorized: false
+    },
+    debug: true, // Active le debug
+  });
 
 // Route pour soumettre des tâches
 app.post('/', async (req, res) => {
@@ -622,23 +635,48 @@ app.get('/password-email', async (req, res) => {
         res.render('password-email');
 });
 
+// app.post('/password-email', (req, res) => {
+//     const email = req.body.email;
+//     // console.log(email)
+  
+//     // Vérifiez si un email est fourni
+//     if (!email) {
+//       return res.status(400).send('Email is required');
+//     }
+  
+//     // Contenu de l'email
+//     const mailOptions = {
+//       from: "alt.fi-0ox8z6xo@yopmail.com",
+//       to: email,
+//       subject: 'Password Recovery',
+//       text: 'This is your password recovery email.',
+//     };
+  
+//     // Envoyer l'email
+//     transporter.sendMail(mailOptions, (error, info) => {
+//       if (error) {
+//         console.error(error);
+//         return res.status(500).send('Error sending email');
+//       }
+//       console.log('Email sent: ' + info.response);
+//       res.send('Email sent successfully');
+//     });
+//   });
+
 app.post('/password-email', (req, res) => {
     const email = req.body.email;
-    // console.log(email)
-  
+    console.log("email : ",email)
     // Vérifiez si un email est fourni
     if (!email) {
       return res.status(400).send('Email is required');
     }
   
-    // Contenu de l'email
     const mailOptions = {
-      from: "alt.fi-0ox8z6xo@yopmail.com",
-      to: email,
-      subject: 'Password Recovery',
-      text: 'This is your password recovery email.',
-    };
-  
+        from: 'apismtp@mailtrap.io', // L'email de l'expéditeur
+        to: email, // Remplacez par l'email du destinataire
+        subject: 'Password Recovery',
+        text: 'This is your password recovery email.',
+      };
     // Envoyer l'email
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -677,12 +715,23 @@ server.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
 })
 
+let userConnected=[]
+
 io.on('connection', (socket) => {
     const req = socket.request;
     const user = req.session.user || {}; // Récupérer les informations de l'utilisateur connecté
 
     console.log('Nouvelle connexion:', socket.id);
     console.log('Nom d\'utilisateur connecté :', user || 'Anonyme');
+
+    userConnected.push(user._id)
+        let nbConnected = userConnected.length
+        console.log("nb connecté : ",nbConnected)
+         // Envoyer le nombre de connectés au client actuel
+        socket.emit('updateNbConnected', nbConnected);
+
+        // Informer tous les clients d'une mise à jour
+        io.emit('updateNbConnected', nbConnected)
 
     socket.on('messageChat', async (message) => {
         console.log("Message reçu:", message, "de", user.username || 'Anonyme');
@@ -692,8 +741,8 @@ io.on('connection', (socket) => {
         const month = date.getMonth();
         const min = date.getMinutes().toString().padStart(2, '0'); // Format 2 chiffres
         const hour = date.getHours().toString().padStart(2, '0');  // Format 2 chiffres
-        const timeMessage = `${day}/${month+1} ( ${hour}:${min} )`; // Format HH:mm
-    
+        const timeMessage = `${day}/${month+1} ( ${hour }:${min} )`; // Format HH:mm
+        
         const messageData = {
             content: message,
             time: timeMessage,
@@ -708,9 +757,21 @@ io.on('connection', (socket) => {
             console.log('Message enregistré dans la base de données:', messageData);
     
             // Diffuser le message aux autres clients
-            io.emit('nouveauMessage', messageData); // Envoie à tous les clients connectés
+            io.emit('nouveauMessage', messageData,nbConnected); // Envoie à tous les clients connectés
         } catch (err) {
             console.error('Erreur lors de l\'enregistrement du message :', err);
+        }
+    });
+    // Gestion de la déconnexion
+    socket.on('disconnect', (reason) => {
+        console.log('Utilisateur déconnecté:', socket.id);
+        console.log('Raison:', reason);
+        userConnected = userConnected.filter(item => item !== user._id);
+        nbConnected = userConnected.length;
+        io.emit('updateNbConnected', nbConnected); // Mise à jour après déconnexion
+        if (user.username) {
+            console.log(`${user.username} s'est déconnecté.`);
+            
         }
     });
 });
