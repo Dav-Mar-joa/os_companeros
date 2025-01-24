@@ -14,6 +14,7 @@ const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
+
 app.use(cookieParser());
 
 const sessionMiddleware = session({
@@ -117,7 +118,8 @@ app.post('/', async (req, res) => {
         name: req.body.task,
         idUser:user._id,
         date: new Date(),
-        username: req.session.user ? req.session.user.username : "Anonyme",
+        // username: req.session.user ? req.session.user.username : "Anonyme",
+        username: user.username || "Anonyme",
         avatar: req.session.user ? req.session.user.avatar : "/assets/avatar/default.png",
         responses: []  
     };
@@ -132,6 +134,10 @@ app.post('/', async (req, res) => {
         res.status(500).send('Erreur lors de l\'ajout de la tâche');
     }
 });
+
+app.get('/propos',async(req,res)=>{
+    res.render('propos')
+})
 
 // Route pour la page d'accueil
 app.get('/', async (req, res) => {
@@ -203,13 +209,17 @@ app.post('/login', async (req, res) => {
                 lastname : userLogged.lastname,
                 email : userLogged.email,
                 avatar: userLogged.avatar 
-            }  
+            } 
+             
                 if(userLogged.isAdmin==="y"){
                     console.log("dans admin")
                     res.redirect('/admin')
                 }
                 else{
                     console.log("users")
+                    console.log("---------------------")
+                    console.log("user connecté : ",req.session.user.username)
+                    console.log("---------------------")
                     res.redirect('/') 
                 }
         }
@@ -223,6 +233,19 @@ app.post('/login', async (req, res) => {
         console.error('Erreur lors de la récupération des tâches :', err);
         res.status(500).send('Erreur lors de la récupération des tâches');
     }
+});
+
+app.get('/logout', (req, res) => {
+    // Supprimer la session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Erreur lors de la destruction de la session', err);
+            return res.status(500).send('Erreur de déconnexion');
+        }
+
+        // Redirection vers la page de login après déconnexion
+        res.redirect('/login');
+    });
 });
 app.get('/find', async (req, res) => {
     const user = req.session.user || "";
@@ -257,7 +280,7 @@ app.get('/find', async (req, res) => {
         res.status(500).send('Erreur lors de la récupération des users');
      }
 });
-app.post('/addUser', async (req, res) => {
+app.post('/find', async (req, res) => {
     try {
 
         const { userId } = req.body; 
@@ -332,7 +355,7 @@ app.get('/chat',async (req,res)=>{
         // Filtrer les tâches par `idUser`
         const tasks = await collection
             .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
-            .sort({ date: -1 })
+            .sort({ date: 1 })
             .toArray();
 
 
@@ -446,6 +469,212 @@ app.get('/chatPublic', async (req, res) => {
         res.status(500).send('Erreur lors de la récupération des tâches');
     }
 }); 
+// app.post('/delUser', async (req, res) => {
+//     try {
+//         const { userId } = req.body; // ID de l'utilisateur à enlever
+//         const currentUser = req.session.user;
+
+//         if (!currentUser) {
+//             return res.status(401).send('Utilisateur non connecté');
+//         }
+
+//         if (!userId) {
+//             return res.status(400).send('ID de l\'ami manquant');
+//         }
+
+//         // Vérifie si l'utilisateur à supprimer existe
+//         const userToRemove = await db
+//             .collection('Users')
+//             .findOne({ _id: userId });
+ 
+//         if (!userToRemove) {
+//             return res.status(404).send('Utilisateur non trouvé');
+//         }
+
+//         // Initialisation de la liste d'amis si elle n'existe pas
+//         if (!currentUser.friends) {
+//             currentUser.friends = [];
+//         }
+
+//         // Retirer l'utilisateur de la liste d'amis de l'utilisateur actuel
+//         await db.collection('Users').updateOne(
+//             { _id: currentUser._id }, // Identifie l'utilisateur actuel
+//             { $pull: { friends: userId } } // Retirer l'ami de la liste
+//         );
+
+//         // Retirer l'utilisateur actuel de la liste des amis de l'utilisateur à supprimer
+//         await db.collection('Users').updateOne(
+//             { _id: userToRemove._id }, // Identifie l'utilisateur à supprimer
+//             { $pull: { friends: currentUser._id } } // Retirer l'utilisateur actuel de la liste des amis de l'autre utilisateur
+//         );
+
+//         // Met à jour la session
+//         req.session.user = currentUser;
+
+//         console.log('Liste des amis mise à jour :', currentUser.friends);
+
+//         // Redirige vers la page précédente
+//         res.redirect('/profil');
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression de l\'utilisateur dans la liste des amis :', err);
+//         res.status(500).send('Erreur serveur');
+//     }
+// });
+// app.post('/adminDelUser', async (req, res) => {
+//     try {
+//         const { userId } = req.body; // ID de l'utilisateur à supprimer
+
+//         if (!userId) {
+//             return res.status(400).send('ID de l\'utilisateur manquant');
+//         }
+//         const collectionMessage = db.collection(process.env.MONGODB_COLLECTION);
+//         const collection = db.collection('Users');
+
+//         // Vérifier si l'utilisateur existe
+//         const userToDelete = await collection.findOne({ _id: userId });
+//         if (!userToDelete) {
+//             return res.status(404).send('Utilisateur non trouvé');
+//         }
+
+//         // Supprimer l'utilisateur
+//         await collection.deleteOne({ _id: userId });
+
+//         console.log(`Utilisateur avec l'ID ${userId} supprimé.`);
+
+//         // Récupérer la liste mise à jour des utilisateurs pour l'administration
+//         const users = await collection
+//             .find({ isAdmin: { $ne: "y" } }) // Exclure les administrateurs
+//             .toArray();
+
+//         res.render('admin', {
+//             users,
+//             message: `Utilisateur ${userToDelete.userName} supprimé avec succès.`
+//         });
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression de l\'utilisateur :', err);
+//         res.status(500).send('Erreur serveur');
+//     }
+// });
+
+// app.post('/adminDelUser', async (req, res) => {
+//     try {
+//         const { userId } = req.body; // ID de l'utilisateur à supprimer
+//         console.log("userId : ",userId)
+//         if (!userId) {
+//             return res.status(400).send('ID de l\'utilisateur manquant');
+//         }
+
+//         const collectionMessage = db.collection(process.env.MONGODB_COLLECTION); // Collection des messages
+//         console.log("collectionMessage : ",collectionMessage)
+//         const collection = db.collection('Users'); // Collection des utilisateurs
+
+//         // Vérifier si l'utilisateur existe
+//         const userToDelete = await collection.findOne({ _id: userId });
+//         console.log("userToDelete : ",userToDelete)
+//         if (!userToDelete) {
+//             return res.status(404).send('Utilisateur non trouvé');
+//         }
+
+//         // Supprimer les messages associés à l'utilisateur
+//         const deleteMessagesResult = await collectionMessage.deleteMany({ idUser: userId });
+//         console.log("deleteMessage : ",deleteMessagesResult)
+//         console.log(`${deleteMessagesResult.deletedCount} message(s) supprimé(s) pour l'utilisateur ${userId}.`);
+
+//         // Supprimer l'utilisateur
+//         const deleteUserResult = await collection.deleteOne({ _id: userId });
+
+//         console.log("deleteUserResult : ",deleteMessagesResult)
+//         if (deleteUserResult.deletedCount === 1) {
+//             console.log(`Utilisateur avec l'ID ${userId} supprimé.`);
+//         }
+
+//         // Récupérer la liste mise à jour des utilisateurs pour l'administration
+//         const users = await collection
+//             .find({ isAdmin: { $ne: "y" } }) // Exclure les administrateurs
+//             .toArray();
+
+//         res.render('admin', {
+//             users,
+//             message: `Utilisateur ${userToDelete.userName} et ses messages ont été supprimés avec succès.`
+//         });
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression de l\'utilisateur et des messages :', err);
+//         res.status(500).send('Erreur serveur');
+//     }
+// });
+// app.post('/adminDelUser', async (req, res) => {
+//     try {
+//         const userIdsToDelete = req.body.userIds; // Récupérer les IDs des utilisateurs à supprimer
+        
+//         if (!userIdsToDelete || !Array.isArray(userIdsToDelete) || userIdsToDelete.length === 0) {
+//             return res.status(400).send('Aucun utilisateur sélectionné');
+//         }
+
+//         const collectionMessage = db.collection(process.env.MONGODB_COLLECTION); // Collection des messages
+//         const collectionUser = db.collection('Users'); // Collection des utilisateurs
+
+//         // Supprimer les messages associés aux utilisateurs
+//         const deleteMessagesResult = await collectionMessage.deleteMany({
+//             idUser: { $in: userIdsToDelete }
+//         });
+
+//         // Supprimer les utilisateurs
+//         const deleteUsersResult = await collectionUser.deleteMany({
+//             _id: { $in: userIdsToDelete }
+//         });
+
+//         console.log(`${deleteMessagesResult.deletedCount} message(s) supprimé(s).`);
+//         console.log(`${deleteUsersResult.deletedCount} utilisateur(s) supprimé(s).`);
+
+//         // Récupérer la liste mise à jour des utilisateurs pour l'administration
+//         const users = await collectionUser.find({ isAdmin: { $ne: "y" } }).toArray();
+
+//         res.render('admin', {
+//             users,
+//             message: `${deleteUsersResult.deletedCount} utilisateur(s) et leurs messages ont été supprimés avec succès.`
+//         });
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression des utilisateurs et des messages :', err);
+//         res.status(500).send('Erreur serveur');
+//     }
+// });
+// app.post('/adminDelUser', async (req, res) => {
+//     try {
+//         const userIdsToDelete = req.body.userIds; // Récupérer les IDs des utilisateurs à supprimer
+        
+//         if (!userIdsToDelete || !Array.isArray(userIdsToDelete) || userIdsToDelete.length === 0) {
+//             return res.status(400).send('Aucun utilisateur sélectionné');
+//         }
+
+//         const collectionMessage = db.collection(process.env.MONGODB_COLLECTION); // Collection des messages
+//         const collectionUser = db.collection('Users'); // Collection des utilisateurs
+
+//         // Supprimer les messages associés aux utilisateurs
+//         const deleteMessagesResult = await collectionMessage.deleteMany({
+//             idUser: { $in: userIdsToDelete }
+//         });
+
+//         // Supprimer les utilisateurs
+//         const deleteUsersResult = await collectionUser.deleteMany({
+//             _id: { $in: userIdsToDelete }
+//         });
+
+//         console.log(`${deleteMessagesResult.deletedCount} message(s) supprimé(s).`);
+//         console.log(`${deleteUsersResult.deletedCount} utilisateur(s) supprimé(s).`);
+
+//         // Récupérer la liste mise à jour des utilisateurs pour l'administration
+//         const users = await collectionUser.find({ isAdmin: { $ne: "y" } }).toArray();
+
+//         res.render('admin', {
+//             users,
+//             message: `${deleteUsersResult.deletedCount} utilisateur(s) et leurs messages ont été supprimés avec succès.`
+//         });
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression des utilisateurs et des messages :', err);
+//         res.status(500).send('Erreur serveur');
+//     }
+// });
+
 app.post('/delUser', async (req, res) => {
     try {
         const { userId } = req.body; // ID de l'utilisateur à enlever
@@ -463,7 +692,7 @@ app.post('/delUser', async (req, res) => {
         const userToRemove = await db
             .collection('Users')
             .findOne({ _id: userId });
- 
+
         if (!userToRemove) {
             return res.status(404).send('Utilisateur non trouvé');
         }
@@ -485,10 +714,11 @@ app.post('/delUser', async (req, res) => {
             { $pull: { friends: currentUser._id } } // Retirer l'utilisateur actuel de la liste des amis de l'autre utilisateur
         );
 
-        // Met à jour la session
-        req.session.user = currentUser;
+        // Met à jour la session avec les données les plus récentes
+        const updatedUser = await db.collection('Users').findOne({ _id: currentUser._id });
+        req.session.user = updatedUser;
 
-        console.log('Liste des amis mise à jour :', currentUser.friends);
+        console.log('Liste des amis mise à jour :', updatedUser.friends);
 
         // Redirige vers la page précédente
         res.redirect('/profil');
@@ -498,35 +728,77 @@ app.post('/delUser', async (req, res) => {
     }
 });
 
-app.get('/profil', async (req, res) => {
-    const user = req.session.user || "";
 
-    const userId = req.session.user._id || "";
-    const usersLoggedFriends = await db.collection('Users')
-    .find({_id:{$eq:userId}})
-    .toArray();
+// app.get('/profil', async (req, res) => {
+//     const user = req.session.user || "";
 
-    let nbUsersLoggedFriends = 0
+//     const userId = req.session.user._id || "";
+//     const usersLoggedFriends = await db.collection('Users')
+//     .find({_id:{$eq:userId}})
+//     .toArray();
+
+//     let nbUsersLoggedFriends = 0
    
-    if (usersLoggedFriends[0].friends) {
-        nbUsersLoggedFriends = usersLoggedFriends[0].friends.length 
-    }
+//     if (usersLoggedFriends[0].friends) {
+//         nbUsersLoggedFriends = usersLoggedFriends[0].friends.length 
+//     }
 
-    const friendsId = usersLoggedFriends[0].friends || []; // Tableau des IDs des amis
-        const friends = await db.collection('Users')
-            .find({ _id: { $in: friendsId } })
-            // .project({ userName: 1,_id : 0}) 
-            // .sort({userName:1})
-            .sort({userName:1})
+//     const friendsId = usersLoggedFriends[0].friends || []; // Tableau des IDs des amis
+//         const friends = await db.collection('Users')
+//             .find({ _id: { $in: friendsId } })
+//             // .project({ userName: 1,_id : 0}) 
+//             // .sort({userName:1})
+//             .sort({userName:1})
+//             .toArray();
+
+//         res.render('profil',{
+//             user,
+//             nbUsersLoggedFriends,
+//             friends
+//         })
+//         ;
+// });
+app.get('/profil', async (req, res) => {
+    try {
+        const user = req.session.user || "";
+        const userId = user._id || "";
+
+        if (!userId) {
+            return res.status(401).send('Utilisateur non connecté');
+        }
+
+        // Récupère les informations de l'utilisateur depuis la base de données
+        const usersLoggedFriends = await db.collection('Users')
+            .find({ _id: { $eq: userId } })
             .toArray();
 
-        res.render('profil',{
-            user,
+        let nbUsersLoggedFriends = 0;
+        if (usersLoggedFriends[0].friends) {
+            nbUsersLoggedFriends = usersLoggedFriends[0].friends.length;
+        }
+
+        const friendsId = usersLoggedFriends[0].friends || []; // Tableau des IDs des amis
+        const friends = await db.collection('Users')
+            .find({ _id: { $in: friendsId } })
+            .sort({ userName: 1 })
+            .toArray();
+
+        // Met à jour les informations de l'utilisateur dans la session
+        const updatedUser = await db.collection('Users').findOne({ _id: userId });
+        req.session.user = updatedUser;
+
+        // Rend la vue avec les informations mises à jour
+        res.render('profil', {
+            user: updatedUser, // Utiliser les données mises à jour
             nbUsersLoggedFriends,
             friends
-        })
-        ;
+        });
+    } catch (err) {
+        console.error('Erreur lors de la récupération du profil :', err);
+        res.status(500).send('Erreur serveur');
+    }
 });
+
 
 app.get('/register', async (req, res) => {
 
@@ -606,30 +878,172 @@ app.get('/admin', async (req, res) => {
     }
 });
 
-app.post('/admin', async (req, res) => {
-    const { userId } = req.body;
-    console.log('del user', userId);
-    try {
-        const collection = db.collection('Users');
-        // Supprimer l'utilisateur
-        await collection.deleteOne({ _id: userId });
-        let nbUsers = await collection.countDocuments()
-        nbUsers=nbUsers-1
-        console.log("nbUSERS ",nbUsers)
-        // Récupérer à nouveau la liste des utilisateurs après la suppression
-        const users = await collection
-        .find({ isAdmin: { $ne: "y"} })
-        .toArray();
+// app.post('/admin', async (req, res) => {
+//     const { userId } = req.body;
+//     console.log('del user', userId);
+//     try {
+//         const collection = db.collection('Users');
+//         // Supprimer l'utilisateur
+//         await collection.deleteOne({ _id: userId });
+//         let nbUsers = await collection.countDocuments()
+//         nbUsers=nbUsers-1
+//         console.log("nbUSERS ",nbUsers)
+//         // Récupérer à nouveau la liste des utilisateurs après la suppression
+//         const users = await collection
+//         .find({ isAdmin: { $ne: "y"} })
+//         .toArray();
 
-        res.render('admin', {
-            users,
-            nbUsers // Passe les utilisateurs après suppression au template
-        });
+//         res.render('admin', {
+//             users,
+//             nbUsers // Passe les utilisateurs après suppression au template
+//         });
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression de l\'utilisateur :', err);
+//         res.status(500).send('Erreur lors de la suppression de l\'utilisateur');
+//     }
+// });
+
+// app.post('/admin', async (req, res) => {
+//     const { userId } = req.body; // ID de l'utilisateur à supprimer
+//     console.log('Suppression de l\'utilisateur', userId);
+
+//     try {
+//         const usersCollection = db.collection('Users');
+//         const wallCollection = db.collection(process.env.MONGODB_COLLECTION);
+
+//         // Supprimer les messages de l'utilisateur dans la collection Wall
+//         await wallCollection.deleteMany({ idUser: userId });
+//         console.log('Messages de l\'utilisateur supprimés des murs.');
+
+//         // Supprimer l'utilisateur des réponses dans les murs
+//         await wallCollection.updateMany(
+//             { 'responses.idUser': userId },
+//             { $pull: { responses: { idUser: userId } } }
+//         );
+//         console.log('Réponses de l\'utilisateur supprimées des murs.');
+
+//         // Supprimer l'utilisateur des listes d'amis
+//         await usersCollection.updateMany(
+//             { friends: userId },
+//             { $pull: { friends: userId } }
+//         );
+//         console.log('Utilisateur supprimé des listes d\'amis.');
+
+//         // Supprimer l'utilisateur lui-même
+//         await usersCollection.deleteOne({ _id: userId });
+//         console.log('Utilisateur supprimé de la collection Users.');
+
+//         // Récupérer les utilisateurs restants pour l'afficher dans le panneau admin
+//         const users = await usersCollection
+//             .find({ isAdmin: { $ne: "y" } })
+//             .toArray();
+//         const nbUsers = users.length;
+
+//         res.render('admin', {
+//             users,
+//             nbUsers
+//         });
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression de l\'utilisateur :', err);
+//         res.status(500).send('Erreur lors de la suppression de l\'utilisateur');
+//     }
+// });
+// app.post('/admin', async (req, res) => {
+//     const userId = req.body.userId; // Récupérer l'ID unique envoyé par le formulaire
+//     console.log('Reçu pour suppression :', userId);
+
+//     try {
+//         const userCollection = db.collection('Users');
+
+//         // Supprimer uniquement l'utilisateur avec l'ID correspondant
+//         const result = await userCollection.deleteOne({ _id: userId });
+//         if (result.deletedCount === 1) {
+//             console.log(`Utilisateur supprimé : ${userId}`);
+//         } else {
+//             console.log(`Aucun utilisateur trouvé avec l'ID : ${userId}`);
+//         }
+
+//         // Rechargez la liste des utilisateurs après suppression
+//         const users = await userCollection.find({ isAdmin: { $ne: "y" } }).toArray();
+//         const nbUsers = users.length;
+
+//         res.render('admin', { users, nbUsers });
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression :', err);
+//         res.status(500).send('Erreur serveur lors de la suppression');
+//     }
+// });
+
+// app.post('/admin', async (req, res) => {
+//     const userId = req.body.userId; // Récupérer l'ID unique de l'utilisateur à supprimer
+//     console.log('Reçu pour suppression :', userId);
+
+//     try {
+//         const userCollection = db.collection('Users');
+//         const wallCollection = db.collection('Wall'); // Collection des messages
+
+//         // Supprimer l'utilisateur
+//         const userResult = await userCollection.deleteOne({ _id: userId });
+//         if (userResult.deletedCount === 1) {
+//             console.log(`Utilisateur supprimé : ${userId}`);
+//         } else {
+//             console.log(`Aucun utilisateur trouvé avec l'ID : ${userId}`);
+//         }
+
+//         // Supprimer les messages de l'utilisateur dans la collection wall
+//         const wallResult = await wallCollection.deleteMany({ idUser: userId });
+//         console.log(`Messages supprimés dans Wall : ${wallResult.deletedCount}`);
+
+//         // Rechargez la liste des utilisateurs après suppression
+//         const users = await userCollection.find({ isAdmin: { $ne: "y" } }).toArray();
+//         const nbUsers = users.length;
+
+//         res.render('admin', { users, nbUsers });
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression :', err);
+//         res.status(500).send('Erreur serveur lors de la suppression');
+//     }
+// });
+app.post('/admin', async (req, res) => {
+    const userId = req.body.userId; // Récupérer l'ID unique de l'utilisateur à supprimer
+    console.log('Reçu pour suppression :', userId);
+
+    try {
+        const userCollection = db.collection('Users');
+        const wallCollection = db.collection('Wall'); // Collection des messages
+
+        // Supprimer l'utilisateur
+        const userResult = await userCollection.deleteOne({ _id: userId });
+        if (userResult.deletedCount === 1) {
+            console.log(`Utilisateur supprimé : ${userId}`);
+        } else {
+            console.log(`Aucun utilisateur trouvé avec l'ID : ${userId}`);
+        }
+
+        // Supprimer les messages de l'utilisateur dans la collection wall
+        const wallResult = await wallCollection.deleteMany({ idUser: userId });
+        console.log(`Messages supprimés dans Wall : ${wallResult.deletedCount}`);
+
+        // Retirer l'utilisateur des listes d'amis des autres utilisateurs
+        await userCollection.updateMany(
+            { friends: userId }, // Trouver les utilisateurs ayant l'utilisateur supprimé dans leurs amis
+            { $pull: { friends: userId } } // Supprimer l'utilisateur des amis
+        );
+        console.log(`L'utilisateur a été retiré des listes d'amis`);
+
+        // Rechargez la liste des utilisateurs après suppression
+        const users = await userCollection.find({ isAdmin: { $ne: "y" } }).toArray();
+        const nbUsers = users.length;
+
+        res.render('admin', { users, nbUsers });
     } catch (err) {
-        console.error('Erreur lors de la suppression de l\'utilisateur :', err);
-        res.status(500).send('Erreur lors de la suppression de l\'utilisateur');
+        console.error('Erreur lors de la suppression :', err);
+        res.status(500).send('Erreur serveur lors de la suppression');
     }
 });
+
+
+
 app.get('/password-email', async (req, res) => {
 
         res.render('password-email');
@@ -745,6 +1159,7 @@ io.on('connection', (socket) => {
         
         const messageData = {
             content: message,
+            date : date,
             time: timeMessage,
             username: user.username || 'Anonyme',
             avatar:user.avatar,

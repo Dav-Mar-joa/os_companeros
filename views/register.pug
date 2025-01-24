@@ -149,6 +149,9 @@ html(lang="en")
             option(value="assets/avatar/avatar10.png") Street felling
           img#preview(src="assets/avatar/avatar1.png", alt="avatar preview", style="width: 50px; height: 50px; margin-top: 10px;") 
         button(type="submit") S'inscrire
+      form(action="/login" method="post")
+        button(type="submit") Déja utilisateur
+      
     script(src="/js/script.js")
     script.
       function updatePreview() {

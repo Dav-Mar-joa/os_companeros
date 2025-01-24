@@ -438,36 +438,48 @@ html(lang="en")
               p Bye
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )        
+        //- .titre-container
+        //-   p.titre Admin 🧐  
+        //- form(action="/admin" method="post")
+        //-   .ajoutCommentaire
+        //-     .avatar-container
+        //-      table
+        //-       thead
+        //-         tr
+        //-           th Avatar
+        //-           th Nom d'utilisateur
+        //-           th.hidden-md  Prénom
+        //-           th.hidden-md  Nom
+        //-           th.hidden-md  Date de création
+        //-           th Suppression
+        //-       tbody
+        //-         each user in users
+        //-           tr
+        //-             td
+        //-               img.avatar(src=user.avatar, alt="avatar profil")
+        //-             td #{user.userName}
+        //-             td.hidden-md #{user.firstname}
+        //-             td.hidden-md #{user.lastname}
+        //-             //- td.hidden-md #{user.lastname}
+        //-             td.hidden-md AAAAAA
+        //-             //- td.hidden-md #{user.date}
+        //-             td
+        //-               form(action="/adminDelUser" method="post")
+        //-                 input(type="hidden" name="userId" value=user._id.toString())
+        //-                 button(type="submit" class="button-delete") X
         .titre-container
-          p.titre Admin 🧐  
-        form(action="/admin" method="post")
-          .ajoutCommentaire
-            .avatar-container
-             table
-              thead
-                tr
-                  th Avatar
-                  th Nom d'utilisateur
-                  th.hidden-md  Prénom
-                  th.hidden-md  Nom
-                  th.hidden-md  Date de création
-                  th Suppression
-              tbody
-                each user in users
-                  tr
-                    td
-                      img.avatar(src=user.avatar, alt="avatar profil")
-                    td #{user.userName}
-                    td.hidden-md #{user.firstname}
-                    td.hidden-md #{user.lastname}
-                    //- td.hidden-md #{user.lastname}
-                    td.hidden-md AAAAAA
-                    //- td.hidden-md #{user.date}
-                    td
-                      form(action="/adminDelUser" method="post")
-                        input(type="hidden" name="userId" value=user._id.toString())
-                        button(type="submit" class="button-delete") X
-                        
+        p.titre Admin 🧐
+        
+        form(action="/adminDelUser" method="post")
+          each user in users
+            div
+              p Nom d'utilisateur : #{user.userName}
+              p Prénom : #{user.firstname}
+              p Nom : #{user.lastname}
+              p Date de création : #{user.date || 'Non renseignée'}
+              input(type="checkbox" name="userIds" value=user._id.toString()) Supprimer
+          button(type="submit") Supprimer les utilisateurs sélectionnés
+                
 
         //-  table.table-container
         //- thead

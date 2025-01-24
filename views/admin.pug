@@ -443,12 +443,12 @@ html(lang="en")
             //- button.button-head
               //- img.avatar(src="assets/icons/icon512.png", alt="wall") 
           div.avatar-container-head
-            form(action='/login' method='get')
+            form(action='/logout' method='get')
               p Bye
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )        
         .titre-container
-          p.titre Admin 🧐  
+          p.titre  👮‍♂️👮‍♀️ 
         form(action="/admin" method="post")
           .ajoutCommentaire
             .avatar-container
@@ -472,29 +472,10 @@ html(lang="en")
                     //- td.hidden-md #{user.lastname}
                     td.hidden-md #{user.date}
                     td
-                      form(action="/adminDelUser" method="post")
+                      form(action="/admin" method="post")
                         input(type="hidden" name="userId" value=user._id.toString())
                       button(type="submit" class="button-delete") X
-                        
-
-        //-  table.table-container
-        //- thead
-        //-   tr
-        //-     th Avatar
-        //-     th Nom
-        //-     th Email
-        //-     th Actions
-        //- tbody
-        //-   each user in users
-        //-     tr
-        //-       td
-        //-         img.avatar(src=user.avatar, alt=`Avatar de ${user.name}`)
-        //-       td #{user.name}
-        //-       td #{user.email}
-        //-       td
-        //-         .button-container
-        //-           button.button-like Like
-        //-           button.button-delete Delete           
+         
     
     script(src="/js/script.js")
     script.

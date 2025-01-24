@@ -421,7 +421,7 @@ html(lang="en")
               button.button-head
                 img.avatar(src="assets/icons/message.png", alt="messages")
           div.avatar-container-head
-            form(action='/login' method='get')
+            form(action='/logout' method='get')
               p Bye
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )      
@@ -440,7 +440,7 @@ html(lang="en")
         .profile-container
           .profile-header
             img.profile-avatar(src=user.avatar alt="Avatar")
-            h1.profile-name #{user.username}
+            h1.profile-name #{user.userName}
           .profile-section
             h2.section-title Informations
             p.section-content 
