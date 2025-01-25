@@ -1,0 +1,114 @@
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title À propos
+    link(href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet")
+    style.
+      body {
+        font-family: 'Audiowide', sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #121212;
+        color: #b3b3b3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-top:20%;
+        height: 80vh;
+      }
+      .container {
+        width: 100%;
+        max-width: 800px;
+        padding: 20px;
+        border: 2px solid #9c27b0;
+        border-radius: 10px;
+        background-color: #2a2a2a;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        color: #00c7ff;
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      p {
+        margin: 10px 0;
+        line-height: 1.6;
+      }
+      ul {
+        margin: 10px 0;
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+      a {
+        color: #00bcd4;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      button {
+        margin-top: 20px;
+        background-color: #00bcd4;
+        color: #121212;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        padding: 10px;
+        transition: background-color 0.3s;
+        border: none;
+      }
+      button:hover {
+        background-color: #00796b;
+      }
+      @media (max-width: 400px) {
+        .container {
+          margin-top: 10%; /* Position plus basse pour les petits écrans */
+          margin-left: 8%;
+          margin-right: 8%;
+          padding: 15px;
+          max-width: calc(100% - 10%); /* Ajuste la largeur pour correspondre aux marges */
+        }
+        h1 {
+          font-size: 2rem; /* Réduction de la taille de la police */
+        }
+        p, ul {
+          font-size: 0.9rem; /* Ajustement des textes pour la lisibilité */
+        }
+        button {
+          font-size: 0.9rem; /* Réduction pour correspondre au reste */
+        }
+      }
+  body
+    .container
+      h1
+      h1
+      h1 À propos de nous
+      p
+        | Bienvenue sur notre plateforme, un espace dédié à la liberté, l'inclusivité et le respect.
+      p
+        | Ici, vous pouvez :
+      ul
+        li Vous connecter et créer des liens authentiques.
+        li Partager des moments importants et des idées.
+        li Participer à des échanges enrichissants.
+      p
+        | Notre priorité :
+      ul
+        li Une interface simple et accessible pour tous.
+        li Des outils modernes pour communiquer en toute sécurité.
+        li La confidentialité et le respect des données.
+      p
+        | Toute forme de non-respect sera sanctionnée. Ensemble, construisons une communauté harmonieuse et accueillante !
+      p
+        | Questions ou suggestions ? Contactez-nous via notre formulaire ou par email à 
+        a(href="mailto:david.joaquim.martins@gmail.com") support@monsite.com.
+      p
+        | Merci de nous rejoindre !
+      form(action="/login" method="get")
+        button(type="submit") Retour à l'accueil
