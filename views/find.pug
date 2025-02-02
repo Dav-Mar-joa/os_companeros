@@ -501,10 +501,10 @@ html(lang="en")
               p Bye
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )        
-        .titre-container
-          p.titre Os compañeros
+        //- .titre-container
+        //-   p.titre Os compañeros
         .titre-container  
-          p.titre-find 🧐 
+          p.titre-find 🔎🧐
         form(action="/find" method="post")
         if(users)
           .ajoutCommentaire
@@ -521,8 +521,9 @@ html(lang="en")
                 each user in users
                   tr
                     td
-                      img.avatar(src=user.avatar, alt="avatar profil")
-                    td #{user.userName}
+                      a(href=`/profil/${user._id}`)
+                        img.avatar(src=user.avatar, alt="avatar profil")
+                    td #{user.username}
                     td.hidden-md #{user.firstname}
                     td.hidden-md #{user.lastname}
                     //- td.hidden-md #{user.lastname}
@@ -545,7 +546,7 @@ html(lang="en")
         //- each userExist in users 
         //-   .ajoutCommentaire
         //-     img.avatar(src=userExist.avatar, alt="avatar profil")
-        //-     p.avatar-container #{userExist.userName}
+        //-     p.avatar-container #{userExist.username}
         //-     p.avatar-container (#{userExist.lastname})
         //-     form(action="/find" method="post")
         //-       input(type="hidden" name="userId" value=userExist._id.toString())

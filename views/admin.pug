@@ -434,10 +434,10 @@ html(lang="en")
         .titre-container
           //- p.autres-pages Ami
           div.avatar-container-head
-            form(action='/admin' method='post')
+            form(action='/adminStats' method='get')
               p Mur
               button.button-head
-                img.avatar(src="assets/icons/wall.png", alt="wall")
+                img.avatar(src="assets/icons/statistics.png", alt="wall")
           div.avatar-container-head
             p Commu' : #{nbUsers}    
             //- button.button-head
@@ -446,9 +446,9 @@ html(lang="en")
             form(action='/logout' method='get')
               p Bye
               button.button-head
-                img.avatar(src="assets/icons/logout.png", alt="logout" )        
+                img.avatar(src="assets/icons/logout.png", alt="logout" ) 
         .titre-container
-          p.titre  👮‍♂️👮‍♀️ 
+          p.titre  Admin 👮‍♂️👮‍♀️             
         form(action="/admin" method="post")
           .ajoutCommentaire
             .avatar-container
@@ -466,7 +466,7 @@ html(lang="en")
                   tr
                     td
                       img.avatar(src=user.avatar, alt="avatar profil")
-                    td #{user.userName}
+                    td #{user.username}
                     td.hidden-md #{user.firstname}
                     td.hidden-md #{user.lastname}
                     //- td.hidden-md #{user.lastname}

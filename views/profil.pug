@@ -38,8 +38,9 @@ html(lang="en")
       }
       .profile-header {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
+        justify-content: space-between;
         margin-bottom: 20px;
       }
       .profile-avatar {
@@ -132,6 +133,15 @@ html(lang="en")
         height: 50px;
         border-radius: 50%;
         border: 2px solid #00c7ff; /* Bordure pour mettre en valeur */
+        object-fit: cover; /* Ajuste l'image sans la 
+        déformer */
+      }
+     .icon-edit-logo {
+        width: 4vh;
+        height: auto;
+        border-radius: 50%;
+        background-color:white;
+        padding:2px;
         object-fit: cover; /* Ajuste l'image sans la 
         déformer */
       }
@@ -322,6 +332,22 @@ html(lang="en")
           gap: 10px;
         }
 
+      .edit-icon {
+        background-color:transparent;
+        color: #fff;
+        border: none;
+        border:3px solid  #9c27b0; 
+        border-radius: 50%;
+        padding: 1px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .edit-icon:hover {
+        transform: scale(1.1);
+        border:3px solid rgb(255, 0, 0);
+      }
+
 
       @media (max-width: 400px) {
         .profile-container {
@@ -435,12 +461,15 @@ html(lang="en")
         //-   .date-time
         //-     //- #dateJour
         //-     #heure  
-        .titre-container-head
-          p.titre Os compañeros
+        //- .titre-container-head
+        //-   p.titre Os compañeros
         .profile-container
           .profile-header
             img.profile-avatar(src=user.avatar alt="Avatar")
-            h1.profile-name #{user.userName}
+            form(action='/modificationProfil' method='get')
+              button.edit-icon
+                img.icon-edit-logo(src="assets/icons/modification.png", alt="moifications")
+          h1.profile-name #{user.username}   
           .profile-section
             h2.section-title Informations
             p.section-content 
@@ -475,8 +504,9 @@ html(lang="en")
           each friend in friends 
             if(friend) 
               .container-friends
-                img(src=friend.avatar , alt="") 
-                p.friends.username #{friend.userName}
+                a(href=`/profil/${friend._id}`)
+                  img(src=friend.avatar , alt="") 
+                p.friends.username #{friend.username}
                 form(action="/delUser" method="post")
                   input(type="hidden" name="userId" value=friend._id.toString())
                   button(type="submit" class="button-submit-tache") x
@@ -486,7 +516,7 @@ html(lang="en")
         //-     each friend in friends 
         //-       if(friend)
         //-         img(src=friend.avatar , alt="") 
-        //-         p #{friend.userName}
+        //-         p #{friend.username}
         //-         form(action="/delUser" method="post")
         //-           input(type="hidden" name="userId" value=friend._id.toString())
         //-           button(type="submit" class="button-submit-tache") x

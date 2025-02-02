@@ -13,17 +13,51 @@ const { MongoClient, ObjectId } = require('mongodb');
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const bcrypt = require('bcryptjs');
+const { Console } = require('console');
 
 
 app.use(cookieParser());
 
-const sessionMiddleware = session({
-    secret: 'my-application-oscompaneros', 
-    resave: false, 
-    saveUninitialized: false, 
+// const sessionMiddleware = session({
+//     secret: 'my-application-oscompaneros', 
+//     resave: false, 
+//     saveUninitialized: false, 
 
-    cookie: { 
-        secure: false, 
+//     cookie: { 
+//         secure: false, 
+//     },
+// });
+// Middleware de session
+// const sessionMiddleware = session({
+//     secret: process.env.JWT_SECRET, 
+//     resave: false, 
+//     saveUninitialized: false, 
+//     cookie: {
+//         secure: process.env.NODE_ENV === 'production', 
+//         httpOnly: true, 
+//         maxAge: 1000 * 60 * 60 * 24, 
+//     },
+//     store: MongoStore.create({
+//         mongoUrl: process.env.MONGODB_URI, 
+//         ttl: 14 * 24 * 60 * 60,
+//     }),
+// });
+
+// app.use(sessionMiddleware);
+
+const sessionMiddleware = session({
+    secret: process.env.JWT_SECRET || 'default-secret',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        dbName: 'OsCompaneros', // Nom de la base de données
+        collectionName: 'production', // Nom de la collection pour les sessions
+    }),
+    cookie: {
+        secure: false, // Mettre true en production avec HTTPS
+        maxAge: 30*24 * 60 * 60 * 1000, // Durée de vie des cookies (1 jour ici)
     },
 });
 app.use(sessionMiddleware);
@@ -53,11 +87,13 @@ app.set('view engine', 'pug');
 // Définir le chemin du dossier 'views'
 app.set('views', path.join(__dirname, 'views'));
 
+app.use('/profil', express.static(path.join(__dirname, 'public')));
+
 // Servir les fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware pour parser les données du formulaire
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 io.use((socket, next) => {
     const req = socket.request;
@@ -113,13 +149,16 @@ const transporter = nodemailer.createTransport({
 // Route pour soumettre des tâches
 app.post('/', async (req, res) => {
     const user = req.session.user || "";
+    console.log("user --------------------:",user)
+    const pseudo = user.username
     const task = {
         id: uuidv4(),
         name: req.body.task,
         idUser:user._id,
         date: new Date(),
         // username: req.session.user ? req.session.user.username : "Anonyme",
-        username: user.username || "Anonyme",
+        username: pseudo,
+        // username: req.session.user ? req.session.user.username : "aaaaaaaaaa",
         avatar: req.session.user ? req.session.user.avatar : "/assets/avatar/default.png",
         responses: []  
     };
@@ -170,7 +209,8 @@ app.get('/', async (req, res) => {
             .find({ idUser: { $in: friendsIds } }) // Filtre par les IDs des amis et de l'utilisateur
             .sort({ date: -1 })
             .toArray();
-
+        // console.log('user ',user)
+        // console.log('task ',tasks)
 
         res.render('index', {
             title: 'Mon site',
@@ -189,51 +229,137 @@ app.get('/', async (req, res) => {
 app.get('/login', async (req, res) => {
         res.render('login');
 });
-
 app.post('/login', async (req, res) => {
-
-     const user={
-        username:req.body.username,
-        password:req.body.password
-     }
+    const { username, password } = req.body;
 
     try {
         const collection = db.collection('Users');
-        const userLogged = await collection.findOne({userName:user.username})
-        if(userLogged && userLogged.password===user.password ){
-                
-            req.session.user = {
-                 _id: userLogged._id,
-                username: userLogged.userName,
-                firstname : userLogged.firstname,
-                lastname : userLogged.lastname,
-                email : userLogged.email,
-                avatar: userLogged.avatar 
-            } 
-             
-                if(userLogged.isAdmin==="y"){
-                    console.log("dans admin")
-                    res.redirect('/admin')
-                }
-                else{
-                    console.log("users")
-                    console.log("---------------------")
-                    console.log("user connecté : ",req.session.user.username)
-                    console.log("---------------------")
-                    res.redirect('/') 
-                }
+        const userLogged = await collection.findOne({ username });
+
+        // Vérifier si l'utilisateur existe
+        if (!userLogged) {
+            return res.render('login', { message: "Login ou mot de passe erroné !" });
         }
 
-        else{
-            res.render('login',{
-                message:"Login ou mot de pass erroné !"
-            })
+        // Vérifier si le mot de passe correspond au hash stocké
+        const isMatch = await bcrypt.compare(password, userLogged.password);
+        if (!isMatch) {
+            return res.render('login', { message: "Login ou mot de passe erroné !" });
+        }
+
+        // Création de la session utilisateur après authentification réussie
+        req.session.user = {
+            _id: userLogged._id,
+            username: userLogged.username,
+            firstname: userLogged.firstname,
+            lastname: userLogged.lastname,
+            email: userLogged.email,
+            avatar: userLogged.avatar
         };
-     } catch (err) {
-        console.error('Erreur lors de la récupération des tâches :', err);
-        res.status(500).send('Erreur lors de la récupération des tâches');
+
+        // Redirection selon le rôle de l'utilisateur
+        if (userLogged.isAdmin === "y") {
+            console.log("Utilisateur admin connecté");
+            return res.redirect('/admin');
+        } else {
+            console.log("Utilisateur connecté :", req.session.user.username);
+            return res.redirect('/');
+        }
+    } catch (err) {
+        console.error("Erreur lors de la connexion :", err);
+        res.status(500).send("Erreur lors de la connexion");
     }
 });
+
+
+// app.post('/login', async (req, res) => {
+
+//      const user={
+//         username:req.body.username,
+//         password:req.body.password
+//      }
+
+//     try {
+//         const collection = db.collection('Users');
+//         const userLogged = await collection.findOne({username:user.username})
+//         if(userLogged && userLogged.password===user.password ){
+                
+//             req.session.user = {
+//                  _id: userLogged._id,
+//                 username: userLogged.username,
+//                 firstname : userLogged.firstname,
+//                 lastname : userLogged.lastname,
+//                 email : userLogged.email,
+//                 avatar: userLogged.avatar 
+//             } 
+             
+//                 if(userLogged.isAdmin==="y"){
+//                     console.log("dans admin")
+//                     res.redirect('/admin')
+//                 }
+//                 else{
+//                     console.log("users")
+//                     console.log("---------------------")
+//                     console.log("user connecté : ",req.session.user.username)
+//                     console.log("---------------------")
+//                     res.redirect('/') 
+//                 }
+//         }
+
+//         else{
+//             res.render('login',{
+//                 message:"Login ou mot de pass erroné !"
+//             })
+//         };
+//      } catch (err) {
+//         console.error('Erreur lors de la récupération des tâches :', err);
+//         res.status(500).send('Erreur lors de la récupération des tâches');
+//     }
+// });
+// app.post('/login', async (req, res) => {
+
+//      const user={
+//         username:req.body.username,
+//         password:req.body.password
+//      }
+
+//     try {
+//         const collection = db.collection('Users');
+//         const userLogged = await collection.findOne({username:user.username})
+//         if(userLogged && userLogged.password===user.password ){
+                
+//             req.session.user = {
+//                  _id: userLogged._id,
+//                 username: userLogged.username,
+//                 firstname : userLogged.firstname,
+//                 lastname : userLogged.lastname,
+//                 email : userLogged.email,
+//                 avatar: userLogged.avatar 
+//             } 
+             
+//                 if(userLogged.isAdmin==="y"){
+//                     console.log("dans admin")
+//                     res.redirect('/admin')
+//                 }
+//                 else{
+//                     console.log("users")
+//                     console.log("---------------------")
+//                     console.log("user connecté : ",req.session.user.username)
+//                     console.log("---------------------")
+//                     res.redirect('/') 
+//                 }
+//         }
+
+//         else{
+//             res.render('login',{
+//                 message:"Login ou mot de pass erroné !"
+//             })
+//         };
+//      } catch (err) {
+//         console.error('Erreur lors de la récupération des tâches :', err);
+//         res.status(500).send('Erreur lors de la récupération des tâches');
+//     }
+// });
 
 app.get('/logout', (req, res) => {
     // Supprimer la session
@@ -242,7 +368,7 @@ app.get('/logout', (req, res) => {
             console.error('Erreur lors de la destruction de la session', err);
             return res.status(500).send('Erreur de déconnexion');
         }
-
+        res.clearCookie('connect.sid');
         // Redirection vers la page de login après déconnexion
         res.redirect('/login');
     });
@@ -268,7 +394,7 @@ app.get('/find', async (req, res) => {
         },
         isAdmin: { $ne: "y" }
     })
-    .sort({userName:1})
+    .sort({username:1})
     .toArray();
         res.render('find',{
             user,
@@ -548,7 +674,7 @@ app.get('/chatPublic', async (req, res) => {
 
 //         res.render('admin', {
 //             users,
-//             message: `Utilisateur ${userToDelete.userName} supprimé avec succès.`
+//             message: `Utilisateur ${userToDelete.username} supprimé avec succès.`
 //         });
 //     } catch (err) {
 //         console.error('Erreur lors de la suppression de l\'utilisateur :', err);
@@ -595,7 +721,7 @@ app.get('/chatPublic', async (req, res) => {
 
 //         res.render('admin', {
 //             users,
-//             message: `Utilisateur ${userToDelete.userName} et ses messages ont été supprimés avec succès.`
+//             message: `Utilisateur ${userToDelete.username} et ses messages ont été supprimés avec succès.`
 //         });
 //     } catch (err) {
 //         console.error('Erreur lors de la suppression de l\'utilisateur et des messages :', err);
@@ -674,7 +800,77 @@ app.get('/chatPublic', async (req, res) => {
 //         res.status(500).send('Erreur serveur');
 //     }
 // });
+// app.get('/profil/:userId', async (req, res) => {
+//     console.log("je suis dans la route du profil apres avatar")
+//     const userId = req.params.userId;
+//     // Rechercher l'utilisateur dans la base de données avec l'userId
+//     console.log("userId",userId)
+//     try {
+//         const userProfilFriend =  await db.collection("Users").findOne({ _id: userId })
+//         const friends = await db.collection("Users").findOne(
+//             { _id: userId }, // Critère de recherche
+//             { projection: { friends: 1 } } )
+        
+//         console.log(userProfilFriend)
+//         console.log("friends : ",friends)
 
+//         // Récupérer les informations des amis : avatar et username
+//         const friendsInfo = await db.collection("Users").find(
+//             { _id: { $in: friendsIds } }, 
+//             { projection: { avatar: 1, username: 1 } } // Projection pour récupérer seulement avatar et username
+//         ).toArray();
+
+//         console.log("Informations des amis : ", friendsInfo)
+//         res.render('profilFriend', {
+//             userProfilFriend,
+//             friends
+        
+//         });
+//     } catch (error) {
+//         console.error('Erreur lors de la récupération du profil :', err);
+//         res.status(500).send('Erreur serveur');
+//     }
+
+//   });
+
+  app.get('/profil/:userId', async (req, res) => {
+    console.log("je suis dans la route du profil après avatar");
+    const userId = req.params.userId;
+    console.log("userId", userId);
+
+    try {
+        // Étape 1 : Récupérer l'utilisateur et ses amis
+        const userProfilFriend = await db.collection("Users").findOne({ _id: userId });
+        
+        // Vérifier si l'utilisateur existe et s'il a des amis
+        if (!userProfilFriend || !userProfilFriend.friends) {
+            return res.status(404).send("Utilisateur ou amis non trouvés");
+        }
+
+        console.log("Profil de l'utilisateur : ", userProfilFriend);
+
+        // Étape 2 : Récupérer les IDs des amis
+        const friendsIds = userProfilFriend.friends; // Tableau des IDs des amis
+        console.log("ID des amis : ", friendsIds);
+
+        // Récupérer les informations des amis : avatar et username
+        const friendsInfo = await db.collection("Users").find(
+            { _id: { $in: friendsIds } }, 
+            { projection: { avatar: 1, username: 1,  } } // Projection pour récupérer seulement avatar et username
+        ).toArray();
+
+        console.log("Informations des amis : ", friendsInfo);
+        
+        res.render('profilFriend', {
+                        userProfilFriend,
+                        friendsInfo})
+    } catch (err) {
+        console.log("Erreur lors de la récupération du profil ou des amis :", err);
+        res.status(500).send("Erreur serveur");
+    }
+});
+
+  
 app.post('/delUser', async (req, res) => {
     try {
         const { userId } = req.body; // ID de l'utilisateur à enlever
@@ -746,9 +942,9 @@ app.post('/delUser', async (req, res) => {
 //     const friendsId = usersLoggedFriends[0].friends || []; // Tableau des IDs des amis
 //         const friends = await db.collection('Users')
 //             .find({ _id: { $in: friendsId } })
-//             // .project({ userName: 1,_id : 0}) 
-//             // .sort({userName:1})
-//             .sort({userName:1})
+//             // .project({ username: 1,_id : 0}) 
+//             // .sort({username:1})
+//             .sort({username:1})
 //             .toArray();
 
 //         res.render('profil',{
@@ -780,7 +976,7 @@ app.get('/profil', async (req, res) => {
         const friendsId = usersLoggedFriends[0].friends || []; // Tableau des IDs des amis
         const friends = await db.collection('Users')
             .find({ _id: { $in: friendsId } })
-            .sort({ userName: 1 })
+            .sort({ username: 1 })
             .toArray();
 
         // Met à jour les informations de l'utilisateur dans la session
@@ -804,58 +1000,390 @@ app.get('/register', async (req, res) => {
 
         res.render('register');
 
-});
+})
 app.post('/register', async (req, res) => {
-    const date = new Date()
-    const day=date.getDate()
-    const month=date.getMonth()+1
-    const year=date.getFullYear()
-    const dateAccount=day+'/'+month+'/'+year
+    const date = new Date();
+    const dateAccount = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+
+    // Vérifier que les mots de passe correspondent avant le hashage
+    if (req.body.password !== req.body.confirmPassword) {
+        return res.render('register', { messagePsw: "Passwords do not match!" });
+    }
+
+    // Hacher le mot de passe après validation
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
     const user = {
         _id: uuidv4(),
-        userName: req.body.username,
+        username: req.body.username,
         firstname: req.body.firstname,
-        avatar:req.body.avatar,
+        avatar: req.body.avatar,
         lastname: req.body.lastname,
-        // genre: req.body.genre,
         email: req.body.email,
-        // telephone: req.body.telephone,
-        // age: req.body.age,
-        // presentation: req.body.presentation,
-        // centreInterets: req.body.centreInterets,
-        password: req.body.password,
-        confirmPassword: req.body.confirmPassword,
-        isAdmin:"n",
-        date:dateAccount
+        password: hashedPassword,  // ✅ On stocke uniquement le hash
+        isAdmin: "n",
+        date: dateAccount,
+        isConnected: "n",
     };
-    console.log(dateAccount)
 
-    const collection = db.collection('Users'); // Utiliser la collection "users"
-    const userEmail = await collection.findOne({ email: user.email });
+    const collection = db.collection('Users'); // Accéder à la collection "Users"
+    
+    try {
+        const userEmail = await collection.findOne({ email: user.email });
 
-        if(!userEmail){
-            if(user.password===user.confirmPassword){
-                    try {
-                        await collection.insertOne(user);
-                        res.redirect('/login'); // Redirection avec un paramètre de succès pour les courses
-                    } catch (err) {
-                        console.error('Erreur lors de l\'ajout du compte :', err);
-                        res.status(500).send('Erreur lors de l\'ajout du compte');
-                    }   
-            }
-            else{
-                res.render('register',{
-                    messagePsw:"Passwords do not match !"
-                })
-            }
+        if (userEmail) {
+            return res.render('register', { messageEmail: "Email déjà utilisé!" });
         }
-        else{
-            res.render('register',{
-                messageEmail:"Email déja utilisé !"
-            })
-        }
-              
+
+        // Insérer l'utilisateur après validation
+        await collection.insertOne(user);
+        res.redirect('/login'); 
+
+    } catch (err) {
+        console.error("Erreur lors de l'ajout du compte :", err);
+        res.status(500).send("Erreur lors de l'ajout du compte");
+    }
 });
+
+//----------
+
+// app.post('/register', async (req, res) => {
+//     const date = new Date()
+//     const day=date.getDate()
+//     const month=date.getMonth()+1
+//     const year=date.getFullYear()
+//     const dateAccount=day+'/'+month+'/'+year
+//     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+//         console.log("hashed psw :",hashedPassword)
+//     const hashedPasswordConfirm = await bcrypt.hash(req.body.confirmPassword, 10);
+//         console.log("hashed psw confirm:",hashedPasswordConfirm )
+//     const user = {
+//         _id: uuidv4(),
+//         username: req.body.username,
+//         firstname: req.body.firstname,
+//         avatar:req.body.avatar,
+//         lastname: req.body.lastname,
+//         // genre: req.body.genre,
+//         email: req.body.email,
+//         // telephone: req.body.telephone,
+//         // age: req.body.age,
+//         // presentation: req.body.presentation,
+//         // centreInterets: req.body.centreInterets,
+//         password: hashedPassword,
+//         password: req.body.password,
+//         confirmPassword: req.body.confirmPassword,
+//         isAdmin:"n",
+//         date:dateAccount
+//     };
+//     console.log(dateAccount)
+
+//     const collection = db.collection('Users'); // Utiliser la collection "users"
+//     const userEmail = await collection.findOne({ email: user.email });
+
+//         if(!userEmail){
+//             if(user.password===user.confirmPassword){
+//                     try {
+//                         await collection.insertOne(user);
+//                         res.redirect('/login'); // Redirection avec un paramètre de succès pour les courses
+//                     } catch (err) {
+//                         console.error('Erreur lors de l\'ajout du compte :', err);
+//                         res.status(500).send('Erreur lors de l\'ajout du compte');
+//                     }   
+//             }
+//             else{
+//                 res.render('register',{
+//                     messagePsw:"Passwords do not match !"
+//                 })
+//             }
+//         }
+//         else{
+//             res.render('register',{
+//                 messageEmail:"Email déja utilisé !"
+//             })
+//         }
+              
+// });
+// app.post('/register', async (req, res) => {
+//     const date = new Date()
+//     const day=date.getDate()
+//     const month=date.getMonth()+1
+//     const year=date.getFullYear()
+//     const dateAccount=day+'/'+month+'/'+year
+//     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+//         console.log("hashed psw :",hashedPassword)
+//     const user = {
+//         _id: uuidv4(),
+//         username: req.body.username,
+//         firstname: req.body.firstname,
+//         avatar:req.body.avatar,
+//         lastname: req.body.lastname,
+//         // genre: req.body.genre,
+//         email: req.body.email,
+//         // telephone: req.body.telephone,
+//         // age: req.body.age,
+//         // presentation: req.body.presentation,
+//         // centreInterets: req.body.centreInterets,
+//         password: hashedPassword,
+//         password: req.body.password,
+//         confirmPassword: req.body.confirmPassword,
+//         isAdmin:"n",
+//         date:dateAccount
+//     };
+//     console.log(dateAccount)
+
+//     const collection = db.collection('Users'); // Utiliser la collection "users"
+//     const userEmail = await collection.findOne({ email: user.email });
+
+//         if(!userEmail){
+//             if(user.password===user.confirmPassword){
+//                     try {
+//                         await collection.insertOne(user);
+//                         res.redirect('/login'); // Redirection avec un paramètre de succès pour les courses
+//                     } catch (err) {
+//                         console.error('Erreur lors de l\'ajout du compte :', err);
+//                         res.status(500).send('Erreur lors de l\'ajout du compte');
+//                     }   
+//             }
+//             else{
+//                 res.render('register',{
+//                     messagePsw:"Passwords do not match !"
+//                 })
+//             }
+//         }
+//         else{
+//             res.render('register',{
+//                 messageEmail:"Email déja utilisé !"
+//             })
+//         }
+              
+// });
+// app.get('/modificationProfil', async (req, res) => {
+
+//     const user = req.session.user || "";
+//     const userId = user._id || "";
+//     const collectionUsers = db.collection('Users');
+
+//         // Récupération de l'utilisateur connecté
+//     const currentUser = await collectionUsers.findOne({ _id: user._id });
+//     console.log("#############################################")
+//     console.log("je suis dans get ")
+//     console.log(currentUser)
+//     console.log("#############################################")
+
+//     res.render('modificationProfil',{
+//         currentUser
+//     });
+
+// });
+app.post('/modificationProfil', async (req, res) => {
+    try {
+        const user = req.session.user || "";
+        const userId = user._id || "";
+        
+        // Affichage des informations de l'utilisateur
+        console.log("-------------------------------------");
+        console.log("je suis dans PROFIL ")
+        console.log(user);
+        console.log("-------------------------------------");
+        console.log("gggggggggggggggggg",req.body);  // Pour déboguer
+        // Récupération de la collection 'Users'
+        const collectionUsers = await db.collection('Users');
+
+        // Récupération de l'utilisateur connecté
+        const currentUser = await collectionUsers.findOne({ _id: user._id });
+        const userUpdate = {
+            username: req.body.username || currentUser.username,
+                firstname: req.body.firstname || currentUser.firstname,
+                avatar: req.body.avatar || currentUser.avatar,
+                lastname: req.body.lastname || currentUser.lastname 
+        }
+        console.log("<<<<<<<<<<<<----->>>>>>>>>>>>>>>")
+        console.log("userUpade",userUpdate)
+        await collectionUsers.updateOne({ _id: user._id }, { $set: userUpdate });
+        req.session.user = { ...currentUser, ...userUpdate };
+        
+        const collectionMessages = await db.collection('Wall');
+        await collectionMessages.updateMany(
+            { idUser: userId }, // Identifier les messages de cet utilisateur
+            { $set: { username: userUpdate.username, avatar: userUpdate.avatar } } // Modifier les champs concernés
+        );
+
+        const collectionChat = await db.collection('Chat');
+        await collectionChat.updateMany(
+            { userId: userId }, // Identifier les messages de cet utilisateur
+            { $set: { username: userUpdate.username, avatar: userUpdate.avatar } } // Modifier les champs concernés
+        );
+
+        res.redirect('/profil');
+
+    } catch (error) {
+        console.error("Erreur lors de la récupération de l'utilisateur :", error);
+        res.status(500).send("Une erreur est survenue lors de la modification du profil");
+    }
+});
+app.get('/modificationProfil', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login'); // Redirection si l'utilisateur n'est pas connecté
+    }
+
+    res.render('modificationProfil', { user: req.session.user });
+});
+
+// app.post('/modificationProfil', async (req, res) => {
+//     try {
+//         if (!req.session.user || !req.session.user._id) {
+//             console.log("Aucun utilisateur en session");
+//             return res.status(401).send("Utilisateur non connecté");
+//         }
+
+//         console.log("ID utilisateur en session:", req.session.user._id);
+
+//         let userId;
+//         if (req.session.user._id) {
+//             userId = req.session.user._id;
+//         } else {
+//             console.error("L'ID de session n'est pas valide :", req.session.user._id);
+//             return res.status(400).send("ID utilisateur invalide");
+//         }
+
+//         console.log("ID converti en ObjectId :", userId);
+
+//         const collectionUsers = await db.collection('Users');
+//         const currentUser = await collectionUsers.findOne({ _id: userId });
+
+//         if (!currentUser) {
+//             console.log("Utilisateur introuvable en base de données");
+//             return res.status(404).send("Utilisateur introuvable");
+//         }
+
+//         const userUpdate = {
+//             username: req.body.username || currentUser.username,
+//             firstname: req.body.firstname || currentUser.firstname,
+//             avatar: req.body.avatar || currentUser.avatar,
+//             lastname: req.body.lastname || currentUser.lastname
+//         };
+
+//         console.log("Données mises à jour :", userUpdate);
+
+//         await collectionUsers.updateOne({ _id: userId }, { $set: userUpdate });
+
+//         req.session.user = { ...currentUser, ...userUpdate };
+
+//         console.log("Mise à jour réussie, redirection vers /profil");
+//         res.redirect('/profil'); 
+
+//     } catch (error) {
+//         console.error("Erreur lors de la modification du profil :", error);
+//         res.status(500).send("Une erreur est survenue");
+//     }
+// });
+
+
+
+
+// app.post('/modificationProfil', async (req, res) => {
+//     try {
+//         const user = req.session.user || "";
+//         const userId = user._id || "";
+        
+//         if (!userId) {
+//             return res.status(401).send('Utilisateur non connecté');
+//         }
+
+//         // Récupérer les nouvelles données du formulaire
+//         const { username, firstname, lastname, avatar } = req.body;
+
+//         // Affichage des données reçues pour vérification
+//         console.log("Modification du profil - Données reçues :", req.body);
+
+//         // Récupération de la collection 'Users'
+//         const collectionUsers = db.collection('Users');
+
+//         // Mise à jour de l'utilisateur dans la base de données
+//         const result = await collectionUsers.updateOne(
+//             { _id: userId }, // Recherche de l'utilisateur par son ID
+//             { 
+//                 $set: { 
+//                     username, 
+//                     firstname, 
+//                     lastname, 
+//                     avatar 
+//                 }
+//             }
+//         );
+
+//         // Vérification si la mise à jour a réussi
+//         if (result.matchedCount > 0) {
+//             // Récupérer les nouvelles informations de l'utilisateur après la mise à jour
+//             const updatedUser = await collectionUsers.findOne({ _id: userId });
+
+//             // Mettre à jour la session avec les nouvelles informations de l'utilisateur
+//             req.session.user = updatedUser;
+
+//             // Rediriger vers le profil avec les nouvelles informations
+//             res.redirect('/profil');
+//         } else {
+//             console.log("Aucune modification effectuée.");
+//             res.status(400).send("Aucune modification effectuée.");
+//         }
+
+//     } catch (error) {
+//         console.error("Erreur lors de la modification du profil :", error);
+//         res.status(500).send("Une erreur est survenue lors de la modification du profil.");
+//     }
+// });
+
+// app.post('/modificationProfil', async (req, res) => {
+//     try {
+//         const user = req.session.user || "";
+//         const userId = user._id || "";
+
+//         // Affichage des informations de l'utilisateur
+//         console.log("-------------------------------------");
+//         console.log("je suis dans modificationProfil ");
+//         console.log(user);
+//         console.log("-------------------------------------");
+
+//         // Récupération de la collection 'Users'
+//         const collectionUsers = await db.collection('Users');
+
+//         // Récupération de l'utilisateur connecté
+//         const currentUser = await collectionUsers.findOne({ _id: user._id });
+
+//         if (currentUser) {
+//             // Préparer les nouvelles informations pour l'utilisateur
+//             const userUpdate = {
+//                 username: req.body.username || currentUser.username,
+//                 firstname: req.body.firstname || currentUser.firstname,
+//                 avatar: req.body.avatar || currentUser.avatar,
+//                 lastname: req.body.lastname || currentUser.lastname
+//             };
+
+//             console.log("<<<<<<<<<<<<----->>>>>>>>>>>>>>>");
+//             console.log("userUpdate:", userUpdate);
+
+//             // Mise à jour de l'utilisateur dans la base de données
+//             await collectionUsers.updateOne(
+//                 { _id: user._id },
+//                 { $set: userUpdate }
+//             );
+
+//             // Mettre à jour les données de session avec les nouvelles valeurs
+//             req.session.user = { ...currentUser, ...userUpdate };
+
+//             // Rediriger vers la page du profil ou afficher une page de confirmation
+//             res.redirect('/modificationProfil');
+//         } else {
+//             console.log("Utilisateur introuvable");
+//             res.status(404).send("Utilisateur introuvable");
+//         }
+//     } catch (error) {
+//         console.error("Erreur lors de la récupération de l'utilisateur :", error);
+//         res.status(500).send("Une erreur est survenue lors de la modification du profil");
+//     }
+// });
+
+
 app.get('/admin', async (req, res) => {
     console.log('dans admin get');
     try {
@@ -871,6 +1399,40 @@ app.get('/admin', async (req, res) => {
         res.render('admin', {
             users,
             nbUsers // Passe les utilisateurs au template
+        });
+    } catch (err) {
+        console.error("Erreur lors de la récupération des utilisateurs :", err);
+        res.status(500).send("Erreur lors de la récupération des utilisateurs");
+    }
+});
+app.get('/adminStats', async (req, res) => {
+    console.log('dans admin     statics');
+    try {
+        const collection = db.collection('Users');
+        let nbUsers = await collection.countDocuments()
+        nbUsers=nbUsers-1
+        // nbUsers=nbUsers-1
+        console.log("nbUSERS ",nbUsers) // Utiliser la collection "Users"
+        const usersInfos = await collection
+        .find({ isAdmin: { $ne: "y"}},
+              { isConnected: { $eq: "y"}}
+
+         )
+        .toArray();
+        const nbOnline = await collection.countDocuments({ 
+            isAdmin: { $ne: "y" }, 
+            isConnected: "y"
+        });
+
+        console.log("rrrrrrrrrrrrrrrrrrrr",nbOnline)
+        const collectionPosts = db.collection('Wall');
+        let nbPosts = await collectionPosts.countDocuments()
+        console.log("nbPosts :",nbPosts)
+        res.render('adminStats', {
+            usersInfos,
+            nbUsers,
+            nbPosts,
+            nbOnline // Passe les utilisateurs au template
         });
     } catch (err) {
         console.error("Erreur lors de la récupération des utilisateurs :", err);
@@ -1134,6 +1696,23 @@ let userConnected=[]
 io.on('connection', (socket) => {
     const req = socket.request;
     const user = req.session.user || {}; // Récupérer les informations de l'utilisateur connecté
+    /////////////////////////////
+
+
+    try {
+        console.log("<< -->>")
+        console.log("dans connection")
+        console.log("<< -->>")
+        const collection = db.collection(process.env.MONGODB_COLLECTION);
+        db.collection('Users').updateOne(
+            { _id: user._id  },
+            {$set: { isConnected: 'y' } }
+        )
+
+    } catch (err) {
+        console.error('Erreur lors du changement isConnected :', err);
+        res.status(500).send('Erreur lors du changement isConnected');
+    }
 
     console.log('Nouvelle connexion:', socket.id);
     console.log('Nom d\'utilisateur connecté :', user || 'Anonyme');
@@ -1178,11 +1757,24 @@ io.on('connection', (socket) => {
         }
     });
     // Gestion de la déconnexion
-    socket.on('disconnect', (reason) => {
+    socket.on('disconnect', async  (reason) => {
         console.log('Utilisateur déconnecté:', socket.id);
         console.log('Raison:', reason);
+        try {
+            console.log("dans deconnection")
+            const collection = db.collection(process.env.MONGODB_COLLECTION);
+            await db.collection('Users').updateOne(
+                { _id: user._id  },
+                {$set: { isConnected: 'n' } }
+            )
+    
+        } catch (err) {
+            console.error('Erreur lors du changement isConnected :', err);
+            res.status(500).send('Erreur lors du changement isConnected');
+        }
         userConnected = userConnected.filter(item => item !== user._id);
         nbConnected = userConnected.length;
+        
         io.emit('updateNbConnected', nbConnected); // Mise à jour après déconnexion
         if (user.username) {
             console.log(`${user.username} s'est déconnecté.`);

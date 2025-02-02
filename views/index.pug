@@ -564,8 +564,8 @@ html(lang="en")
         //-   .date-time
         //-     //- #dateJour
         //-     #heure  
-        .titre-container
-          p.titre Os compañeros
+        //- .titre-container
+        //-   p.titre Os compañeros
         form(action="/" method="post")
           .ajoutCommentaire
             label(for="task")
@@ -578,9 +578,10 @@ html(lang="en")
               .task-right
                 .task-header
                   .avatar-container
-                    div.avatar
-                      //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
-                      img.avatar(src=task.avatar, alt="avatar profil")
+                    a(href=`/profil/${task.idUser}`)
+                      div.avatar
+                        //- img.avatar(src="assets/avatar/avatar2.png", alt="avatar profil")
+                        img.avatar(src=task.avatar, alt="avatar profil")
                     p.username-commentaire #{task.username}
                   p.dateCommentaire #{new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(task.date))}
                   
@@ -591,10 +592,11 @@ html(lang="en")
                     div 
                     img(src="/assets/like/like.png" alt="like")
                     P 1
-                  button#toggle-commentaires(type="button" class="button-ajoutReponse") Commentaires
-                  button(type="button" onclick="deleteTask(this)" class="button-like")
-                    div 
-                      img(src="/assets/delete/delete.png", alt="delete")  
+                  //- button#toggle-commentaires(type="button" class="button-ajoutReponse") Commentaires
+                  if task.idUser===user._id
+                    button(type="button" onclick="deleteTask(this)" class="button-like")
+                      div 
+                        img(src="/assets/delete/delete.png", alt="delete")  
               //- .affichageCommentaire 
                 //- .ajoutReponse 
                 //-   form(action='/comment' method='POST')
