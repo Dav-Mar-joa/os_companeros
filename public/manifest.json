@@ -6,6 +6,7 @@
     "background_color": "#9c27b0",
     "theme_color": "#007bff",
     "description": "Une brève description de ton application",
+     "purpose": "any maskable",
     "icons": [
       {
         "src": "/assets/icons/icon192.png",
