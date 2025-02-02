@@ -500,17 +500,18 @@ html(lang="en")
             h2.section-title Amis
             button#toggle-friends(type="button" class="bouton-friends") 👁     
       .friends-container
-        h2.section-title-amis Liste d'amis
-          each friend in friends 
-            if(friend) 
-              .container-friends
-                a(href=`/profil/${friend._id}`)
-                  img(src=friend.avatar , alt="") 
-                p.friends.username #{friend.username}
-                form(action="/delUser" method="post")
-                  input(type="hidden" name="userId" value=friend._id.toString())
-                  button(type="submit" class="button-submit-tache") x
-        //- .profile-section.profile-container-friends(style="display: none;")
+        if(friend)
+          h2.section-title-amis Liste d'amis
+            each friend in friends 
+              if(friend) 
+                .container-friends
+                  a(href=`/profil/${friend._id}`)
+                    img(src=friend.avatar , alt="") 
+                  p.friends.username #{friend.username}
+                  form(action="/delUser" method="post")
+                    input(type="hidden" name="userId" value=friend._id.toString())
+                    button(type="submit" class="button-submit-tache") x
+          //- .profile-section.profile-container-friends(style="display: none;")
         //-   h2.section-title-amis Liste d'Amis
         //-   .container-friends
         //-     each friend in friends 
