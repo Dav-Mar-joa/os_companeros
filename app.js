@@ -1572,6 +1572,7 @@ app.post('/admin', async (req, res) => {
 
     try {
         const userCollection = db.collection('Users');
+        const chatCollection = db.collection('Chat');
         const wallCollection = db.collection('Wall'); // Collection des messages
 
         // Supprimer l'utilisateur
@@ -1584,6 +1585,7 @@ app.post('/admin', async (req, res) => {
 
         // Supprimer les messages de l'utilisateur dans la collection wall
         const wallResult = await wallCollection.deleteMany({ idUser: userId });
+        await chatCollection.deleteMany({ userId: userId });
         console.log(`Messages supprimés dans Wall : ${wallResult.deletedCount}`);
 
         // Retirer l'utilisateur des listes d'amis des autres utilisateurs
