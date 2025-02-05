@@ -509,18 +509,7 @@ html(lang="en")
                 p.friends.username #{friend.username}
                 form(action="/delUser" method="post")
                   input(type="hidden" name="userId" value=friend._id.toString())
-                  button(type="submit" class="button-submit-tache") x
-        //- .profile-section.profile-container-friends(style="display: none;")
-        //-   h2.section-title-amis Liste d'Amis
-        //-   .container-friends
-        //-     each friend in friends 
-        //-       if(friend)
-        //-         img(src=friend.avatar , alt="") 
-        //-         p #{friend.username}
-        //-         form(action="/delUser" method="post")
-        //-           input(type="hidden" name="userId" value=friend._id.toString())
-        //-           button(type="submit" class="button-submit-tache") x
-
+                  button(type="submit" class="button-submit-tache") 🗑
             
     script(src="/js/script-profil.js")
     script.

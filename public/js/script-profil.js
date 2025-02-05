@@ -68,6 +68,7 @@ document.getElementById("toggle-friends").onclick = function() {
     console.log("ETAT : ",friendsDiv.style.display)
     if (friendsDiv.style.display === "none" || friendsDiv.style.display === "") {
         friendsDiv.style.display = "FLEX"; // Afficher
+        friendsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
         friendsDiv.style.display = "none"; // Cacher
     }
