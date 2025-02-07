@@ -1003,7 +1003,19 @@ app.get('/register', async (req, res) => {
 })
 app.post('/register', async (req, res) => {
     const date = new Date();
-    const dateAccount = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    const dateAccount = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
+    // const day = date.getDate().toString().padStart(2, '0');
+    // const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 car les mois commencent à 0
+    // const year = date.getFullYear();
+
+    // const hours = date.getHours().toString().padStart(2, '0');
+    // const minutes = date.getMinutes().toString().padStart(2, '0');
+    // const seconds = date.getSeconds().toString().padStart(2, '0');
+
+    // const dateAccount = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+
+    // console.log(dateAccount);
 
     // Vérifier que les mots de passe correspondent avant le hashage
     if (req.body.password !== req.body.confirmPassword) {
@@ -1426,13 +1438,51 @@ app.get('/adminStats', async (req, res) => {
 
         console.log("rrrrrrrrrrrrrrrrrrrr",nbOnline)
         const collectionPosts = db.collection('Wall');
+        // Récupération du dernier post
+        const lastPostArray = await collectionPosts.find().sort({ date: -1 }).limit(1).toArray();
+        const lastPost = lastPostArray.length > 0 ? lastPostArray[0] : null; // Vérifie si un post existe
+        console.log("lastPost :", lastPost ? lastPost.date : "Aucun post trouvé");
+
+        // Récupération du dernier utilisateur inscrit
+        const lastUserArray = await collection.find().sort({ date: -1 }).limit(1).toArray();
+        const lastUser = lastUserArray.length > 0 ? lastUserArray[0] : null; // Vérifie si un utilisateur existe
+        console.log("lastUser :", lastUser ? lastUser.username : "Aucun utilisateur trouvé");
+        console.log("lastUser date:", lastUser ? lastUser.date : "Aucun utilisateur trouvé");
         let nbPosts = await collectionPosts.countDocuments()
         console.log("nbPosts :",nbPosts)
+
+        // Formatage de la date si lastPost existe
+        if (lastPost && lastPost.date) {
+            const postDate = new Date(lastPost.date);
+            lastPost.formattedDate = postDate.toLocaleString('fr-FR', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+        }
+
+        // Formatage de la date si lastPost existe
+        // if (lastUser && lastUser.date) {
+        //     const userDate = new Date(lastUser.date);
+        //     lastUser.formattedDate = userDate.toLocaleString('fr-FR', { 
+        //         month: '2-digit', 
+        //         day: '2-digit', 
+        //         year: 'numeric', 
+        //         hour: '2-digit', 
+        //         minute: '2-digit', 
+        //         second: '2-digit' 
+        //     });
+        // }
         res.render('adminStats', {
             usersInfos,
             nbUsers,
             nbPosts,
-            nbOnline // Passe les utilisateurs au template
+            nbOnline,
+            lastPost,
+            lastUser // Passe les utilisateurs au template
         });
     } catch (err) {
         console.error("Erreur lors de la récupération des utilisateurs :", err);
@@ -1737,14 +1787,18 @@ io.on('connection', (socket) => {
         const min = date.getMinutes().toString().padStart(2, '0'); // Format 2 chiffres
         const hour = date.getHours().toString().padStart(2, '0');  // Format 2 chiffres
         const timeMessage = `${day}/${month+1} ( ${hour }:${min} )`; // Format HH:mm
+        const timeHourMessage = `( ${hour }:${min} )`; // Format HH:mm
+        const timeDayMessage = ` [ ${day}/${month+1} ] `; // Format HH:mm
         
         const messageData = {
             content: message,
             date : date,
             time: timeMessage,
+            timeDay : timeDayMessage,
+            timeHour : timeHourMessage,
             username: user.username || 'Anonyme',
             avatar:user.avatar,
-            userId: user._id || null
+            userId: user._id || null,
         };
     
         try {

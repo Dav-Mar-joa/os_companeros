@@ -280,7 +280,7 @@ html(lang="en")
         justify-content: space-between;
         width: 100%;
         min-width: 350px;
-        height:30px;
+        height:auto;
         background-color: #fff;
         margin-top: 25px;
         margin-bottom: 10px;
@@ -304,7 +304,7 @@ html(lang="en")
       }
 
       .container-friends form {
-        margin-left: 15px;
+        margin-left: 10;
       }
 
       .button-submit-tache {
@@ -347,7 +347,14 @@ html(lang="en")
         transform: scale(1.1);
         border:3px solid rgb(255, 0, 0);
       }
-
+      .friends.username{
+          margin-top:10px;
+          margin-bottom:10px;
+          max-width:340px;
+          word-wrap: break-word; /* Permet de couper le texte à l'intérieur du conteneur */
+          overflow-wrap: break-word; /* Compatible avec davantage de navigateurs modernes */
+          white-space: normal;
+      }
 
       @media (max-width: 400px) {
         .profile-container {
@@ -362,6 +369,7 @@ html(lang="en")
           width: 80%;
           margin: 10px auto;
           margin-bottom:20px;
+          
         }
 
         .container {
@@ -386,6 +394,10 @@ html(lang="en")
         }
         .container-friends {
           min-width: 180px;
+           margin-top: 20px;
+          margin-bottom: 20px;
+          padding-left: 10px;
+          padding-right: 10px;
         }
         .avatar-container {
           display: flex;

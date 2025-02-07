@@ -435,73 +435,66 @@ html(lang="en")
           //- p.autres-pages Ami
           div.avatar-container-head
             form(action='/admin' method='post')
-              p Mur
+              p Communauté
               button.button-head
-                img.avatar(src="assets/icons/statistics.png", alt="wall")
-          div.avatar-container-head
-            p Commu' : #{nbUsers}    
-            //- button.button-head
-              //- img.avatar(src="assets/icons/icon512.png", alt="wall") 
+                img.avatar(src="assets/icons/icon192.png", alt="wall")
+          //- div.avatar-container-head
+          //-   p Commu' : #{nbUsers}    
+          //-   //- button.button-head
+          //-     //- img.avatar(src="assets/icons/icon512.png", alt="wall") 
           div.avatar-container-head
             form(action='/logout' method='get')
               p Bye
               button.button-head
                 img.avatar(src="assets/icons/logout.png", alt="logout" )        
         .titre-container
-          p.titre  Admin 👮‍♂️👮‍♀️  
+          //- p.titre  Admin 👮‍♂️👮‍♀️  
+          p.titre  Admin 🕵️💻  
         form(action="/adminStats" method="get")
-        p NB POSTS  : #{nbPosts}
-        p NB ONLINE   : #{nbOnline}
           .ajoutCommentaire
             .avatar-container
              table 
               thead
                 tr
-                  th 
-                  th 
-                  th Statistique
-                  th
-                  th
-                  th     
+                  th Statistiques 📈
+   
               tbody
-                each user in usersInfos
-                  tr
-                    td
-                      img.avatar(src=user.avatar, alt="avatar profil")
-                    td #{user.username}
-                    td.hidden-md #{user.firstname}
-                    td.hidden-md #{user.lastname}
-                    //- td.hidden-md #{user.lastname}
-                    td.hidden-md #{user.date}
-                    td
-                      form(action="/admin" method="post")
-                        input(type="hidden" name="userId" value=user._id.toString())
-                      button(type="submit" class="button-delete") X
-          .ajoutCommentaire
-            .avatar-container
-             table
-              thead
                 tr
-                  th Avatar
-                  th Pseudo
-                  th.hidden-md  Prénom
-                  th.hidden-md  Nom
-                  th.hidden-md  Date de création
-                  th 🗑
-              tbody
-                each user in usersInfos
-                  tr
-                    td
-                      img.avatar(src=user.avatar, alt="avatar profil")
-                    td #{user.username}
-                    td.hidden-md #{user.firstname}
-                    td.hidden-md #{user.lastname}
-                    //- td.hidden-md #{user.lastname}
-                    td.hidden-md #{user.date}
-                    td
-                      form(action="/admin" method="post")
-                        input(type="hidden" name="userId" value=user._id.toString())
-                      button(type="submit" class="button-delete") X
+                  td Nb d'utilisateurs : #{nbUsers}
+                tr
+                  td Nb posts : #{nbPosts}
+                tr
+                  td Date dernier post : #{lastPost ? lastPost.formattedDate : 'Aucun post'}
+                tr
+                  td Nom du dernier compte : #{lastUser.username}  
+                tr
+                  td Date dernier compte : #{lastUser.date}
+                  //- td.hidden-md #{user.lastname}
+          //- .ajoutCommentaire
+          //-   .avatar-container
+          //-    table
+          //-     thead
+          //-       tr
+          //-         th Avatar
+          //-         th Pseudo
+          //-         th.hidden-md  Prénom
+          //-         th.hidden-md  Nom
+          //-         th.hidden-md  Date de création
+          //-         th 🗑
+          //-     tbody
+          //-       each user in usersInfos
+          //-         tr
+          //-           td
+          //-             img.avatar(src=user.avatar, alt="avatar profil")
+          //-           td #{user.username}
+          //-           td.hidden-md #{user.firstname}
+          //-           td.hidden-md #{user.lastname}
+          //-           //- td.hidden-md #{user.lastname}
+          //-           td.hidden-md #{user.date}
+          //-           td
+          //-             form(action="/admin" method="post")
+          //-               input(type="hidden" name="userId" value=user._id.toString())
+          //-             button(type="submit" class="button-delete") X
          
     script(src="/js/script.js")
     script.
