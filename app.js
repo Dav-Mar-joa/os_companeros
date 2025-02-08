@@ -174,6 +174,47 @@ app.post('/', async (req, res) => {
     }
 });
 
+app.post('/like/:taskId', async (req, res) => {
+    const user = req.session.user;
+
+    if (!user) {
+        return res.status(401).json({ error: "Utilisateur non connecté" });
+    }
+
+    const taskId = req.params.taskId;
+    const userId = user._id;
+
+    try {
+        const collection = db.collection(process.env.MONGODB_COLLECTION);
+        const task = await collection.findOne({ _id: new ObjectId(taskId) });
+
+        if (!task) {
+            return res.status(404).json({ error: "Tâche non trouvée" });
+        }
+
+        let update;
+        if (task.likes && task.likes.includes(userId)) {
+            // L'utilisateur a déjà liké -> on retire le like
+            update = { $pull: { likes: userId } };
+        } else {
+            // L'utilisateur n'a pas liké -> on ajoute le like
+            update = { $addToSet: { likes: userId } };
+        }
+
+        await collection.updateOne({ _id: new ObjectId(taskId) }, update);
+
+        // Récupérer le nombre de likes mis à jour
+        const updatedTask = await collection.findOne({ _id: new ObjectId(taskId) });
+        const likeCount = updatedTask.likes ? updatedTask.likes.length : 0;
+
+        res.json({ success: true, likeCount });
+    } catch (err) {
+        console.error("Erreur lors du like :", err);
+        res.status(500).json({ error: "Erreur lors de la mise à jour du like" });
+    }
+});
+
+
 app.get('/propos',async(req,res)=>{
     res.render('propos')
 })
@@ -240,12 +281,20 @@ app.post('/login', async (req, res) => {
         if (!userLogged) {
             return res.render('login', { message: "Login ou mot de passe erroné !" });
         }
+        if (userLogged.isLoggedIn) {
+            return res.render('login', { message: "Ce compte est déjà connecté ailleurs." });
+        }
 
         // Vérifier si le mot de passe correspond au hash stocké
         const isMatch = await bcrypt.compare(password, userLogged.password);
         if (!isMatch) {
             return res.render('login', { message: "Login ou mot de passe erroné !" });
         }
+
+        await collection.updateOne(
+            { _id: userLogged._id },
+            { $set: { isLoggedIn: true } }
+        );
 
         // Création de la session utilisateur après authentification réussie
         req.session.user = {
@@ -361,7 +410,15 @@ app.post('/login', async (req, res) => {
 //     }
 // });
 
-app.get('/logout', (req, res) => {
+app.get('/logout', async (req, res) => {
+
+    if (req.session.user) {
+        const collection = db.collection('Users');
+        await collection.updateOne(
+            { _id: req.session.user._id },
+            { $set: { isLoggedIn: false } }
+        );
+    }
     // Supprimer la session
     req.session.destroy((err) => {
         if (err) {
@@ -1032,10 +1089,16 @@ app.post('/register', async (req, res) => {
         avatar: req.body.avatar,
         lastname: req.body.lastname,
         email: req.body.email,
+        gender: req.body.gender,
+        telephone: req.body.telephone || "😎 [ perso ]",
+        age: req.body.age || "😎 [ perso ]",
+        presentation: req.body.presentation || "😎 [ perso ]",
+        centreInterets: req.body.centreInterets || "😎 [ perso ]",
         password: hashedPassword,  // ✅ On stocke uniquement le hash
         isAdmin: "n",
         date: dateAccount,
         isConnected: "n",
+        isLoggedIn : false
     };
 
     const collection = db.collection('Users'); // Accéder à la collection "Users"
@@ -1205,9 +1268,13 @@ app.post('/modificationProfil', async (req, res) => {
         const currentUser = await collectionUsers.findOne({ _id: user._id });
         const userUpdate = {
             username: req.body.username || currentUser.username,
-                firstname: req.body.firstname || currentUser.firstname,
-                avatar: req.body.avatar || currentUser.avatar,
-                lastname: req.body.lastname || currentUser.lastname 
+            firstname: req.body.firstname || currentUser.firstname,
+            avatar: req.body.avatar || currentUser.avatar,
+            lastname: req.body.lastname || currentUser.lastname,
+            gender: req.body.gender || currentUser.gender,
+            telephone: req.body.gender || currentUser.telephone, 
+            presentation: req.body.presentation || currentUser.presentation,
+            centreInterets: req.body.centreInterets || currentUser.centreInterets,
         }
         console.log("<<<<<<<<<<<<----->>>>>>>>>>>>>>>")
         console.log("userUpade",userUpdate)

@@ -100,31 +100,31 @@ html(lang="en")
         .form-group
           label(for="lastname") Nom
           input(type="text" id="lastname" name="lastname" required)
-        //- .form-group
-        //-   label(for="genre") Genre
-        //-   select(id="genre" name="genre" required)
-        //-     option(value="femme") Femme
-        //-     option(value="homme") Homme
-        //-     option(value="non-binaire") Non-binaire
-        //-     option(value="autre") Autre
-        //-     option(value="prefere-pas-dire") Préfère ne pas dire
+        .form-group
+          label(for="gender") Genre
+          select(id="gender" name="gender" required)
+            option(value="femme") Femme
+            option(value="homme") Homme
+            option(value="non-binaire") Non-binaire
+            option(value="autre") Autre
+            option(value="prefere-pas-dire") Préfère ne pas dire
         .form-group
           label(for="email") Email
           input(type="email" id="email" name="email" required)
           if messageEmail
            p#message(style="color: red") #{messageEmail}
-        //- .form-group
-        //-   label(for="telephone") Téléphone
-        //-   input(type="tel" id="telephone" name="telephone" required)   
-        //- .form-group
-        //-   label(for="age") Âge
-        //-   input(type="number" id="age" name="age" required min="0")
-        //- .form-group
-        //-   label(for="presentation") Présentation
-        //-   input(type="text" id="presentation" name="presentation" required)  
-        //- .form-group
-        //-   label(for="centreInterets") Centres d'intérêts
-        //-   input(type="text" id="centreInterets" name="centreInterets" required)     
+        .form-group
+          label(for="telephone") Téléphone
+          input(type="tel" id="telephone" name="telephone" placeholder="😎 [ perso ]" )   
+        .form-group
+          label(for="age") Âge
+          input(type="number" id="age" name="age"  min="0" placeholder="😎 [ perso ]")
+        .form-group
+          label(for="presentation") Présentation
+          input(type="text" id="presentation" name="presentation" placeholder="😎 [ perso ]")  
+        .form-group
+          label(for="centreInterets") Centres d'intérêts
+          input(type="text" id="centreInterets" name="centreInterets" placeholder="😎 [ perso ]")     
         .form-group
           label(for="password") Mot de passe
           input(type="password" id="password" name="password" required)

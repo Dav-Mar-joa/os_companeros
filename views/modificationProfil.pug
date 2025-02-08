@@ -82,7 +82,7 @@ html(lang="en")
       @media (max-width: 400px) {
         .titre-container,
         .register-container {
-          width: 90%; /* Adaptation aux petits écrans */
+          width: 85%; /* Adaptation aux petits écrans */
         }
       }
   body
@@ -100,6 +100,23 @@ html(lang="en")
           .form-group
               label(for="lastname") Nom
               input(type="text" id="lastname" name="lastname" value=user.lastname)
+          .form-group
+              label(for="gender") Genre
+              select(id="gender" name="gender" required)
+                option(value="femme") Femme
+                option(value="homme") Homme
+                option(value="non-binaire") Non-binaire
+                option(value="autre") Autre
+                option(value="prefere-pas-dire") Préfère ne pas dire  
+          .form-group
+              label(for="telephone") Téléphone
+              input(type="tel" id="telephone" name="telephone" placeholder="😎 [ perso ]" ) 
+          .form-group
+              label(for="presentation") Présentation
+              input(type="text" id="presentation" name="presentation" placeholder="😎 [ perso ]") 
+          .form-group
+              label(for="centreInterets") Centres d'intérêts
+              input(type="text" id="centreInterets" name="centreInterets" placeholder="😎 [ perso ]")       
           .form-group  
               label(for="avatar" style="width:50%; display: block; text-align: center;") Avatar
               select(id="avatar" name="avatar" style="text-align:center; width:50%; display:block; margin:5px auto;" onchange="updatePreview()")

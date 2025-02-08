@@ -482,6 +482,16 @@ html(lang="en")
         color: #666;
       }
 
+      .button-like.liked img {
+          filter: brightness(1.5); /* Mettre l'icône plus lumineuse */
+          transition: all 0.3s ease;
+      }
+      .like{
+        border-radius : 10px; 
+        margin-top:20px;
+        background:white;
+      }
+
       
       @media (max-width: 400px) {
         .task-left {
@@ -588,10 +598,9 @@ html(lang="en")
                 h3 #{task.name}  
                 p #{task.description}
                 .button-container
-                  button(type="button" onclick="deleteTask(this)" class="button-like") 
-                    div 
+                  button(type="button", onclick=`addLike('${task._id}', this)` class="button-like")
                     img(src="/assets/like/like.png" alt="like")
-                    P 1
+                    p.like #{task.likes ? task.likes.length : 0}
                   //- button#toggle-commentaires(type="button" class="button-ajoutReponse") Commentaires
                   if task.idUser===user._id
                     button(type="button" onclick="deleteTask(this)" class="button-like")

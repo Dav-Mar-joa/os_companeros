@@ -23,7 +23,8 @@ html(lang="en")
         border: 2px solid #9c27b0;
         border-radius: 10px;
         background-color: #2a2a2a;
-        margin-bottom:20px;
+        margin-bottom : 10%;
+        margin-top : 5%;
       }
       .friends-container {
         display:none;
@@ -361,6 +362,7 @@ html(lang="en")
           width: 80%;
           margin: 10px auto;
           max-width: 350px;
+          margin-bottom : 5%;
 
 
         }
@@ -473,8 +475,8 @@ html(lang="en")
         //-   .date-time
         //-     //- #dateJour
         //-     #heure  
-        //- .titre-container-head
-        //-   p.titre Os compañeros
+        .titre-container-head
+          p.titre Os compañeros
         .profile-container
           .profile-header
             img.profile-avatar(src=user.avatar alt="Avatar")
@@ -489,28 +491,31 @@ html(lang="en")
               br
               | Nom : #{user.firstname}  
               br
-              | Grenre : XXXX 
+              | Grenre : #{user.gender} 
               br
-              | Age : 5123
+              | Age : #{user.age} 
               br
               | Amis : #{nbUsersLoggedFriends}  
               //- button#toggle-friends(type="button" class="bouton-friends") 👁
           .profile-section
             h2.section-title Centres d'intérêts
-            p.section-content Lecture, cinéma, randonnée
+            p.section-content #{user.centreInterets} 
           .profile-section
             h2.section-title Présentation
-            p.section-content Passionné par le développement web, j'adore explorer de nouvelles technologies et collaborer avec des personnes motivées.
+            p.section-content  #{user.presentation}
           .profile-section
             h2.section-title Contact
             p.section-content
-              | Email: #{user.email}
+              | Email : #{user.email}
               br
-              | Téléphone: 123-456-7890
+              | Téléphone : #{user.telephone}
               br
           .profile-section
             h2.section-title Amis
-            button#toggle-friends(type="button" class="bouton-friends") 👁     
+            button#toggle-friends(type="button" class="bouton-friends") 👁 
+          .profile-section
+            h2.section-title Sécurité
+            p Toute forme de non-respect sera sanctionnée. Ensemble, construisons une communauté harmonieuse et accueillante !      
       .friends-container
         h2.section-title-amis Liste d'amis
           each friend in friends 

@@ -82,3 +82,24 @@ document.getElementById("toggle-commentaires").onclick = function() {
         friendsDiv.style.display = "none"; // Cacher
     }
 };
+
+function addLike(taskId, buttonElement) {
+    fetch(`/like/${taskId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const likeCountElement = buttonElement.querySelector('p');
+            likeCountElement.textContent = `${data.likeCount}`;
+
+            // Changer le style du bouton pour indiquer un like actif
+            buttonElement.classList.toggle('liked');
+        }
+    })
+    .catch(error => console.error('Erreur lors du like:', error));
+}
+
