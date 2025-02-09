@@ -1,10 +1,10 @@
 {
-  "name": "ToDoList",
-  "short_name": "ToDoList",
+  "name": "Os Companeros",
+  "short_name": "Os Companeros",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#333333",
-  "theme_color": "#007bff",
+  "theme_color": "#FF0000", 
   "description": "Une brève description de ton application",
   "icons": [
     {
@@ -19,3 +19,4 @@
     }
   ]
 }
+  
