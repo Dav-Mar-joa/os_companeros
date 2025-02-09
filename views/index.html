@@ -156,23 +156,23 @@
     
     <script src="/js/script.js"></script>
     <script>
-        // Vérifie si le navigateur supporte les Service Workers
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            // Enregistre le Service Worker une fois la page chargée
-            navigator.serviceWorker.register('/service-worker.js')
-              .then((registration) => {
-                console.log('Service Worker enregistré avec succès :', registration);
-              })
-              .catch((error) => {
-                console.error('Erreur lors de l\'enregistrement du Service Worker :', error);
-              });
-          });
-        } else {
-          console.log('Service Worker non supporté par ce navigateur.');
-        }
-      </script>
-      
+  // Vérifie si le navigateur supporte les Service Workers
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      // Enregistre le Service Worker une fois la page chargée
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('Service Worker enregistré avec succès :', registration);
+        })
+        .catch((error) => {
+          console.error('Erreur lors de l\'enregistrement du Service Worker :', error);
+        });
+    });
+  } else {
+    console.log('Service Worker non supporté par ce navigateur.');
+  }
+</script>
+
     
 </body>
 </html>
