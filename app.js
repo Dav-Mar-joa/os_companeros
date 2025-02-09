@@ -56,7 +56,7 @@ const sessionMiddleware = session({
         collectionName: 'production', // Nom de la collection pour les sessions
     }),
     cookie: {
-        secure: false, // Mettre true en production avec HTTPS
+        secure: true, // Mettre true en production avec HTTPS
         maxAge: 30*24 * 60 * 60 * 1000, // Durée de vie des cookies (1 jour ici)
     },
 });
@@ -87,7 +87,7 @@ app.set('view engine', 'pug');
 // Définir le chemin du dossier 'views'
 app.set('views', path.join(__dirname, 'views'));
 
-// app.use('/profil', express.static(path.join(__dirname, 'public')));
+app.use('/profil', express.static(path.join(__dirname, 'public')));
 app.get('/service-worker.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'service-worker.js'));
 });
