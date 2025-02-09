@@ -5,8 +5,8 @@ self.addEventListener('install', function(event) {
         '/',
         '/index.html',
         '/assets/css/styles.css',
-        '/assets/icons/icon192.png',
-        '/assets/icons/icon512.png'
+        '/assets/icons/icon192B.png',
+        '/assets/icons/icon512B.png'
       ]);
     })
   );
