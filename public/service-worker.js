@@ -3,7 +3,7 @@ self.addEventListener('install', function(event) {
     caches.open('v1').then(function(cache) {
       return cache.addAll([
         '/',
-        '/index.pug',
+        '/index.html',
         '/assets/css/styles.css',
         '/assets/icons/icon192.png',
         '/assets/icons/icon512.png'
