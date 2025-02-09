@@ -97,6 +97,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware pour parser les données du formulaire
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+    if (req.protocol === 'http') {
+      res.redirect(301, `https://${req.hostname}${req.url}`);
+    } else {
+      next();
+    }
+  })
 
 io.use((socket, next) => {
     const req = socket.request;
