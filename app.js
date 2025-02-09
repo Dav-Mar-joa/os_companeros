@@ -88,6 +88,9 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use('/profil', express.static(path.join(__dirname, 'public')));
+app.get('/service-worker.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'service-worker.js'));
+});
 
 // Servir les fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));
