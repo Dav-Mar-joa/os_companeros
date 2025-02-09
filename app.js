@@ -98,7 +98,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Middleware pour parser les données du formulaire
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 io.use((socket, next) => {
     const req = socket.request;
     const res = req.res || {};
