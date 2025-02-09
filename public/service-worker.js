@@ -5,10 +5,17 @@ self.addEventListener('install', function(event) {
       return cache.addAll([
         '/',
         '/index.html',
-        '/assets/css/styles.css',
         '/assets/icons/icon192C.png',
-        '/assets/icons/icon512C.png'
+        '/assets/icons/icon512C.png',
       ]);
+    })
+  );
+});
+
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request).then(function(response) {
+      return response || fetch(event.request);
     })
   );
 });
