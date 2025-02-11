@@ -437,7 +437,7 @@ html(lang="en")
             form(action='/admin' method='post')
               p Communauté
               button.button-head
-                img.avatar(src="assets/icons/icon192.png", alt="wall")
+                img.avatar(src="assets/icons/friends.png", alt="wall")
           //- div.avatar-container-head
           //-   p Commu' : #{nbUsers}    
           //-   //- button.button-head
@@ -468,7 +468,7 @@ html(lang="en")
                 tr
                   td Nom du dernier compte : #{lastUser.username}  
                 tr
-                  td Date dernier compte : #{lastUser.date}
+                  td Date dernier compte : #{lastUser.formattedDate}
                   //- td.hidden-md #{user.lastname}
           //- .ajoutCommentaire
           //-   .avatar-container
