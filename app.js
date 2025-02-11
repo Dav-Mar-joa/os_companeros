@@ -92,7 +92,7 @@ app.set('views', path.join(__dirname, 'views'));
 // });
 
 
-// app.use('/profil', express.static(path.join(__dirname, 'public')));
+app.use('/profil', express.static(path.join(__dirname, 'public')));
 
 // // Vérifie que la route manifeste fonctionne
 // app.get('/manifest.json', (req, res) => {
