@@ -73,15 +73,15 @@ function deleteCourse(button) {
 //     }
 // };
 
-document.getElementById("toggle-commentaires").onclick = function() {
-    const friendsDiv = document.querySelector(".affichageCommentaire");
-    console.log("ETAT : ",friendsDiv.style.display)
-    if (friendsDiv.style.display === "none" || friendsDiv.style.display === "") {
-        friendsDiv.style.display = "block"; // Afficher
-    } else {
-        friendsDiv.style.display = "none"; // Cacher
-    }
-};
+// document.getElementById("toggle-commentaires").onclick = function() {
+//     const friendsDiv = document.querySelector(".affichageCommentaire");
+//     console.log("ETAT : ",friendsDiv.style.display)
+//     if (friendsDiv.style.display === "none" || friendsDiv.style.display === "") {
+//         friendsDiv.style.display = "block"; // Afficher
+//     } else {
+//         friendsDiv.style.display = "none"; // Cacher
+//     }
+// };
 
 function addLike(taskId, buttonElement) {
     fetch(`/like/${taskId}`, {

@@ -1,20 +1,18 @@
-self.addEventListener('install', function(event) {
-  self.skipWaiting(); // Forcer l'installation immédiate
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open('v1').then(function(cache) {
+    caches.open('v1').then((cache) => {
       return cache.addAll([
         '/',
-        '/index.html',
-        '/assets/icons/icon192C.png',
-        '/assets/icons/icon512C.png',
+        '/assets/icons/icon192.png',
+        '/assets/icons/icon512.png',
       ]);
     })
   );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then(function(response) {
+    caches.match(event.request).then((response) => {
       return response || fetch(event.request);
     })
   );
