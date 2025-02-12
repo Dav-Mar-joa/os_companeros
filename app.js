@@ -1543,19 +1543,32 @@ app.get('/adminStats', async (req, res) => {
                 second: '2-digit' 
             });
         }
-
+        console.log("lastPost.formattedDate ",lastPost.formattedDate)
         // Formatage de la date si lastPost existe
         if (lastUser && lastUser.date) {
             const userDate = new Date(lastUser.date);
-            lastUser.formattedDate = userDate.toLocaleString('fr-FR', { 
+            
+            // Formater la date en français
+            let formattedDate = userDate.toLocaleString('fr-FR', { 
+                day: '2-digit',
                 month: '2-digit', 
-                day: '2-digit', 
                 year: 'numeric', 
                 hour: '2-digit', 
                 minute: '2-digit', 
                 second: '2-digit' 
             });
+        
+            // Réarranger la date : passer le mois en 3ème et l'heure en 4ème position
+            const parts = formattedDate.split(' ');  // Séparer la date et l'heure
+            const dateParts = parts[0].split('/');  // Séparer jour/mois/année
+            const timeParts = parts[1].split(':');  // Séparer l'heure/minute/secondes
+        
+            // Réarranger les termes
+            const newFormattedDate = `${dateParts[0]}/${timeParts[0]}:${timeParts[1]} ${dateParts[1]}/${dateParts[2]} ${timeParts[2]}`;
+        
+            lastUser.formattedDate = newFormattedDate;
         }
+        console.log("lastUser.formattedDate ",lastUser.formattedDate )
         res.render('adminStats', {
             usersInfos,
             nbUsers,
