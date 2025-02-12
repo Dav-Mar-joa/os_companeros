@@ -1,6 +1,6 @@
 {
-  "name": "Companeros",
-  "short_name": "Companeros",
+  "name": "Os Companeros",
+  "short_name": "Os Companeros",
   "start_url": "/login",
   "display": "standalone",
   "background_color": "#9c27b0",
