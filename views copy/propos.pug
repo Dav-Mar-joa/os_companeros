@@ -4,7 +4,6 @@ html(lang="en")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title Login
     link(href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet")
-    link(rel="manifest" href="/manifest.json")
     style.
       body {
         font-family: 'Audiowide', sans-serif;
@@ -18,7 +17,7 @@ html(lang="en")
         height: 90vh;
       }
       .login-container {
-        width: 90%;
+        width: 100%;
         max-width: 400px;
         padding: 15px;
         margin: auto;
@@ -86,7 +85,8 @@ html(lang="en")
         font-weight: bold;
         border-radius: 5px;
         cursor: pointer;
-        margin:auto
+        margin:auto;
+        margin-left:35%;
         transition: background-color 0.3s;
       }
       button:hover {
@@ -101,7 +101,8 @@ html(lang="en")
           justify-content: space-between; /* Espace égal entre les colonnes */
           width: 100%;
           padding: 0; /* Supprime les marges internes */
-          margin: 0; /* Supprime les marges externes */
+          margin: 0;
+          margin-top:8% /* Supprime les marges externes */
           gap: 0; /* Aucune espace additionnelle entre les colonnes */
       }
       .form-boutton{
@@ -140,11 +141,28 @@ html(lang="en")
         padding-top:0px;
         padding-bottom:0px;
       }
-      @media (max-width: 450px) {
+
+      p {
+        margin: 10px 0;
+        line-height: 1.6;
+      }
+      ul {
+        margin: 2px 0;
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 2px;
+      }
+      a {
+        color: #00bcd4;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 400px) {
         .login-container {
-          width: 90%;
-          max-width: 350px;
-          margin-top:5px;
+          margin-top:5px
           padding: 15px;
           width:90%;
         }
@@ -173,31 +191,25 @@ html(lang="en")
       .titre-container
           p.titre Os compañeros
       .login-container
-        h1.login-title Connexion
-        form(action="/login" method="post")
-          .form-group
-            label(for="username") Nom d'utilisateur
-            input(type="text" id="username" name="username" )
-          .form-group
-            label(for="password") Mot de passe
-            input(type="password" id="password" name="password" )
-            if message
-              p#message(style="color: red") #{message}
-          .form-boutton  
-            button(type="submit" class="button-new-user") Connexion
-        form(action="/register" method="get")
-          .form-group
-            //- h1.login-new-user Nouvel utilisateur
-            button(type="submit" class="button-new-user login-new-user") Création d'un nouveau compte     
-        form(action="/password-email" method="get")
-          .forgot-password-container
-            button(type="submit" class="forgot-password") Mot de pass oublié      
-        
-        form(action="/propos" method="get")
-          button(type="submit") A propos      
+        p
+        | Bienvenue sur notre plateforme, un espace dédié à la liberté, l'inclusivité et le respect.
+        p
+          | Notre priorité :
+        ul
+          li La bienveillance, la confidentialité et le respect des données.
+        p
+          | Toute forme de non-respect sera sanctionnée. Ensemble, construisons une communauté harmonieuse et accueillante !
+        p
+          | Questions ou suggestions ? Contactez-nous à 
+          a(href="mailto:oscompaneros@gmail.com") oscompaneros@gmail.com.
+        p
+          | Merci de nous rejoindre !
+
+      form(action="/login" method="get")
+        button(type="submit") Retour à l'accueil        
             
     script(src="/js/script.js")
-     script.
+    script.
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/service-worker.js').then(function(registration) {

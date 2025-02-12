@@ -1,0 +1,171 @@
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Inscription
+    link(href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet")
+    style.
+      body {
+        font-family: 'Audiowide', sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #121212;
+        color: #b3b3b3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .titre-container {
+        width: 100%;
+        max-width: 400px; /* Alignement avec la largeur du conteneur violet */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .titre {
+        font-size: 3rem;
+        color: #00c7ff; /* Bleu néon doux */
+        text-align: center;
+        margin: 0; /* Pas de marges inutiles */
+      }
+      .register-container {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+        border: 2px solid #9c27b0;
+        border-radius: 10px;
+        background-color: #2a2a2a;
+      }
+      .register-title {
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 20px;
+        margin-top: 5px;
+        color: #00c7ff;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+      label {
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input, select {
+        padding: 10px;
+        border: 2px solid #00bcd4;
+        border-radius: 5px;
+        background-color: #121212;
+        color: #b3b3b3;
+      }
+      button {
+        
+        width: 100%;
+        padding: 10px;
+        background-color: #00bcd4;
+        color: #121212;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #00796b;
+      }
+      img{
+        border:4px solid #00c7ff;
+        border-radius:50%;
+      }
+      @media (max-width: 400px) {
+        .titre-container,
+        .register-container {
+          width: 90%; /* Adaptation aux petits écrans */
+        }
+      }
+  body
+    .titre-container
+      h1.titre Os compañeros
+    .register-container
+      h1.register-title Inscription
+      form(action="/register" method="post")
+        .form-group
+          label(for="username") Username
+          input(type="text" id="username" name="username" required) 
+        .form-group
+          label(for="firstname") Prénom
+          input(type="text" id="firstname" name="firstname" required)
+        .form-group
+          label(for="lastname") Nom
+          input(type="text" id="lastname" name="lastname" required)
+        .form-group
+          label(for="gender") Genre
+          select(id="gender" name="gender" required)
+            option(value="femme") Femme
+            option(value="homme") Homme
+            option(value="non-binaire") Non-binaire
+            option(value="autre") Autre
+            option(value="prefere-pas-dire") Préfère ne pas dire
+        .form-group
+          label(for="email") Email
+          input(type="email" id="email" name="email" required)
+          if messageEmail
+           p#message(style="color: red") #{messageEmail}
+        .form-group
+          label(for="telephone") Téléphone
+          input(type="tel" id="telephone" name="telephone" placeholder="😎 [ perso ]" )   
+        .form-group
+          label(for="age") Âge
+          input(type="number" id="age" name="age"  min="0" placeholder="😎 [ perso ]")
+        .form-group
+          label(for="presentation") Présentation
+          input(type="text" id="presentation" name="presentation" placeholder="😎 [ perso ]")  
+        .form-group
+          label(for="centreInterets") Centres d'intérêts
+          input(type="text" id="centreInterets" name="centreInterets" placeholder="😎 [ perso ]")     
+        .form-group
+          label(for="password") Mot de passe
+          input(type="password" id="password" name="password" required)
+        .form-group
+          label(for="confirmPassword") Confirmer le mot de passe
+          input(type="password" id="confirmPassword" 
+          name="confirmPassword" required)
+          if messagePsw
+           p#message(style="color: red") #{messagePsw}
+        .form-group  
+          label(for="avatar" style="width:50%; display: block; text-align: center;") Avatar
+          select(id="avatar" name="avatar" style="text-align:center; width:50%; display:block; margin:5px auto;" onchange="updatePreview()")
+            option(value="assets/avatar/avatar1.png") Purple skate
+            option(value="assets/avatar/avatar2.png") Bio tennis
+            option(value="assets/avatar/avatar3.png") Sunday workout
+            option(value="assets/avatar/avatar4.png") Gio Lemon
+            option(value="assets/avatar/avatar5.png") Aie robot
+            option(value="assets/avatar/avatar6.png") Pink roller
+            option(value="assets/avatar/avatar7.png") Cool student
+            option(value="assets/avatar/avatar8.png") Sailor bob
+            option(value="assets/avatar/avatar9.png") Workaholic earings
+            option(value="assets/avatar/avatar10.png") Street felling
+          img#preview(src="assets/avatar/avatar1.png", alt="avatar preview", style="width: 50px; height: 50px; margin-top: 10px;") 
+        button(type="submit") S'inscrire
+      form(action="/login" method="post")
+        button(type="submit") Déja utilisateur
+      
+    script(src="/js/script.js")
+    script.
+      function updatePreview() {
+        const select = document.getElementById('avatar');
+        const preview = document.getElementById('preview');
+        preview.src = select.value;
+      }
+    script.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }    

@@ -1,0 +1,533 @@
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Os compañeros
+    link(rel="manifest" href="/manifest.json")
+    link(href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet")
+    script(src="/socket.io/socket.io.js")
+    script(src="/js/scriptChat.js")
+    style.
+      body {
+        font-family: 'Audiowide', sans-serif; /* Police futuriste */
+        margin: 0;
+        padding: 20px;
+        background-color: #121212; /* Fond sombre inspiré des années 80 */
+        color: #b3b3b3; /* Texte gris clair */
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 1100px;
+        gap: 20px;
+      }
+      .form-container, .tasks-container, .purchase-container {
+        width: 100%;
+      }
+      .form {
+        border: 2px solid #9c27b0; /* Bordure violette */
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #2a2a2a; /* Fond encore plus sombre pour le formulaire */
+        margin-bottom: 20px;
+        width:90%;
+        max-width:700px;
+      }
+      .ajoutCommentaire {
+        text-align:center;
+        display: flex;
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        width: 100%;
+        gap: 10px; /* Espacement entre l'input et le bouton */
+      }
+      .ajoutCommentaire input {
+        width: 100%; /* Champ de texte prend 60% de la largeur */
+        padding: 10px;
+        border: 2px solid #00bcd4;
+        border-radius: 5px;
+        background-color: #2a2a2a;
+        color: #b3b3b3;
+      }
+      .ajoutCommentaire button {
+        display: flex; /* Permet un alignement plus précis */
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        width: 100px;
+        background-color: #00bcd4;
+        color: #121212;
+        border-radius: 10px;
+        cursor: pointer;
+        padding: 10px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        font-size: 17px;
+        
+        }
+
+
+
+
+
+
+      .titre-container {
+          display: flex;
+          justify-content: space-between; /* Espace égal entre les colonnes */
+          width: 100%;
+          padding: 0; /* Supprime les marges internes */
+          margin: 0; /* Supprime les marges externes */
+          gap: 0; /* Aucune espace additionnelle entre les colonnes */
+      }
+
+      .titre-container > * {
+          flex: 1; /* Chaque élément enfant prend un tiers de l'espace */
+          text-align: center; /* Centrer le contenu dans chaque colonne */
+      }
+      .titre {
+        flex: 1; /* La colonne centrale occupe l'espace disponible */
+        font-family: 'Audiowide', sans-serif;
+        font-size: 3rem;
+        color: #00c7ff; /* Bleu néon doux */
+        text-align: center; /* Centrer le titre */
+        width:60%;
+        margin-bottom:3%;
+        margin-top:0%;
+        padding-top:0px;
+        padding-bottom:0px;
+      }
+
+      .avatar-container {
+        margin-bottom:3%;
+        display: flex;
+        align-items: center; /* Centre verticalement */
+        justify-content: center; /* Centre horizontalement */
+        text-align: center;
+        gap: 20px;
+      }
+
+      .avatar {
+        width: 90px; /* Ajuste la taille de l'avatar */
+        height: 90px;
+        border-radius: 50%; /* Rend l'avatar rond */
+        border: 2px solid #00c7ff; /* Bordure pour mettre en valeur l'avatar */
+        object-fit: cover; /* Ajuste l'image sans la déformer */
+      }
+
+      .button-submit-taches {
+        width: 100%;
+        font-size:1.2rem;
+      }
+
+      .avatar {
+        padding-top:0%;
+        width: 50px; /* Taille de l'avatar */
+        height: 50px;
+        border-radius: 50%; /* Forme ronde */
+        background-color: #ccc; /* Couleur par défaut */
+      }
+      .avatarChat {
+        padding-top:0%;
+        width: 40px; /* Taille de l'avatar */
+        height: 40px;
+        border-radius: 50%; /* Forme ronde */
+        background-color: #ccc; /* Couleur par défaut */
+        margin-right:8%;
+      }
+
+      .avatars-container {
+        display: flex;
+        justify-content: center; /* Écart entre les éléments : gauche, centre, droite */
+        align-items: center; /* Centrer les avatars verticalement */
+        width: 100%;
+        gap:10px
+      }
+      .avatars-container-head {
+        display: flex;
+        justify-content: center; /* Écart entre les éléments : gauche, centre, droite */
+        align-items: center; /* Centrer les avatars verticalement */
+        width: 100%;
+        gap:10px
+      }
+
+      .avatars-container .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid #00c7ff; /* Bordure pour mettre en valeur */
+        object-fit: cover; /* Ajuste l'image sans la déformer */
+      }
+      .dateCommentaire {
+        margin-top:0%;
+        padding-top:0%;
+        text-align: right;
+        flex: 1;  /* This will make the .dateCommentaire take up the available space */
+        font-size:0.8rem;
+        min-width:20%;
+      }
+
+      .button-container{
+        display:flex;
+        gap:10px;
+        justify-content:space-between;
+        margin-bottom:10px;
+        padding-bottom:10px;
+        height:40px;
+      }
+
+      .button-head{
+        border-radius:50%;
+        background-color:#00c7ff;
+      }
+      .button-head:hover{
+        background-color: #00796b; /* Teinte plus foncée au survol */
+        transform:scale(1.05);
+        border-radius:15px;
+      }
+      .button-ajoutReponse{
+        border-radius:10px;
+        background:yellow;
+      }
+      .button-ajoutReponse:hover{
+        scale:1.1;
+        background:green;
+      }
+
+
+      .avatar-container-reponse img.avatar-reponse {
+        align-self: flex-start; /* En haut à gauche */
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        margin-left:5%;
+        margin-top:5%;
+      }
+
+      .date-reponse {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .profile-container-public {
+        width: 80%; /* Largeur par défaut */
+        max-width: 800px; /* Limite la largeur maximale */
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto; /* Centre horizontalement */
+        text-align: center;
+        border: 2px solid #9c27b0;
+        border-radius: 10px;
+        background-color: #2a2a2a;
+        margin-top: 10%;
+        margin-bottom: 5%;
+        box-sizing: border-box; /* Inclut padding et bordures dans la largeur */
+      }
+
+      .profile-container-public:hover , .profile-container-prive:hover {
+        border: 2px solid rgb(225, 183, 232);
+        border-radius:15px;
+        background-color:rgb(75, 72, 72);
+      }
+      .profile-container-prive {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+        margin: 0 auto; /* Centre dans l'espace disponible */
+        text-align: center; /* Centre le texte */
+        border: 2px solid #9c27b0;
+        border-radius: 10px;
+        background-color: #2a2a2a;
+        margin-bottom:5%;
+        transition: transform 0.3s, background-color 0.3s;
+      }
+
+
+      #messages-container {
+        max-height: 400px;
+        width: 99%; /* 90% de la largeur du conteneur parent */
+        max-width: 100%; 
+        line-height: 1.5;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        border: 2px solid rgb(255, 255, 255);
+        border-radius: 10px;
+        background-color: rgb(0, 0, 0);
+        margin: auto;
+        margin-top: 5%;
+        margin-bottom: 5%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        box-sizing: border-box; /* Inclut padding et bordures dans la largeur */
+        overflow-y: auto;
+      }
+      
+      #messageInput {
+        padding-top:5px;
+        padding-bottom:5px;
+        width: calc(70% - 60px);
+        height: 30px;
+        background-color: #000;
+        color: white;
+        border: 2px solid #00c7ff;
+        
+        padding-left: 5px;
+        border-radius: 10px;
+      }
+      #envoyerMessage {
+        margin-top: 15px;
+        margin-bottom: 8px;
+        right: 0px;
+        height: 30px;
+        border-radius: 10px;
+        background-color: #ffcc00;
+        color: black;
+        border: none;
+        width: 120px;
+        cursor: pointer;
+        font-family: 'Audiowide', sans-serif;
+        border: 3px solid #fff;
+        font-size:1.1rem;
+      }
+
+      #envoyerMessage:hover {
+        background-color: #00c7ff;
+        transform:scale(1.1);
+        border:2px solid black;
+      }
+      .message {
+        display: flex;
+        align-items: center; /* Aligne verticalement l'avatar et le contenu */
+        margin-bottom:5px;
+      }
+
+      .content{
+        margin-top:5px;
+        margin-bottom:0px;
+        background:rgb(248, 248, 233);
+        border-radius : 10px;
+        padding:3px;
+        padding-left: 10px;
+        padding-right: 10px;
+        color: #9c27b0;
+        font-size : 12px;
+      }
+      .contentEnd{
+        background:rgb(80, 80, 79);
+        border-radius : 10px;
+        margin-top:10px;
+        margin-bottom:20px;
+        padding:3px;
+        padding-left: 10px;
+        margin-right: 10px;
+        color:white;
+      }
+
+      @media (max-width: 768px) {
+        .profile-container-public {
+          width: 95%; /* Plus large pour petits écrans */
+          margin-top: 2%;
+          padding: 15px;
+        }
+        #messages-container {
+          width: 100%; /* Largeur par défaut */
+          max-height: 300px;
+          
+        }
+
+      }
+
+      
+      @media (max-width: 400px) {
+
+        #messages-container {
+          width: 99%; /* Largeur par défaut */
+          min-width: 190px; 
+          margin-top: 2%;
+          max-height: 300px;
+        }
+        #messageInput {
+        width: calc(70% - 60px);
+        }
+        .profile-container-public {
+          width: 95%; /* Presque pleine largeur */
+          margin: 10px auto; /* Ajuste les marges */
+          padding: 10px; /* Réduit les espaces internes */
+          font-size: 0.9rem; /* Taille de texte plus petite */
+        }
+        
+        
+        .task-left {
+          display: flex;
+          width: 50%;
+          flex-direction: column; /* Aligne les éléments en colonne */
+          justify-content: space-between; /* Aligne verticalement avec un espacement */
+          word-wrap: break-word; /* Ancien nom, pour compatibilité */
+          overflow-wrap: break-word; /* Nom moderne et standard */
+          word-break: break-word; /* Comportement pour les très longs mots */
+          border : 2px solid white !important;
+          border-radius : 8px;
+        }
+
+        .container {
+          flex-direction: column;
+        }
+        .form-container, .tasks-container, .purchase-container {
+          width: 100%;
+        }
+        .button-submit-taches{
+          width: 100%;
+        }
+        .autres-pages {
+        padding-left:20px;
+        padding-right:20px;
+
+        }
+        .avatar-container {
+        display: flex;
+        align-items: center; /* Vertically centers the avatar and text */
+        margin-bottom:6%;
+        justify-content: center; /* Aligns items to the left */
+        gap: 10px;
+        }
+        .avatar-container-head {
+        display: flex;
+        align-items: center; /* Vertically centers the avatar and text */
+        margin-bottom:6%;
+        justify-content: center; /* Aligns items to the left */
+        gap: 10px;
+        }
+      }
+      .autres-pages {
+        padding-left:12px;
+        padding-right:12px;
+      }
+
+      .chat-public-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centre horizontalement tous les éléments enfants */
+        justify-content: center;
+        gap: 10px;
+        }
+
+        .chat-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #00bcd4; /* Vous pouvez personnaliser la couleur */
+        text-align: center;
+        margin-bottom: 10px;
+        }
+
+        .avatars-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-bottom:5%;
+        }
+
+        .go-button {
+       
+        padding: 10px 20px;
+        background-color: #00bcd4;
+        color: #121212;
+        border-radius: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        }
+        #nb-connected{
+          font-size:0.9rem;
+          color:white;
+
+        }
+
+        .go-button:hover {
+        background-color:rgb(36, 210, 54);
+        border-radius:15px;
+        transform: scale(1.1);
+        }
+        .titre-find {
+        flex: 1; /* La colonne centrale occupe l'espace disponible */
+        font-family: 'Audiowide', sans-serif;
+        font-size: 2rem;
+        color: #00c7ff; /* Bleu néon doux */
+        text-align: center; /* Centrer le titre */
+        width:60%;
+        margin-bottom:3%;
+        margin-top:0%;
+        padding-top:0px;
+        padding-bottom:0px;
+      }
+
+      
+body
+    .container
+      .form-container
+        .titre-container
+          //- p.autres-pages Ami
+          div.avatar-container-head
+            form(action='/find' method='get')
+              p Amis
+              button.button-head
+                img.avatar(src="assets/icons/friends.png", alt="friends")
+          div.avatar-container-head
+            form(action='/profil' method='get')
+              p Profile
+              button.button-head
+                img.avatar(src=user.avatar, alt="avatar profil")   
+          div.avatar-container-head
+            form(action='/' method='get')
+              p Mur 
+              button.button-head
+                img.avatar(src="assets/icons/wall.png", alt="wall") 
+          div.avatar-container-head
+            form(action='/login' method='get')
+              p Bye
+              button.button-head
+                img.avatar(src="assets/icons/logout.png", alt="logout" )        
+        //- .titre-container
+        //-   p.titre Os compañeros
+        .profile-container-public  
+          div#chat-container
+              .chat-title Chat public
+               p#nb-connected (Online : 0)
+              //- p.(#nbConnected on line)
+          div#messages-container
+            each message in messages
+                div.message
+                  img.avatarChat(src=message.avatar , alt="avatar")
+                  p.content=message.username + ' - '+'    ' + [message.timeDay] +'  '
+                //- p.contentEnd=message.time + ' : ' + message.content
+                p.contentEnd=message.timeHour + ' : ' + message.content
+          textarea#messageInput(rows="6", placeholder="message ...") 
+          button#envoyerMessage(type="button") Envoyer
+              
+    //- script(src="/js/scriptChat.js")
+    script.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
