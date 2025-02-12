@@ -1560,11 +1560,14 @@ app.get('/adminStats', async (req, res) => {
         
             // Réarranger la date : passer le mois en 3ème et l'heure en 4ème position
             const parts = formattedDate.split(' ');  // Séparer la date et l'heure
+            console.log ("parts ",parts)
             const dateParts = parts[0].split('/');  // Séparer jour/mois/année
+            console.log("dateParts ",dateParts)
             const timeParts = parts[1].split(':');  // Séparer l'heure/minute/secondes
+            console.log("timeParts ",timeParts )
         
             // Réarranger les termes
-            const newFormattedDate = `${dateParts[0]}/${timeParts[0]}:${timeParts[1]} ${dateParts[1]}/${dateParts[2]} ${timeParts[2]}`;
+            const newFormattedDate = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]} ${timeParts[0]}:${timeParts[1]}:${timeParts[2]}`;
         
             lastUser.formattedDate = newFormattedDate;
         }
