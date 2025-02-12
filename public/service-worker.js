@@ -2,7 +2,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open('v1').then((cache) => {
       return cache.addAll([
-        '/',
+        '/login',
         '/assets/icons/icon192.png',
         '/assets/icons/icon512.png',
       ]);
