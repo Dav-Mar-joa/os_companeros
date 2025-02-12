@@ -73,7 +73,7 @@ function deleteCourse(button) {
 //     }
 // };
 
-// document.getElementById("toggle-commentaires").onclick = function() {
+/// document.getElementById("toggle-commentaires").onclick = function() {
 //     const friendsDiv = document.querySelector(".affichageCommentaire");
 //     console.log("ETAT : ",friendsDiv.style.display)
 //     if (friendsDiv.style.display === "none" || friendsDiv.style.display === "") {

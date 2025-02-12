@@ -211,7 +211,7 @@ app.post('/login', async (req, res) => {
                 }
                 else{
                     console.log("users")
-                    res.redirect('/') 
+                    res.redirect('/chat') 
                 }
         }
 

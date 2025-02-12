@@ -280,15 +280,12 @@ app.get('/', async (req, res) => {
 app.get('/login', async (req, res) => {
         res.render('login');
 });
-
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
         const collection = db.collection('Users');
         const userLogged = await collection.findOne({ username });
-
-
 
         // Vérifier si l'utilisateur existe
         if (!userLogged) {
