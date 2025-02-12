@@ -1,7 +1,7 @@
 {
   "name": "Companeros",
   "short_name": "Companeros",
-  "start_url": "/",
+  "start_url": "/login",
   "display": "standalone",
   "background_color": "#9c27b0",
   "theme_color": "#007bff",
