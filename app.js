@@ -1547,7 +1547,7 @@ app.get('/adminStats', async (req, res) => {
         // Formatage de la date si lastPost existe
         if (lastUser && lastUser.date) {
             const userDate = new Date(lastUser.date);
-            
+            console.log("userDate : ",userDate)
             // Formater la date en français
             let formattedDate = userDate.toLocaleString('fr-FR', { 
                 day: '2-digit',
@@ -1559,7 +1559,7 @@ app.get('/adminStats', async (req, res) => {
             });
         
             // Réarranger la date : passer le mois en 3ème et l'heure en 4ème position
-            const parts = formattedDate.split(' ');  // Séparer la date et l'heure
+            const parts = lastUser.date.split(' ');  // Séparer la date et l'heure
             console.log ("parts ",parts)
             const dateParts = parts[0].split('/');  // Séparer jour/mois/année
             console.log("dateParts ",dateParts)
@@ -1567,7 +1567,7 @@ app.get('/adminStats', async (req, res) => {
             console.log("timeParts ",timeParts )
         
             // Réarranger les termes
-            const newFormattedDate = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]} ${timeParts[0]}:${timeParts[1]}:${timeParts[2]}`;
+            const newFormattedDate = `${dateParts[0]}/${dateParts[1]}/${dateParts[2]} ${timeParts[0]}:${timeParts[1]}:${timeParts[2]}`;
         
             lastUser.formattedDate = newFormattedDate;
         }
