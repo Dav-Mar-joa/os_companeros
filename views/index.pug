@@ -493,6 +493,10 @@ html(lang="en")
         background:white;
       }
 
+      input[type="text"]::placeholder {
+        color: white;         /* Texte du placeholder en blanc */    /* Texte du placeholder en gras */
+      }
+
       
       @media (max-width: 450px) {
         .task-left {
@@ -568,7 +572,7 @@ html(lang="en")
         form(action="/" method="post")
           .ajoutCommentaire
             label(for="task")
-            input(type="text" id="task" name="task" required)
+            input(type="text" id="task" name="task" required placeholder="Un feeling, une infos à partager ?")
             button(type="submit" class="button-submit-taches") +
       .tasks-container
         each task in tasks
