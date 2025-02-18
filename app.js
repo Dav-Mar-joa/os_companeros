@@ -1073,19 +1073,19 @@ app.get('/register', async (req, res) => {
 })
 app.post('/register', async (req, res) => {
     const date = new Date();
-    const dateAccount = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    // const dateAccount = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
-    // const day = date.getDate().toString().padStart(2, '0');
-    // const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 car les mois commencent à 0
-    // const year = date.getFullYear();
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 car les mois commencent à 0
+    const year = date.getFullYear();
 
-    // const hours = date.getHours().toString().padStart(2, '0');
-    // const minutes = date.getMinutes().toString().padStart(2, '0');
-    // const seconds = date.getSeconds().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
 
-    // const dateAccount = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    const dateAccount = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
-    // console.log(dateAccount);
+    console.log(dateAccount);
 
     // Vérifier que les mots de passe correspondent avant le hashage
     if (req.body.password !== req.body.confirmPassword) {
@@ -1110,6 +1110,7 @@ app.post('/register', async (req, res) => {
         password: hashedPassword,  // ✅ On stocke uniquement le hash
         isAdmin: "n",
         date: dateAccount,
+        dateFull:date,
         isConnected: "n",
         isLoggedIn : false,
     };
@@ -1539,9 +1540,9 @@ app.get('/adminStats', async (req, res) => {
         const lastPostArray = await collectionPosts.find().sort({ date: -1 }).limit(1).toArray();
         const lastPost = lastPostArray.length > 0 ? lastPostArray[0] : null; // Vérifie si un post existe
         console.log("lastPost :", lastPost ? lastPost.date : "Aucun post trouvé");
-
+        // console.log("lastPostArray ---------------",lastPostArray.username)
         // Récupération du dernier utilisateur inscrit
-        const lastUserArray = await collection.find().sort({ date: -1 }).limit(1).toArray();
+        const lastUserArray = await collection.find().sort({ dateFull: -1 }).limit(1).toArray();
         const lastUser = lastUserArray.length > 0 ? lastUserArray[0] : null; // Vérifie si un utilisateur existe
         console.log("lastUser :", lastUser ? lastUser.username : "Aucun utilisateur trouvé");
         console.log("lastUser date:", lastUser ? lastUser.date : "Aucun utilisateur trouvé");
