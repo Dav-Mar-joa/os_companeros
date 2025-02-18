@@ -146,8 +146,8 @@ const transporter = nodemailer.createTransport({
     host: 'sandbox.smtp.mailtrap.io',
     port: 2525,
     auth: {
-      user: '4f82b80e4f4e33',
-      pass: '400d03e2790f20'
+      user: 'd6768fa2dd54e9',
+      pass: '99cb82fddf702b'
     },
     secure: false, // STARTTLS est requis
     tls: {
@@ -1805,8 +1805,12 @@ app.get('/password-email', async (req, res) => {
 //     });
 //   });
 
-app.post('/password-email', (req, res) => {
+app.post('/password-email', async(req, res) => {
     const email = req.body.email;
+    const userCollection = db.collection('Users');
+    const user = await userCollection.findOne({ email: email });
+
+    console.log("user.username : ",user.username)
     console.log("email : ",email)
     // Vérifiez si un email est fourni
     if (!email) {
@@ -1817,7 +1821,7 @@ app.post('/password-email', (req, res) => {
         from: 'apismtp@mailtrap.io', // L'email de l'expéditeur
         to: email, // Remplacez par l'email du destinataire
         subject: 'Password Recovery',
-        text: 'This is your password recovery email.',
+        text: `This is your login : ${user.username}`,
       };
     // Envoyer l'email
     transporter.sendMail(mailOptions, (error, info) => {
@@ -1826,7 +1830,7 @@ app.post('/password-email', (req, res) => {
         return res.status(500).send('Error sending email');
       }
       console.log('Email sent: ' + info.response);
-      res.send('Email sent successfully');
+      res.render('login');
     });
   });
 app.delete('/delete-task/:id', async (req, res) => {
