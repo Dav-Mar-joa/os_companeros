@@ -1095,7 +1095,7 @@ app.post('/register', async (req, res) => {
     // Hacher le mot de passe après validation
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    const user = {
+    let user = {
         _id: uuidv4(),
         username: req.body.username,
         firstname: req.body.firstname,
@@ -1111,8 +1111,25 @@ app.post('/register', async (req, res) => {
         isAdmin: "n",
         date: dateAccount,
         isConnected: "n",
-        isLoggedIn : false
+        isLoggedIn : false,
     };
+
+    console.log("date ------------",date)
+    let dateFormatedString = user.date.toString()
+    console.log("date formated = ",dateFormatedString)
+    dateFormatedString=dateFormatedString.split(' ');
+    dateFormatedString=dateFormatedString[0];
+    console.log("date formated = ",dateFormatedString)
+
+    if(user.age!= "😎 [ perso ]"){
+        user.dateFormated=dateFormatedString
+    }
+        else{
+            user.dateFormated="😎 [ perso ]"
+        }
+
+    // dateFormated=dateFormatedString[8]+dateFormatedString[9]+'/'+dateFormatedString[5]+dateFormatedString[6]+'/'+dateFormatedString[0]+dateFormatedString[1]+dateFormatedString[2]+dateFormatedString[3]
+    // console.log("dateFormated",dateFormated)
 
     const collection = db.collection('Users'); // Accéder à la collection "Users"
     
